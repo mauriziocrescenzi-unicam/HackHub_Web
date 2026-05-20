@@ -1,0 +1,52 @@
+/*
+ * Copyright © 2025 Victoria Coacci, Daniel Duda, Fattori Filippo
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the “Software”), to deal in the
+ * Software without restriction, including without limitation the rights to use, copy,
+ * modify, merge, publish, distribute, sublicense, and/or sell copies of the Software,
+ * and to permit persons to whom the Software is furnished to do so, subject to the
+ * following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ * CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+ * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+ * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+package it.unicam.cs.hackhub.model;
+
+/**
+ * Concrete factory for creating {@link GitHubSubmission} instances.
+ *
+ * <p>
+ * This class implements the {@link SubmissionFactory} contract
+ * and encapsulates the creation logic for GitHub-based submissions,
+ * delegating the actual construction to {@link GitHubSubmission}.
+ * </p>
+ */
+public class GitHubSubmissionFactory implements SubmissionFactory {
+
+    /**
+     * Creates a new {@link GitHubSubmission}.
+     *
+     * <p>
+     * The returned submission is initialized using the provided repository URL
+     * and associated with the specified {@link Team} and {@link Hackathon}.
+     * </p>
+     *
+     * @param team          the team submitting the project
+     * @param hackathon     the hackathon to which the submission belongs
+     * @param repositoryUrl the GitHub repository URL
+     * @return a new {@link GitHubSubmission} instance
+     */
+    @Override
+    public Submission create(Team team, Hackathon hackathon, String repositoryUrl) {
+        return new GitHubSubmission(repositoryUrl, team, hackathon);
+    }
+}
