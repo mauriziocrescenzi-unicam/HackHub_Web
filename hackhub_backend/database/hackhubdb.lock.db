@@ -1,6 +1,6 @@
 #FileLock
-#Wed Apr 22 08:47:21 CEST 2026
-hostName=host.docker.internal
-id=19db3f17bff3879acaffa40a58b119a2d80ee043b26
+#Mon Jun 01 16:06:01 CEST 2026
+hostName=LAPTOP-MJCS5GR4.lan
+id=19e8381724655b7707c50212083ac715a01ccfb4dc7
 method=file
-server=172.17.81.70\:15549
+server=192.168.100.121\:44199

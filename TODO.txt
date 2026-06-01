@@ -1,0 +1,86 @@
+- Ripristinare i settaggi per h2 com'erano all'inizio una volta concluso il progetto
+
+Come procedere
+1. Fondamenta e Configurazione Globale (Setup Base)
+Prima di creare interfacce grafiche, l'applicazione deve sapere come comunicare con l'esterno e come navigare tra le pagine.
+
+environments/environment.ts: Definire qui le variabili globali, in particolare l'URL base del backend (http://localhost:8080/api).
+
+app.config.ts: Iniettare i provider fondamentali (provideHttpClient, provideRouter).
+
+app.html: Pulire il file generato di default e inserire il <router-outlet></router-outlet> per abilitare il routing.
+
+app.routes.ts: Predisporre lo scheletro vuoto delle rotte principali (es. rotta di fallback  che rimanda al login).
+
+2. Il Motore di Sicurezza (La cartella core)
+Visto che le chiamate API protette dal JWT funzionano, dobbiamo automatizzare l'inserimento del token nel frontend.
+
+core/interceptors/jwt.interceptor.ts: Creare un intercettore HTTP che prenda il token salvato nel browser e lo aggiunga automaticamente all'header Authorization: Bearer ... di ogni chiamata in uscita.
+
+core/interceptors/error.interceptor.ts: Gestire centralmente gli errori (es. se il backend risponde 401 Unauthorized, l'intercettore scollega l'utente e lo rimanda al login).
+
+core/guards/auth.guard.ts: Creare la guardia del router che impedirà agli utenti non loggati di digitare manualmente l'URL della dashboard per entrarci.
+
+3. Punto di Accesso (La feature auth)
+Ora che la sicurezza passiva è pronta, serve l'interfaccia attiva per far entrare l'utente.
+
+features/auth/models/auth.model.ts: Definire le interfacce per login e registrazione.
+
+features/auth/service/auth.service.ts: Implementare le chiamate al backend (login, signup) e il salvataggio del token, oltre alla gestione dello stato dell'utente corrente.
+
+features/auth/components/login: Sviluppare il form visivo di login.
+
+features/auth/components/register: Sviluppare il form visivo di registrazione.
+
+Aggiornamento Rotte: Inserire le rotte /login e /register in app.routes.ts.
+
+4. Atterraggio e Navigazione (La feature dashboard e Layout)
+L'utente loggato ha bisogno di un posto dove atterrare e di un menu per navigare.
+
+features/dashboard/component/home.component: Creare la pagina iniziale (dashboard) protetta da auth.guard.ts.
+
+Layout Globale: Decidere se inserire una Navbar/Sidebar direttamente in app.html o se creare un componente layout specifico che avvolga la dashboard e le altre pagine protette.
+
+5. Core Business Logic (La feature hackathons)
+Questa è la funzionalità centrale dell'applicativo.
+
+features/hackathons/models/...: Scrivere i DTO per hackathon, rule, staff.
+
+features/hackathons/service/hackathon.service.ts: Creare i metodi HTTP per ottenere la lista, creare un evento e leggerne i dettagli.
+
+features/hackathons/components/hackathons: Creare la vista a lista/griglia per visualizzare tutti gli hackathon disponibili.
+
+features/hackathons/components/createHackathon: Sviluppare il form di creazione (che hai appena testato su Postman).
+
+features/hackathons/components/hackathon-detail: La pagina di dettaglio di un singolo evento.
+
+6. Collaborazione (La feature teams)
+Gli utenti devono potersi aggregare per partecipare agli hackathon.
+
+features/teams/model/...: Interfacce per team e membri.
+
+features/teams/service/team.service.ts: Chiamate API per creare team, unirsi e visualizzare le statistiche.
+
+features/teams/components/team: Gestione globale dei team.
+
+features/teams/components/my-team: L'area privata del team dell'utente loggato.
+
+7. Gestione Profilo (La feature account)
+Permettere all'utente di gestire i propri dati personali.
+
+features/account/models & service: Modelli e chiamate per account e inviti.
+
+features/account/component/profile: Modifica dati, cambio password.
+
+features/account/component/invitation: Gestione degli inviti ricevuti per entrare in un team o fare da giudice/mentor.
+
+8. Funzionalità Avanzate e Valutazione (submissions, reports, users)
+L'ultimo tassello per chiudere il ciclo di vita dell'hackathon.
+
+features/submissions/...: Logica per permettere ai team di consegnare il progetto a fine hackathon.
+
+features/reports/...: Interfaccia per i giudici per inserire i voti (reports) sui progetti consegnati.
+
+features/users/...: Pannello di amministrazione globale (protetto dal admin.guard.ts) per gestire tutti gli account registrati a sistema.
+
+Sei d'accordo con questo ordine di attacco? Se sì, possiamo partire immediatamente con lo Step 1: Fondamenta e Configurazione Globale.
