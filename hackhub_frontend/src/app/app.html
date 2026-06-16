@@ -1,54 +1,72 @@
-<div class="min-h-screen flex flex-col bg-zinc-950 text-zinc-50 font-sans">
-  
-  <nav class="sticky top-0 z-50 w-full border-b border-zinc-800 bg-zinc-950/80 backdrop-blur-md">
-    <div class="container mx-auto px-4 h-20 flex items-center justify-between">
-      
-      <a routerLink="/" class="flex items-center gap-2 text-3xl font-bold decoration-transparent">
-        <span>Hack<span class="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">Hub</span></span>
+<nav class="navbar">
+  <div class="navbar-container">
+    <div class="navbar-inner">
+
+      <a routerLink="/" class="navbar-logo">
+        <div class="logo-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+            <path d="M2 17l10 5 10-5"/>
+            <path d="M2 12l10 5 10-5"/>
+          </svg>
+        </div>
+        <span class="logo-text">Hack<span class="logo-accent">Hub</span></span>
       </a>
 
-      <div class="hidden lg:flex items-center gap-8">
-        <a routerLink="/hackathons" routerLinkActive="text-purple-400" [routerLinkActiveOptions]="{ exact: true }" class="text-zinc-400 hover:text-purple-400 font-medium transition-colors decoration-transparent">Hackathons</a>
-        <a routerLink="/teams" routerLinkActive="text-purple-400" [routerLinkActiveOptions]="{ exact: true }" class="text-zinc-400 hover:text-purple-400 font-medium transition-colors decoration-transparent">Teams</a>
-      </div>
-
-      <div class="flex items-center gap-4">
-        <a routerLink="/login" class="text-zinc-300 hover:text-white font-medium transition-colors decoration-transparent hidden sm:block">Login</a>
-        <a routerLink="/register" class="px-5 py-2.5 rounded-lg bg-gradient-to-r from-purple-500 to-pink-500 text-white font-medium hover:from-purple-600 hover:to-pink-600 transition-all shadow-lg shadow-purple-500/25 decoration-transparent cursor-pointer">Sign Up</a>
+      <div class="navbar-links">
+        <a routerLink="/hackathons" routerLinkActive="active" class="nav-link">Hackathons</a>
         
-        <button class="lg:hidden text-zinc-400 hover:text-white p-2">
-          <i class="fa-solid fa-bars text-xl"></i>
-        </button>
-      </div>
-      
-    </div>
-  </nav>
+        @if(isAuthenticated()) {
+          <a routerLink="/teams" routerLinkActive="active" class="nav-link">Teams</a>
+        }
 
-  <main class="flex-grow">
-    <router-outlet></router-outlet>
-  </main>
-
-  <footer class="border-t border-zinc-800 bg-zinc-950 py-8 mt-auto">
-    <div class="container mx-auto px-4">
-      <div class="flex flex-col md:flex-row items-center justify-between gap-4">
-        
-        <div class="text-center md:text-left">
-          <span class="text-xl font-bold decoration-transparent block mb-1">
-            Hack<span class="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">Hub</span>
-          </span>
-          <p class="text-zinc-500 text-sm m-0">© 2024 - Developed by Gasparretti & Crescenzi</p>
+        <div class="auth-buttons">
+          @if (!isAuthenticated()) {
+            <a routerLink="/login" class="btn btn-ghost">Login</a>
+            <a routerLink="/register" class="btn btn-gradient">Sign Up</a>
+          } @else {
+            <div class="profile-dropdown">
+              <button class="dropdown-toggle" (click)="toggleProfileDropdown()">
+                <img [src]="userProfile()?.avatarUrl" alt="Avatar" class="profile-avatar">
+              </button>
+              
+              <ul class="dropdown-menu shadow" [class.show]="isProfileDropdownOpen()">
+                <li><a class="dropdown-item" routerLink="/profile">Il mio profilo</a></li>
+                <li><button class="dropdown-item text-danger" (click)="logout()">Logout</button></li>
+              </ul>
+            </div>
+          }
         </div>
-        
-        <div class="flex items-center justify-center gap-6 text-sm text-zinc-400">
-          <a routerLink="/hackathons" class="hover:text-purple-400 transition-colors decoration-transparent">Hackathons</a>
-          <a routerLink="/teams" class="hover:text-purple-400 transition-colors decoration-transparent">Teams</a>
-          <a href="" target="_blank" class="hover:text-white transition-colors text-lg">
-            <i class="fa-brands fa-github"></i>
-          </a>
-        </div>
-        
+      </div>
+
+      <button class="mobile-toggle" (click)="toggleMobileMenu()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="3" y1="6" x2="21" y2="6"/>
+          <line x1="3" y1="12" x2="21" y2="12"/>
+          <line x1="3" y1="18" x2="21" y2="18"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="mobile-menu" [class.open]="isMobileMenuOpen()">
+      <a routerLink="/hackathons" class="nav-link-mobile">Hackathons</a>
+      @if(isAuthenticated()) {
+        <a routerLink="/teams" class="nav-link-mobile">Teams</a>
+      }
+      <div class="mobile-auth">
+        @if (!isAuthenticated()) {
+          <a routerLink="/login" class="btn btn-outline w-full">Login</a>
+          <a routerLink="/register" class="btn btn-gradient w-full">Sign Up</a>
+        } @else {
+          <a routerLink="/profile" class="btn btn-outline w-full">Il mio profilo</a>
+          <button (click)="logout()" class="btn btn-ghost w-full" style="color: #ef4444;">Logout</button>
+        }
       </div>
     </div>
-  </footer>
-  
-</div>
+
+  </div>
+</nav>
+
+<main>
+  <router-outlet></router-outlet>
+</main>
