@@ -1,6 +1,6 @@
 #FileLock
-#Tue Jun 16 14:38:55 CEST 2026
+#Tue Jun 16 17:01:35 CEST 2026
 hostName=LAPTOP-MJCS5GR4.lan
-id=19ed0711e0192564ae7ae274d7078d4a335c89c6fb6
+id=19ed0f3bcfd0b6aee52b06114ad439c31ef1b3e874c
 method=file
-server=192.168.100.123\:34885
+server=192.168.100.123\:41548
