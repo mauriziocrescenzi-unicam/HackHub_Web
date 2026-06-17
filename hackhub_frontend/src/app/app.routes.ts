@@ -1,6 +1,8 @@
 import { Routes } from '@angular/router';
+import { RegisterComponent } from './features/auth/components/register/register.component';
 
 export const routes: Routes = [
-  // Aggiungerai qui i percorsi man mano che crei i componenti
-  // { path: 'login', component: LoginComponent },
+  { path: 'register', component: RegisterComponent },
+  // Rotta di fallback che reindirizza alla home
+  { path: '**', redirectTo: '' }
 ];

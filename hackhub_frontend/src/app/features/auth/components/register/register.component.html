@@ -1,0 +1,99 @@
+<div class="page">
+  <div class="card">
+    
+    <div class="card-header">
+      <h1 class="card-title">Create Account</h1>
+      <p class="card-description">Join HackHub and start your hackathon journey</p>
+    </div>
+
+    <div class="card-content">
+      <form class="form" [formGroup]="registerForm" (ngSubmit)="register()">
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="name">Name</label>
+            <input id="name" type="text" formControlName="name" placeholder="John" 
+                   [class.invalid-input]="registerForm.get('name')?.invalid && registerForm.get('name')?.touched" />
+          </div>
+          <div class="form-group">
+            <label for="surname">Surname</label>
+            <input id="surname" type="text" formControlName="surname" placeholder="Doe" 
+                   [class.invalid-input]="registerForm.get('surname')?.invalid && registerForm.get('surname')?.touched" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="nickname">Nickname</label>
+          <input id="nickname" type="text" formControlName="nickname" placeholder="johndoe99" 
+                 [class.invalid-input]="registerForm.get('nickname')?.invalid && registerForm.get('nickname')?.touched" />
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input id="email" type="email" formControlName="email" placeholder="john@example.com" 
+                 [class.invalid-input]="registerForm.get('email')?.invalid && registerForm.get('email')?.touched" />
+          @if (registerForm.get('email')?.invalid && registerForm.get('email')?.touched) {
+            <span class="error-text">Inserisci un'email valida.</span>
+          }
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <div class="input-icon-wrapper">
+            <input [type]="isPasswordVisible ? 'text' : 'password'" id="password" formControlName="password" placeholder="••••••••" 
+                   [class.invalid-input]="registerForm.get('password')?.invalid && registerForm.get('password')?.touched" />
+            <button type="button" class="icon-btn" (click)="togglePasswordVisibility()">
+              <svg *ngIf="!isPasswordVisible" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+              <svg *ngIf="isPasswordVisible" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/><line x1="2" y1="2" x2="22" y2="22"/></svg>
+            </button>
+          </div>
+          @if (registerForm.get('password')?.errors?.['pattern'] && registerForm.get('password')?.touched) {
+            <span class="error-text">Min 8 caratteri, 1 maiuscola, 1 minuscola, 1 numero.</span>
+          }
+        </div>
+
+        <div class="form-group">
+          <label for="confirmPassword">Confirm Password</label>
+          <div class="input-icon-wrapper">
+            <input [type]="isConfirmPasswordVisible ? 'text' : 'password'" id="confirmPassword" formControlName="confirmPassword" placeholder="••••••••" 
+                   [class.invalid-input]="registerForm.get('confirmPassword')?.invalid && registerForm.get('confirmPassword')?.touched" />
+            <button type="button" class="icon-btn" (click)="toggleConfirmPasswordVisibility()">
+              <svg *ngIf="!isConfirmPasswordVisible" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+              <svg *ngIf="isConfirmPasswordVisible" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/><line x1="2" y1="2" x2="22" y2="22"/></svg>
+            </button>
+          </div>
+          @if (registerForm.get('confirmPassword')?.errors?.['passwordMismatch'] && registerForm.get('confirmPassword')?.touched) {
+            <span class="error-text">Le password non coincidono.</span>
+          }
+        </div>
+
+        <div class="form-group">
+          <label for="role">Role</label>
+          <select id="role" formControlName="role" 
+                  [class.invalid-input]="registerForm.get('role')?.invalid && registerForm.get('role')?.touched">
+            <option value="" disabled selected hidden>Select your role</option>
+            <option value="USER">User (Hacker)</option>
+            <option value="STAFF">Staff (Organizer)</option>
+          </select>
+        </div>
+
+        @if (errorMessage()) {
+          <div class="alert-error">
+            <span>{{ errorMessage() }}</span>
+          </div>
+        }
+
+        <button type="submit" class="btn-submit" [disabled]="registerForm.invalid">
+          Create Account
+        </button>
+
+      </form>
+
+      <p class="login-link">
+        <span>Already have an account? </span>
+        <a routerLink="/auth/login">Login</a>
+      </p>
+    </div>
+
+  </div>
+</div>
