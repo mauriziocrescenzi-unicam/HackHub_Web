@@ -1,0 +1,94 @@
+<section class="profile-section">
+  <div class="container py-5">
+    <div class="row justify-content-center">
+      <div class="col-12 col-md-8 col-lg-6">
+        
+        <div class="pr-card">
+          <div class="pr-card-bar"></div>
+          <div class="pr-card-body">
+            
+            @if (authService.user(); as user) {
+              <div class="text-center mb-5">
+                <h3 class="pr-title">
+                  {{ user.name }} <span class="accent">{{ user.surname }}</span>
+                </h3>
+                <span class="pr-badge">{{ user.role }}</span>
+              </div>
+
+              @if (errorMessage()) {
+                <div class="alert alert-error mb-4">
+                  <i class="fa-solid fa-triangle-exclamation"></i>
+                  <span>{{ errorMessage() }}</span>
+                </div>
+              }
+              @if (successMessage()) {
+                <div class="alert alert-success mb-4">
+                  <i class="fa-solid fa-check"></i>
+                  <span>{{ successMessage() }}</span>
+                </div>
+              }
+
+              <div class="pr-divider"></div>
+              
+              @if (!isEditing()) {
+                <div class="pr-info-grid">
+                  <div class="pr-info-item"><span class="pr-label">Name</span><span class="pr-value">{{ user.name }}</span></div>
+                  <div class="pr-info-item"><span class="pr-label">Surname</span><span class="pr-value">{{ user.surname }}</span></div>
+                  <div class="pr-info-item pr-full-width"><span class="pr-label">Nickname</span><span class="pr-value">{{ user.nickname || 'No nickname' }}</span></div>
+                  <div class="pr-info-item pr-full-width"><span class="pr-label">Email</span><span class="pr-value">{{ user.email }}</span></div>
+                  <div class="pr-info-item pr-full-width mt-2">
+                    <span class="pr-label">Team Status</span>
+                    @if (user.idTeam) { <span class="pr-value accent-green">{{ user.teamName || 'Team assigned' }}</span> } 
+                    @else { <span class="pr-value pr-text-muted">No team assigned</span> }
+                  </div>
+                </div>
+                <div class="mt-5 text-center">
+                  <button class="pr-btn-primary w-100" (click)="toggleEdit()">Edit Information →</button>
+                </div>
+              } @else {
+                <div class="pr-form">
+                  <div class="pr-input-group"><label class="pr-label">Name</label><input type="text" class="pr-input" [(ngModel)]="editName"></div>
+                  <div class="pr-input-group"><label class="pr-label">Surname</label><input type="text" class="pr-input" [(ngModel)]="editSurname"></div>
+                  <div class="pr-input-group pr-full-width"><label class="pr-label">Nickname</label><input type="text" class="pr-input" [(ngModel)]="editNickname"></div>
+                  
+                  <div class="pr-full-width"><div class="pr-divider my-4"></div></div>
+
+                  <div class="pr-input-group pr-full-width">
+                    <span class="pr-label" style="color: #00c896;">Change Password (Optional)</span>
+                    <label class="pr-label">Old Password</label>
+                    <div class="password-wrapper position-relative w-100">
+                      <input [type]="isOldPasswordVisible ? 'text' : 'password'" class="pr-input w-100" [(ngModel)]="editOldPassword">
+                      <i [class]="isOldPasswordVisible ? 'fa-solid fa-eye-slash password-icon' : 'fa-solid fa-eye password-icon'" (click)="toggleOldPasswordVisibility()"></i>
+                    </div>
+                  </div>
+                  <div class="pr-input-group pr-full-width">
+                    <label class="pr-label">New Password</label>
+                    <div class="password-wrapper position-relative w-100">
+                      <input [type]="isPasswordVisible ? 'text' : 'password'" class="pr-input w-100" [(ngModel)]="editNewPassword">
+                      <i [class]="isPasswordVisible ? 'fa-solid fa-eye-slash password-icon' : 'fa-solid fa-eye password-icon'" (click)="togglePasswordVisibility()"></i>
+                    </div>
+                  </div>
+                  <div class="pr-input-group pr-full-width">
+                    <label class="pr-label">Confirm New Password</label>
+                    <div class="password-wrapper position-relative w-100">
+                      <input [type]="isConfirmPasswordVisible ? 'text' : 'password'" class="pr-input w-100" [(ngModel)]="editConfirmPassword">
+                      <i [class]="isConfirmPasswordVisible ? 'fa-solid fa-eye-slash password-icon' : 'fa-solid fa-eye password-icon'" (click)="toggleConfirmPasswordVisibility()"></i>
+                    </div>
+                  </div>
+                </div>
+                <div class="mt-5 d-flex gap-3">
+                  <button class="pr-btn-outline w-50" (click)="cancelEdit()" [disabled]="isSaving()">Cancel</button>
+                  <button class="pr-btn-primary w-50" (click)="saveChanges()" [disabled]="isSaving()">
+                    {{ isSaving() ? 'Saving...' : 'Save Changes' }}
+                  </button>
+                </div>
+              }
+            } @else {
+              <div class="text-center py-5"><div class="spinner-border text-success" role="status"></div></div>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
