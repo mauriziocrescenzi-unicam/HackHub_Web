@@ -1,4 +1,4 @@
-/* ── Base & Page ────────────────────────────────────────── */
+/* ── Base & Page Scaffolding ────────────────────────────── */
 :host {
   display: block;
 }
@@ -8,9 +8,10 @@
   align-items: center;
   justify-content: center;
   padding: 1.5rem;
+  min-height: 80vh;
 }
 
-/* ── Card ───────────────────────────────────────────────── */
+/* ── Card Container ─────────────────────────────────────── */
 .card {
   width: 100%;
   max-width: 32rem;
@@ -18,6 +19,7 @@
   border-radius: 0.75rem;
   background-color: #09090b;
   overflow: hidden;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
 }
 
 .card-bar {
@@ -29,7 +31,7 @@
   padding: 2rem;
 }
 
-/* ── Profile header ─────────────────────────────────────── */
+/* ── Profile Header ─────────────────────────────────────── */
 .profile-header {
   display: flex;
   flex-direction: column;
@@ -73,13 +75,14 @@
   border-radius: 9999px;
   font-size: 0.75rem;
   font-weight: 600;
-  text-transform: capitalize;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
   background-color: rgba(168, 85, 247, 0.1);
   border: 1px solid rgba(168, 85, 247, 0.3);
   color: #c084fc;
 }
 
-/* ── Alerts ─────────────────────────────────────────────── */
+/* ── Alerts Feedback ────────────────────────────────────── */
 .alert {
   display: flex;
   align-items: center;
@@ -108,14 +111,14 @@
   color: #34d399;
 }
 
-/* ── Divider ────────────────────────────────────────────── */
+/* ── UI Separator ───────────────────────────────────────── */
 .divider {
   height: 1px;
   background-color: #27272a;
   margin-bottom: 1.5rem;
 }
 
-/* ── Info grid (modalità visualizzazione) ───────────────── */
+/* ── Info Grid (View Mode) ──────────────────────────────── */
 .info-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -147,7 +150,7 @@
   font-style: italic;
 }
 
-/* ── Form grid (modalità modifica) ─────────────────────── */
+/* ── Form Layout (Edit Mode) ────────────────────────────── */
 .form-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -191,7 +194,7 @@
   box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.15);
 }
 
-/* ── Password section ───────────────────────────────────── */
+/* ── Password Security Context ──────────────────────────── */
 .password-header {
   margin-bottom: 0.25rem;
 }
@@ -230,13 +233,18 @@
   display: flex;
   align-items: center;
   transition: color 0.2s;
+  
+  &:hover {
+    color: #fafafa;
+  }
 }
 
-.toggle-pw:hover {
-  color: #fafafa;
+.toggle-pw svg {
+  width: 1rem;
+  height: 1rem;
 }
 
-/* ── Buttons ────────────────────────────────────────────── */
+/* ── Core Action Buttons ────────────────────────────────── */
 .btn-primary {
   display: flex;
   align-items: center;
@@ -252,15 +260,20 @@
   font-weight: 600;
   cursor: pointer;
   transition: opacity 0.2s;
+
+  &:hover:not(:disabled) {
+    opacity: 0.9;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
 }
 
-.btn-primary:hover:not(:disabled) {
-  opacity: 0.9;
-}
-
-.btn-primary:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
+.btn-primary svg {
+  width: 1rem;
+  height: 1rem;
 }
 
 .btn-outline {
@@ -278,25 +291,29 @@
   font-weight: 600;
   cursor: pointer;
   transition: background 0.2s;
+
+  &:hover:not(:disabled) {
+    background-color: #27272a;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
 }
 
-.btn-outline:hover:not(:disabled) {
-  background-color: #27272a;
+.btn-outline svg {
+  width: 1rem;
+  height: 1rem;
 }
 
-.btn-outline:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-/* ── Action buttons row ─────────────────────────────────── */
 .action-buttons {
   display: flex;
   gap: 0.75rem;
   margin-top: 1.5rem;
 }
 
-/* ── Responsive ─────────────────────────────────────────── */
+/* ── Responsive Adaptations ─────────────────────────────── */
 @media (max-width: 480px) {
   .card-body {
     padding: 1.25rem;

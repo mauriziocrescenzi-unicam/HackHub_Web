@@ -1,0 +1,180 @@
+<section class="page">
+  @if (authService.user(); as user) {
+    <div class="card">
+      
+      <div class="card-bar"></div>
+
+      <div class="card-body">
+
+        <div class="profile-header">
+          <div class="avatar">
+            {{ user.name ? user.name.charAt(0).toUpperCase() : '' }}{{ user.surname ? user.surname.charAt(0).toUpperCase() : '' }}
+          </div>
+          <div class="profile-info">
+            <h2 class="profile-name">
+              {{ user.name }} <span class="accent">{{ user.surname }}</span>
+            </h2>
+            <span class="role-badge">{{ user.role }}</span>
+          </div>
+        </div>
+
+        @if (errorMessage()) {
+          <div class="alert alert-error">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+              <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+            </svg>
+            <span>{{ errorMessage() }}</span>
+          </div>
+        }
+
+        @if (successMessage()) {
+          <div class="alert alert-success">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/>
+              <polyline points="22 4 12 14.01 9 11.01"/>
+            </svg>
+            <span>{{ successMessage() }}</span>
+          </div>
+        }
+
+        <div class="divider"></div>
+
+        @if (!isEditing()) {
+          <div class="view-mode">
+            <div class="info-grid">
+              <div class="info-item">
+                <p class="info-label">Nome</p>
+                <p class="info-value">{{ user.name }}</p>
+              </div>
+              <div class="info-item">
+                <p class="info-label">Cognome</p>
+                <p class="info-value">{{ user.surname }}</p>
+              </div>
+              <div class="info-item full">
+                <p class="info-label">Nickname</p>
+                <p class="info-value">{{ user.nickname || 'Nessun nickname' }}</p>
+              </div>
+              <div class="info-item full">
+                <p class="info-label">Email</p>
+                <p class="info-value">{{ user.email }}</p>
+              </div>
+              <div class="info-item full">
+                <p class="info-label">Status Team</p>
+                @if (user.idTeam) {
+                  <p class="info-value">{{ user.teamName || 'Team assegnato' }}</p>
+                } @else {
+                  <p class="info-value muted">Nessun team assegnato</p>
+                }
+              </div>
+            </div>
+
+            <button type="button" class="btn-primary" (click)="toggleEdit()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/>
+                <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>
+              </svg>
+              Modifica Informazioni
+            </button>
+          </div>
+        }
+
+        @else {
+          <div class="edit-mode">
+            <div class="form-grid">
+              <div class="form-group">
+                <label>Nome</label>
+                <input type="text" [(ngModel)]="editName" />
+              </div>
+
+              <div class="form-group">
+                <label>Cognome</label>
+                <input type="text" [(ngModel)]="editSurname" />
+              </div>
+
+              <div class="form-group full">
+                <label>Nickname</label>
+                <input type="text" [(ngModel)]="editNickname" placeholder="Il tuo nickname" />
+              </div>
+
+              <div class="form-group full">
+                <label>Email</label>
+                <input type="email" [value]="user.email" disabled style="opacity: 0.5; cursor: not-allowed;" />
+              </div>
+            </div>
+
+            <div class="divider" style="margin: 1.25rem 0;"></div>
+
+            <div class="password-header">
+              <p class="password-title">Cambio Password (Opzionale)</p>
+              <p class="password-hint">Compila questi campi solo se desideri aggiornare la tua password.</p>
+            </div>
+
+            <div class="form-grid" style="margin-top: 1rem;">
+              <div class="form-group full">
+                <label>Vecchia Password</label>
+                <div class="password-wrapper">
+                  <input [type]="isOldPasswordVisible ? 'text' : 'password'" [(ngModel)]="editOldPassword" placeholder="Inserisci la password attuale" />
+                  <button type="button" class="toggle-pw" (click)="toggleOldPasswordVisibility()">
+                    <svg class="icon-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                      <circle cx="12" cy="12" r="3"/>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+
+              <div class="form-group full">
+                <label>Nuova Password</label>
+                <div class="password-wrapper">
+                  <input [type]="isPasswordVisible ? 'text' : 'password'" [(ngModel)]="editNewPassword" placeholder="Inserisci la nuova password" />
+                  <button type="button" class="toggle-pw" (click)="togglePasswordVisibility()">
+                    <svg class="icon-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                      <circle cx="12" cy="12" r="3"/>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+
+              <div class="form-group full">
+                <label>Conferma Nuova Password</label>
+                <div class="password-wrapper">
+                  <input [type]="isConfirmPasswordVisible ? 'text' : 'password'" [(ngModel)]="editConfirmPassword" placeholder="Ripeti la nuova password" />
+                  <button type="button" class="toggle-pw" (click)="toggleConfirmPasswordVisibility()">
+                    <svg class="icon-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                      <circle cx="12" cy="12" r="3"/>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="action-buttons">
+              <button type="button" class="btn-outline" (click)="cancelEdit()" [disabled]="isSaving()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+                Annulla
+              </button>
+              <button type="button" class="btn-primary" (click)="saveChanges()" [disabled]="isSaving()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/>
+                  <polyline points="17 21 17 13 7 13 7 21"/>
+                  <polyline points="7 3 7 8 15 8"/>
+                </svg>
+                {{ isSaving() ? 'Salvataggio...' : 'Salva Modifiche' }}
+              </button>
+            </div>
+          </div>
+        }
+
+      </div>
+    </div>
+  } @else {
+    <div class="text-center py-5">
+      <div class="spinner-border text-success" role="status"></div>
+    </div>
+  }
+</section>

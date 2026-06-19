@@ -7,8 +7,8 @@ import { AuthService } from '../../../auth/service/auth.service';
   selector: 'app-profile',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './profile.html',
-  styleUrl: './profile.scss'
+  templateUrl: './profile.component.html',
+  styleUrl: './profile.component.scss'
 })
 export class ProfileComponent {
   isEditing = signal(false);
