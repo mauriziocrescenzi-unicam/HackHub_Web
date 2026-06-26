@@ -1,1 +1,39 @@
-<p>lista-hackathon works!</p>
+<div class="page">
+  <div class="page-header">
+    <h1 class="page-title">Hackathons</h1>
+    <p class="page-subtitle">Discover and join amazing hackathons from around the world</p>
+    
+    <div class="search-wrapper">
+      <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      </svg>
+      <input type="text" class="search-input" placeholder="Search hackathons..." [(ngModel)]="searchQuery" />
+    </div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab" [class.active]="currentFilter === 'all'" (click)="currentFilter = 'all'">All</button>
+    <button class="tab" [class.active]="currentFilter === 'upcoming'" (click)="currentFilter = 'upcoming'">Upcoming</button>
+    <button class="tab" [class.active]="currentFilter === 'ongoing'" (click)="currentFilter = 'ongoing'">Ongoing</button>
+    <button class="tab" [class.active]="currentFilter === 'completed'" (click)="currentFilter = 'completed'">Completed</button>
+  </div>
+
+  <div class="hackathon-grid">
+    <div class="card" *ngFor="let h of filteredHackathons()">
+      <div class="card-image">
+        <img [src]="h.imageUrl" [alt]="h.title" />
+        <span class="badge" [ngClass]="'badge-' + h.status">{{ h.status }}</span>
+      </div>
+      <div class="card-header">
+        <h2 class="card-title">{{ h.title }}</h2>
+        <p class="card-description">{{ h.description }}</p>
+      </div>
+      <div class="card-content">
+        <div class="tags">
+          <span class="tag" *ngFor="let tag of h.tags">{{ tag }}</span>
+        </div>
+        <a href="#" class="btn-primary">View Details</a>
+      </div>
+    </div>
+  </div>
+</div>
