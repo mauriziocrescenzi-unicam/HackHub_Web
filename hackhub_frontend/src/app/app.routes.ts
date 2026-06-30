@@ -4,6 +4,7 @@ import { LoginComponent } from './features/auth/components/login/login.component
 import { ProfileComponent } from './features/account/components/profile/profile.component';
 import { ListaHackathonComponent } from './features/hackathon/components/lista-hackathon/lista-hackathon.component';
 import { CreazioneHackathonComponent } from './features/hackathon/components/creazione-hackathon/creazione-hackathon.component';
+import { TeamComponent } from './features/team/components/team/team.component';
 import { authGuard } from './core/guard/auth.guard';
 import { roleGuard } from './core/guard/role.guard';
 
@@ -13,6 +14,7 @@ export const routes: Routes = [
   { path: 'profile', component: ProfileComponent, canActivate: [authGuard] },
   { path: 'hackathons', component: ListaHackathonComponent },
   { path: 'hackathons/create', component: CreazioneHackathonComponent },
+  { path: 'teams', component: TeamComponent },
   // Rotta di fallback che reindirizza alla home
   { path: '**', redirectTo: '' },
   { path: 'hackathons/create', 

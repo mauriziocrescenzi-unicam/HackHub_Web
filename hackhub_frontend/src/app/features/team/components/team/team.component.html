@@ -1,0 +1,234 @@
+<div class="page">
+  <div class="page-header">
+    <div class="header-content">
+      <div>
+        <h1 class="page-title">Esplora Teams</h1>
+        <p class="page-subtitle">Cerca un team a cui unirti o crea il tuo gruppo</p>
+      </div>
+      @if (isLoggedIn()) {
+        <button class="btn-primary create-btn" (click)="openCreateTeam()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 1rem; height: 1rem; margin-right: 0.5rem;">
+            <line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+          Crea Team
+        </button>
+      }
+    </div>
+    
+    <div class="search-wrapper">
+      <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      </svg>
+      <input type="text" class="search-input" placeholder="Cerca un team per nome o parola chiave..." [value]="searchQuery()" (input)="updateSearch($event)" />
+    </div>
+  </div>
+
+  @if (errorMessage()) {
+    <div class="alert-error">
+      {{ errorMessage() }}
+    </div>
+  }
+
+  @if (isLoading()) {
+    <div class="empty-state">
+      <div class="spinner"></div>
+      <p>Caricamento team in corso...</p>
+    </div>
+  } @else {
+    
+    <div class="team-grid">
+      @for (team of filteredTeams(); track team.id) {
+        <div class="card" (click)="openTeamDetails(team)">
+          
+          <div class="card-header">
+            <div class="card-title-row">
+              <div class="team-identity">
+                <img [src]="'https://api.dicebear.com/7.x/shapes/svg?seed=' + team.name" [alt]="team.name" class="team-avatar" />
+                <div>
+                  <h2 class="card-title">{{ team.name }}</h2>
+                  <p class="card-hackathon">ID Squadra: #{{ team.id }}</p>
+                </div>
+              </div>
+              
+              @if (getTotalMembers(team) >= maxMembers) {
+                <span class="badge badge-full">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+                  Al completo
+                </span>
+              } @else {
+                <span class="badge badge-looking">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                  In cerca
+                </span>
+              }
+            </div>
+            <p class="card-description">{{ team.description || 'Questo team non ha inserito una descrizione.' }}</p>
+          </div>
+
+          <div class="card-content">
+            <div class="meta-row">
+              <div class="members-count">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+                {{ getTotalMembers(team) }} / {{ maxMembers }} membri
+              </div>
+            </div>
+            
+            <div class="members-section">
+              <p class="section-label">Membri Principali</p>
+              <div class="members-list">
+                @if (team.leader) {
+                  <div class="member-chip leader-chip">
+                    <div class="avatar">{{ team.leader.nickname.charAt(0) | uppercase }}</div>
+                    <div class="member-info">
+                      <span class="member-name">{{ team.leader.nickname }}</span>
+                      <span class="member-role">Leader</span>
+                    </div>
+                  </div>
+                }
+                @for (member of team.members?.slice(0, 2); track member.id) {
+                  <div class="member-chip">
+                    <div class="avatar">{{ member.nickname.charAt(0) | uppercase }}</div>
+                    <div class="member-info">
+                      <span class="member-name">{{ member.nickname }}</span>
+                      <span class="member-role">Membro</span>
+                    </div>
+                  </div>
+                }
+              </div>
+            </div>
+
+            <div class="skills-section">
+              <p class="section-label">Statistiche</p>
+              <div class="skills-list">
+                <span class="skill">Vittorie: {{ team.teamStats?.hackthonsWon || 0 }}</span>
+                <span class="skill">Win Rate: {{ team.teamStats?.winRate || 0 }}%</span>
+              </div>
+            </div>
+            
+            <button class="btn-primary" (click)="$event.stopPropagation(); openTeamDetails(team)">Dettagli Team</button>
+          </div>
+        </div>
+      }
+    </div>
+
+    @if (filteredTeams().length === 0) {
+      <div class="empty-state">
+        <p>Nessun team trovato con questa ricerca.</p>
+      </div>
+    }
+  }
+</div>
+
+@if (selectedTeam()) {
+  <div class="custom-modal-overlay" (click)="closePopup()">
+    <div class="custom-modal-content" (click)="$event.stopPropagation()">
+      
+      <div class="modal-header">
+        <div class="team-identity">
+          <img [src]="'https://api.dicebear.com/7.x/shapes/svg?seed=' + selectedTeam()!.name" class="team-avatar" />
+          <div>
+            <h2 class="card-title">{{ selectedTeam()!.name }}</h2>
+            <p class="card-hackathon">ID Squadra: #{{ selectedTeam()!.id }}</p>
+          </div>
+        </div>
+        <button class="btn-close" (click)="closePopup()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <p class="modal-description">{{ selectedTeam()!.description || 'Questo team non ha inserito una descrizione.' }}</p>
+        
+        <h4 class="section-label mt-4">Statistiche Globali</h4>
+        <div class="stats-grid">
+          <div class="stat-box">
+            <span class="stat-label">Giocati</span>
+            <span class="stat-value">{{ selectedTeam()!.teamStats?.hackathonsPlayed || 0 }}</span>
+          </div>
+          <div class="stat-box">
+            <span class="stat-label">Vittorie</span>
+            <span class="stat-value highlight">{{ selectedTeam()!.teamStats?.hackthonsWon || 0 }}</span>
+          </div>
+          <div class="stat-box">
+            <span class="stat-label">Podi</span>
+            <span class="stat-value">{{ selectedTeam()!.teamStats?.podiums || 0 }}</span>
+          </div>
+          <div class="stat-box">
+            <span class="stat-label">Win Rate</span>
+            <span class="stat-value">{{ selectedTeam()!.teamStats?.winRate || 0 }}%</span>
+          </div>
+        </div>
+
+        <h4 class="section-label mt-4">Tutti i Membri ({{ getTotalMembers(selectedTeam()!) }})</h4>
+        <div class="full-members-list">
+          @if (selectedTeam()!.leader) {
+            <div class="member-row leader-row">
+              <div class="avatar">{{ selectedTeam()!.leader.nickname.charAt(0) | uppercase }}</div>
+              <div class="member-details">
+                <span class="member-name">{{ selectedTeam()!.leader.nickname }} <span class="badge badge-looking ms-2" style="font-size: 0.6rem;">Leader</span></span>
+                <span class="member-email">{{ selectedTeam()!.leader.email }}</span>
+              </div>
+            </div>
+          }
+          @for (member of selectedTeam()!.members; track member.id) {
+            <div class="member-row">
+              <div class="avatar">{{ member.nickname.charAt(0) | uppercase }}</div>
+              <div class="member-details">
+                <span class="member-name">{{ member.nickname }}</span>
+                <span class="member-email">{{ member.email }}</span>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-secondary" (click)="closePopup()">Chiudi</button>
+      </div>
+
+    </div>
+  </div>
+}
+
+@if (showCreateForm()) {
+  <div class="custom-modal-overlay" (click)="closeCreateForm()">
+    <div class="custom-modal-content" (click)="$event.stopPropagation()">
+      
+      <div class="modal-header">
+        <h2 class="card-title" style="font-size: 1.5rem;">Crea un nuovo Team</h2>
+        <button class="btn-close" (click)="closeCreateForm()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        @if (createErrorMessage()) {
+          <div class="alert-error mb-3">{{ createErrorMessage() }}</div>
+        }
+        @if (createSuccessMessage()) {
+          <div class="alert-success mb-3">{{ createSuccessMessage() }}</div>
+        }
+
+        <div class="form-group">
+          <label class="section-label">Nome Team</label>
+          <input type="text" class="search-input" placeholder="Es. Phoenix Squad" [(ngModel)]="newTeamName" maxlength="50">
+          <div class="char-count">{{ newTeamName.length }}/50</div>
+        </div>
+
+        <div class="form-group">
+          <label class="section-label">Descrizione</label>
+          <textarea class="search-input textarea" placeholder="Descrivi il tuo team, i vostri obiettivi..." [(ngModel)]="newTeamDescription" maxlength="300" rows="4"></textarea>
+          <div class="char-count">{{ newTeamDescription.length }}/300</div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-secondary" (click)="closeCreateForm()">Annulla</button>
+        <button class="btn-primary" [disabled]="isCreating() || !newTeamName.trim()" (click)="submitCreateTeam()">
+          {{ isCreating() ? 'Creazione...' : 'Crea Team' }}
+        </button>
+      </div>
+
+    </div>
+  </div>
+}
