@@ -27,7 +27,8 @@
           } @else {
             <div class="profile-dropdown">
               <button class="dropdown-toggle" (click)="toggleProfileDropdown()">
-                <img [src]="userProfile()?.avatarUrl" alt="Avatar" class="profile-avatar">
+                <img [src]="'https://ui-avatars.com/api/?name=' + userProfile()?.nickname + '&background=0f172a&color=fff'" 
+                     alt="Avatar" class="profile-avatar">
               </button>
               
               <ul class="dropdown-menu shadow" [class.show]="isProfileDropdownOpen()">
@@ -63,7 +64,6 @@
         }
       </div>
     </div>
-
   </div>
 </nav>
 

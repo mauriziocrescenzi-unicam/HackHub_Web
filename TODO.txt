@@ -10,8 +10,8 @@ Feature da Implementare
 - profilo utente --> fatto
 - inviti
 - team
-    - mio_team
-    - teams
+    - mio_team --> prossimo da fare maurizio
+    - teams --> fatto
 
 Altro funzionalità
 - team.guards

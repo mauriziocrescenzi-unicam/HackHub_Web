@@ -1,40 +1,43 @@
-import { Component, signal } from '@angular/core';
-import { RouterModule, RouterOutlet } from '@angular/router';
+import { Component, computed, inject, signal, OnInit } from '@angular/core';
+import { RouterModule, RouterOutlet, Router } from '@angular/router';
+import { AuthService } from './features/auth/service/auth.service';
 
 @Component({
   selector: 'app-root',
+  standalone: true,
   imports: [RouterOutlet, RouterModule],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
-export class App {
-  title = signal('hackhub_frontend');
+export class App implements OnInit {
+  private authService = inject(AuthService);
+  private router = inject(Router);
 
-  // MOCK: Segnali temporanei per l'interfaccia (sostituiranno l'AuthService)
-  isAuthenticated = signal<boolean>(false); // Cambialo a 'true' per vedere il menu utente
-  userProfile = signal<{name: string, role: string, email: string, avatarUrl: string} | null>({
-    name: 'Andrea',
-    role: 'USER',
-    email: 'andrea@example.com',
-    avatarUrl: 'https://ui-avatars.com/api/?name=Andrea&background=0f172a&color=fff'
-  });
+  // Segnale calcolato per autenticazione (true se user è presente)
+  isAuthenticated = computed(() => !!this.authService.user());
+  
+  // Riferimento diretto al segnale utente del servizio
+  userProfile = this.authService.user; 
 
-  // Gestione stato dei menu (sostituisce il JS di Bootstrap)
+  // Gestione stato menu
   isMobileMenuOpen = signal<boolean>(false);
   isProfileDropdownOpen = signal<boolean>(false);
 
-  toggleMobileMenu() {
-    this.isMobileMenuOpen.update(v => !v);
+  ngOnInit() {
+    // Carica i dati dell'utente se il token esiste ma non abbiamo ancora i dati
+    if (this.authService.getToken() && !this.authService.user()) {
+      this.authService.loadUser$().subscribe({
+        error: () => this.logout() // Se il token non è valido, pulisce tutto
+      });
+    }
   }
 
-  toggleProfileDropdown() {
-    this.isProfileDropdownOpen.update(v => !v);
-  }
+  toggleMobileMenu() { this.isMobileMenuOpen.update(v => !v); }
+  toggleProfileDropdown() { this.isProfileDropdownOpen.update(v => !v); }
 
   logout() {
-    console.log('Logout action triggered');
-    this.isAuthenticated.set(false);
+    this.authService.logout();
     this.isProfileDropdownOpen.set(false);
-    // this.router.navigate(['/login']);
+    this.router.navigate(['/login']);
   }
 }

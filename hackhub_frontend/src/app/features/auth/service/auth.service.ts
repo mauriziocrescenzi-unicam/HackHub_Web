@@ -21,6 +21,19 @@ export class AuthService {
 
   constructor(private http: HttpClient) {
     const token = localStorage.getItem(this.tokenKey);
+    
+    if (token) {
+      this.loadUser$().subscribe({
+        next: (user) => console.log('✅ Sessione ripristinata con successo! Utente:', user),
+        error: (err) => {
+          // STAMPIAMO L'ERRORE REALE!
+          console.error('❌ ERRORE REALE DURANTE IL CARICAMENTO:', err);
+          
+          // Commentiamo temporaneamente il logout per non cancellare il token e poter debuggare
+          // this.logout();
+        }
+      });
+    }
   }
   
  updateProfile(updateData: Partial<Account>): Observable<Account> {
