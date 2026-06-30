@@ -24,7 +24,7 @@ export class AuthService {
   }
   
  updateProfile(updateData: Partial<Account>): Observable<Account> {
-    return this.http.put<Account>(`${environment.apiUrl}/profile`, updateData).pipe(
+    return this.http.put<Account>(`${environment.apiUrl}/accounts/profile`, updateData).pipe(
       tap((updatedUser: Account) => {
         this.userSignal.set(updatedUser);
       })

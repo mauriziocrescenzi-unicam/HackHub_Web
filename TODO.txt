@@ -2,12 +2,12 @@ crea componente: ng g c /path --type=component
 
 Feature da Implementare
 - dashboard
-    - creazioneHackathon --> fatto
+    - creazioneHackathon --> fatto *da rivedere html e app.routes
     - singoloHackathon
     - modificaHackathon 
     - listaHackathon --> fatto
     - home
-- profilo utente
+- profilo utente --> fatto
 - inviti
 - team
     - mio_team
