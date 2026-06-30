@@ -3,14 +3,12 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, of, switchMap, tap } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { LoginRequest, RegisterRequest, LoginResponse } from '../model/auth.model';
-import { Account } from '../../account/models/account.model'; 
-
+import { Account } from '../../account/models/account.model';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
-
   private baseUrl = environment.apiUrl + '/auth';
   private tokenKey = 'authToken';
   private userLoaded = false;
@@ -21,26 +19,28 @@ export class AuthService {
 
   constructor(private http: HttpClient) {
     const token = localStorage.getItem(this.tokenKey);
-    
+
     if (token) {
       this.loadUser$().subscribe({
         next: (user) => console.log('✅ Sessione ripristinata con successo! Utente:', user),
         error: (err) => {
-          // STAMPIAMO L'ERRORE REALE!
-          console.error('❌ ERRORE REALE DURANTE IL CARICAMENTO:', err);
-          
-          // Commentiamo temporaneamente il logout per non cancellare il token e poter debuggare
-          // this.logout();
-        }
+          console.error('❌ Errore durante il ripristino:', err);
+          // Esegui il logout solo se l'errore indica che il token è davvero invalido (es. 401 Unauthorized)
+          if (err.status === 401 || err.status === 403) {
+            this.logout();
+          } else {
+            console.warn('Errore di sistema o rete, evitiamo il logout forzato.');
+          }
+        },
       });
     }
   }
-  
- updateProfile(updateData: Partial<Account>): Observable<Account> {
+
+  updateProfile(updateData: Partial<Account>): Observable<Account> {
     return this.http.put<Account>(`${environment.apiUrl}/accounts/profile`, updateData).pipe(
       tap((updatedUser: Account) => {
         this.userSignal.set(updatedUser);
-      })
+      }),
     );
   }
 
@@ -48,15 +48,15 @@ export class AuthService {
 
   login(req: LoginRequest): Observable<Account> {
     return this.http.post<LoginResponse>(`${this.baseUrl}/login`, req).pipe(
-      tap(res => res.token && this.setToken(res.token)),
-      switchMap(() => this.loadUser$())                  
+      tap((res) => res.token && this.setToken(res.token)),
+      switchMap(() => this.loadUser$()),
     );
   }
 
   signup(req: RegisterRequest): Observable<Account> {
     return this.http.post<LoginResponse>(`${this.baseUrl}/signup`, req).pipe(
-      tap(res => res.token && this.setToken(res.token)),
-      switchMap(() => this.loadUser$())
+      tap((res) => res.token && this.setToken(res.token)),
+      switchMap(() => this.loadUser$()),
     );
   }
 
@@ -91,10 +91,10 @@ export class AuthService {
     }
 
     return this.http.get<Account>(`${this.baseUrl}/me`).pipe(
-      tap(user => {
+      tap((user) => {
         this.userSignal.set(user);
         this.userLoaded = true;
-      })
+      }),
     );
   }
 
