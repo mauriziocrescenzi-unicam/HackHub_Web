@@ -14,4 +14,6 @@ Feature da Implementare
     - teams --> fatto
 
 Altro funzionalità
-- team.guards
+- team.guards --> fatto, da capire meglio a cosa serve
+
+* togliere commenti su hacker-team.ts, InvitationService negli import e nel costruttore appena implementato il componente

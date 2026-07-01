@@ -10,16 +10,16 @@ export class TeamGuard implements CanActivate {
   constructor(private auth: AuthService, private router: Router) {}
 
   /**
-   * Route guard that handles redirection based on:
-   * - User authentication
-   * - Whether the user belongs to a team
-   * - Whether the user is a normal user or something else (admin, manager, etc.)
+   * Guardia di routing che gestisce i reindirizzamenti in base a:
+   * - Autenticazione dell'utente
+   * - Appartenenza dell'utente a un team
+   * - Ruolo dell'utente (utente normale vs admin, staff, ecc.)
    *
-   * Logic flow:
-   * 1. If the user is not authenticated → redirect to /login
-   * 2. If the user has a teamId → redirect directly to /teams/:teamId
-   * 3. If the user does NOT have a team but is also NOT a "user" → redirect to /dashboard
-   * 4. Otherwise → allow access to the route
+   * Flusso logico:
+   * 1. Se l'utente non è autenticato → reindirizza a /login
+   * 2. Se l'utente ha già un teamId → reindirizza direttamente a /teams/my
+   * 3. Se l'utente NON ha un team ma NON è un "user" normale → reindirizza a /dashboard
+   * 4. Altrimenti → consenti l'accesso alla rotta
    */
   canActivate(): boolean | UrlTree {
     
