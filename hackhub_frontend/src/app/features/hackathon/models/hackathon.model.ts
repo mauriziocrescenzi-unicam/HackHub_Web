@@ -1,8 +1,9 @@
 import { Team } from '../../team/model/team.model';
 import { Staff } from './staff.model';
 import { Rule } from './rule.model';
+import { StaffResponse } from './staffResponse.model';
 
-export interface SingoloHackathon {
+export interface Hackathon {
     id: number;
     name: string;
     location: string;

@@ -23,13 +23,13 @@
 .page-title { font-size: 2.25rem; font-weight: 700; margin-bottom: 0.5rem; }
 .page-subtitle { font-size: 1.1rem; color: #71717a; margin-bottom: 1.5rem; }
 
-/* Search e Tabs - Stesse che avevi, pulite */
+/* Search e Tabs */
 .search-wrapper { position: relative; max-width: 28rem; }
 .search-icon { position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); width: 1.25rem; height: 1.25rem; color: #71717a; }
 .search-input { width: 100%; padding: 0.55rem 0.75rem 0.55rem 2.5rem; border-radius: 0.5rem; border: 1px solid #27272a; background-color: #18181b; color: #fafafa; outline: none; }
 
 .tabs { display: flex; gap: 0.25rem; margin-bottom: 2rem; background-color: #18181b; border: 1px solid #27272a; border-radius: 0.6rem; padding: 0.25rem; width: fit-content; }
-.tab { padding: 0.45rem 1rem; border-radius: 0.4rem; border: none; background: transparent; color: #71717a; cursor: pointer; }
+.tab { padding: 0.45rem 1rem; border-radius: 0.4rem; border: none; background: transparent; color: #71717a; cursor: pointer; transition: 0.2s; }
 .tab.active { background-color: #27272a; color: #fafafa; }
 
 /* Grid e Card */
@@ -59,19 +59,42 @@
 .badge-ongoing { background-color: #22c55e; }
 .badge-completed { background-color: #3f3f46; }
 
-/* Dettagli */
+/* Dettagli Card */
 .card-header { padding: 1rem 1rem 0.5rem; }
 .card-title { font-size: 1.15rem; font-weight: 700; margin-bottom: 0.35rem; }
 .card-description { font-size: 0.85rem; color: #71717a; line-height: 1.5; }
 .card-content { padding: 0.75rem 1rem 1rem; display: flex; flex-direction: column; gap: 0.85rem; flex: 1;}
 
+/* Tags */
+.tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.5rem; }
+.tag {
+  font-size: 0.7rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 0.3rem;
+  background: #27272a;
+  color: #a1a1aa;
+}
+
+/* Bottone Primary */
 .btn-primary {
   display: block; text-align: center;
   padding: 0.6rem 1rem; border-radius: 0.5rem;
-  border: black;
+  border: none;
   background: linear-gradient(to right, #a855f7, #ec4899);
-  color: black; font-weight: 600; text-decoration: none; margin-top: auto;
+  color: white; 
+  font-weight: 600; text-decoration: none; margin-top: auto;
+  cursor: pointer;
+  transition: opacity 0.2s;
 }
+.btn-primary:hover { opacity: 0.9; }
+
+/* Bottoni Outlined (per paginazione) */
+.btn-outline {
+  padding: 0.4rem 0.8rem; border-radius: 0.4rem;
+  border: 1px solid #3f3f46; background: transparent;
+  color: #fafafa; cursor: pointer;
+}
+.btn-outline:disabled { opacity: 0.3; cursor: not-allowed; }
 
 @media (max-width: 640px) {
   .hackathon-grid { grid-template-columns: 1fr; }

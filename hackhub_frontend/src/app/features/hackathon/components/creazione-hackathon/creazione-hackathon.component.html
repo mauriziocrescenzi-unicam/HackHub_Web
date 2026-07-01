@@ -46,7 +46,7 @@
         <div class="form-grid">
           <div class="form-group full">
             <label>Nome <span class="required">*</span></label>
-            <input type="text" placeholder="es. AI Innovation Challenge 2026" [(ngModel)]="hackathonData.nome" />
+            <input type="text" placeholder="es. AI Innovation Challenge 2026" [(ngModel)]="hackathonData.name" />
           </div>
         </div>
       </div>
@@ -66,7 +66,7 @@
         <div class="form-grid">
           <div class="form-group">
             <label>Data Inizio <span class="required">*</span></label>
-            <input type="datetime-local" [(ngModel)]="hackathonData.startDate" [min]="minDate" />
+            <input type="datetime-local" [(ngModel)]="hackathonData.startDate" [min]="minDate" (change)="onStartDateChange()" />
           </div>
           <div class="form-group">
             <label>Data Fine <span class="required">*</span></label>
@@ -74,7 +74,7 @@
           </div>
           <div class="form-group full">
             <label>Luogo <span class="required">*</span></label>
-            <input type="text" placeholder="es. Camerino, Italia oppure Remote" [(ngModel)]="hackathonData.localita" />
+            <input type="text" placeholder="es. Camerino, Italia oppure Remote" [(ngModel)]="hackathonData.location" />
           </div>
         </div>
       </div>
@@ -93,15 +93,15 @@
         <div class="form-grid">
           <div class="form-group">
             <label>Max numero di Team <span class="required">*</span></label>
-            <input type="number" min="1" placeholder="1" [(ngModel)]="hackathonData.maxParticipants" />
+            <input type="number" min="1" placeholder="1" [(ngModel)]="hackathonData.maxNumberTeams" />
           </div>
           <div class="form-group">
             <label>Max membri per Team <span class="required">*</span></label>
-            <input type="number" min="1" placeholder="1" [(ngModel)]="hackathonData.maxParticipantsPerTeam" />
+            <input type="number" min="1" placeholder="1" [(ngModel)]="hackathonData.maxTeamMembers" />
           </div>
           <div class="form-group full">
             <label>Prize Pool (€) <span class="required">*</span></label>
-            <input type="number" min="0" placeholder="0" [(ngModel)]="hackathonData.premio" />
+            <input type="number" min="0" placeholder="0" [(ngModel)]="hackathonData.prize" />
           </div>
         </div>
       </div>
@@ -124,7 +124,7 @@
           
           @if (showGiudici() && giudiciFiltrati.length > 0) {
             <div class="dropdown-menu">
-              @for (item of giudiciFiltrati; track item.id) {
+              @for (item of giudiciFiltrati; track item.idAccount) {
                 <div class="dropdown-item" (mousedown)="selezionaGiudice(item)">
                   {{ item.email }}
                 </div>
@@ -140,7 +140,7 @@
           
           @if (showMentori() && mentoriFiltrati.length > 0) {
             <div class="dropdown-menu">
-              @for (item of mentoriFiltrati; track item.id) {
+              @for (item of mentoriFiltrati; track item.idAccount) {
                 <div class="dropdown-item" (mousedown)="selezionaMentore(item)">
                   {{ item.email }}
                 </div>
@@ -148,7 +148,7 @@
             </div>
           }
           <div class="tags-list">
-            @for (mentore of mentoriSelezionati; track mentore.id) {
+            @for (mentore of mentoriSelezionati; track mentore.idAccount) {
               <span class="tag">
                 {{ mentore.email }}
                 <button type="button" class="tag-remove" (click)="rimuoviMentore(mentore)">

@@ -1,198 +1,228 @@
 import { Component, OnInit, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { RouterModule, Router } from '@angular/router';
 import { AuthService } from '../../../auth/service/auth.service';
-import { creaHackathonService } from '../../service/creazione-hackathon.service';
+import { FormsModule } from '@angular/forms';
+import { HackathonService } from '../../service/hackathon.service';
+import { StaffService } from '../../service/staff.service';
+import { CreazioneHackathon } from '../../models/creazione-hackathon.model';
 import { Rule } from '../../models/rule.model';
 import { Staff } from '../../models/staff.model';
-
+import { Router, RouterLink } from '@angular/router';
+import { min } from 'rxjs';
+import { Hackathon } from '../../models/hackathon.model';
+import { Account } from '../../../account/models/account.model';
 @Component({
-  selector: 'app-creazione-hackathon',
-  standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
+  selector: 'app-create-hackathon',
+  imports: [FormsModule, RouterLink],
   templateUrl: './creazione-hackathon.component.html',
-  styleUrls: ['./creazione-hackathon.component.scss'],
+  styleUrl: './creazione-hackathon.component.scss',
 })
 export class CreazioneHackathonComponent implements OnInit {
-  // Messaggi di errore/successo
+  // messaggi di errore/successo
   errorMessage = signal<string | null>(null);
   successMessage = signal<string | null>(null);
-  
-  // Data minima per i campi data (oggi)
+  //data minima per i campi data (oggi)
   minDate!: string;
-  
-  // Liste per giudici, mentori e regole
-  giudiceSelezionato: Staff | null = null;
-  mentoriSelezionati: Staff[] = [];
-  items: Staff[] = [];
-  regole: Rule[] = [];
+  //liste complete
+  accounts: Account[] = [];
+  regole: Rule[] = []
+  //liste dei valori scelti
+  giudiceSelezionato: Account | null = null;
+  mentoriSelezionati: Account[] = [];
   regoleSelezionate: Rule[] = [];
 
+
   // Variabili per la ricerca e i risultati filtrati
+  // per la ricerca dei giudici, mentori e regole
   searchGiudice: string = '';
   searchMentore: string = '';
   searchRegola: string = '';
-  
-  // Risultati filtrati
-  giudiciFiltrati: Staff[] = [];
-  mentoriFiltrati: Staff[] = [];
+  // risultati filtrati
+  giudiciFiltrati: Account[] = [];
+  mentoriFiltrati: Account[] = [];
   regoleFiltrate: Rule[] = [];
-  
   showGiudici = signal(false);
   showMentori = signal(false);
   showRegole = signal(false);
 
-  // Dati del form
-  hackathonData = {
-    nome: '',
-    localita: '',
+
+  // dati del form
+  hackathonData: CreazioneHackathon = {
+    name: '',
+    location: '',
+    prize: 0,
+    maxTeamMembers: 1,
+    maxNumberTeams: 1,
     startDate: '',
     endDate: '',
-    premio: 0,
-    maxParticipants: 0,
-    maxParticipantsPerTeam: 0,
+    judgeEmail: '',
+    mentorEmails: [],
+    idRules: []
   };
 
-  constructor(
-    public authService: AuthService, 
-    private creaHackathonService: creaHackathonService, 
-    private router: Router
-  ) {
-    // const user = this.authService.user();
-  }
 
+  constructor(public authService: AuthService, private HackathonService: HackathonService, private router: Router, private StaffService: StaffService) {
+    const user = this.authService.user();
+  }
   ngOnInit(): void {
-    // Imposta la data minima (oggi) per i campi data
     const now = new Date();
     const pad = (n: number) => String(n).padStart(2, '0');
-    const localDateTime = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}T${pad(now.getHours())}:${pad(now.getMinutes())}`;
 
-    this.hackathonData.startDate = localDateTime;
-    this.minDate = localDateTime;
-    this.hackathonData.endDate = localDateTime;
-    
-    // Carica regole e staff per i dropdown
-    this.creaHackathonService.getRules().subscribe(data => {
-      this.regole = data;
-    });
-    
-    this.creaHackathonService.getStaff().subscribe(data => {
-      this.items = data;
-    });
-  }
-
-  saveChanges() {
-    // Validazione dei campi
-    if (!this.hackathonData.nome || !this.hackathonData.localita || !this.hackathonData.startDate || !this.hackathonData.endDate) {
-      this.errorMessage.set("Compila tutti i campi obbligatori");
-      return;
-    }
-    
-    if (this.hackathonData.premio < 0 || this.hackathonData.maxParticipants < 1 || this.hackathonData.maxParticipantsPerTeam < 1) {
-      this.errorMessage.set("Valori numerici non validi");
-      return;
-    }
-    
-    if (this.giudiceSelezionato === null) {
-      this.errorMessage.set("Seleziona un giudice");
-      return;
-    }
-    
-    if (this.mentoriSelezionati.length === 0) {
-      this.errorMessage.set("Seleziona almeno un mentore");
-      return;
-    }
-
-    // Trasforma i dati in formato adatto al backend
-    const data = {
-      name: this.hackathonData.nome,
-      location: this.hackathonData.localita,
-      prize: this.hackathonData.premio,
-      maxTeamMembers: this.hackathonData.maxParticipantsPerTeam,
-      maxNumberTeams: this.hackathonData.maxParticipants,
-      startDate: this.hackathonData.startDate + ':00',
-      endDate: this.hackathonData.endDate + ':00',
-      judgeEmail: this.giudiceSelezionato?.email,
-      mentorEmails: this.mentoriSelezionati.map(m => m.email),
-      idRules: this.regoleSelezionate.map(r => r.id)
+    // Helper function per formattare la data nel formato richiesto da datetime-local
+    const formatForInput = (date: Date) => {
+      return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
     };
 
-    // Invia i dati al backend per creare l'hackathon
-    this.creaHackathonService.createHackathon(data).subscribe({
+    // La data minima selezionabile nel calendario è "Oggi"
+    this.minDate = formatForInput(now);
+
+    //  Imposta la data di INIZIO a +1 settimana da oggi
+    const start = new Date();
+    start.setDate(now.getDate() + 7);
+    this.hackathonData.startDate = formatForInput(start);
+
+    // Imposta la data di FINE a +1 settimana dalla data di inizio (+14 giorni totali da oggi)
+    const end = new Date(start);
+    end.setDate(start.getDate() + 7);
+    this.hackathonData.endDate = formatForInput(end);
+
+    // Caricamento dati esistenti (Rules e Staff)
+    this.HackathonService.getRules().subscribe(data => {
+      this.regole = data;
+    });
+    this.StaffService.getStaff().subscribe(data => {
+      this.accounts = data;
+    });
+  }
+  onStartDateChange() {
+  const start = new Date(this.hackathonData.startDate);
+  const end = new Date(this.hackathonData.endDate);
+
+  // Se la data di fine è diventata precedente o uguale alla nuova data di inizio
+  if (end <= start) {
+    const newEnd = new Date(start);
+    newEnd.setDate(start.getDate() + 7); // Sposta la fine a +7 giorni dalla nuova data inizio
+    
+    const pad = (n: number) => String(n).padStart(2, '0');
+    this.hackathonData.endDate = `${newEnd.getFullYear()}-${pad(newEnd.getMonth() + 1)}-${pad(newEnd.getDate())}T${pad(newEnd.getHours())}:${pad(newEnd.getMinutes())}`;
+  }
+}
+  saveChanges() {
+    // Validazione dei campi
+    if (!this.hackathonData.name || !this.hackathonData.location || !this.hackathonData.startDate || !this.hackathonData.endDate) {
+      this.errorMessage.set("Please fill in all required fields");
+      return;
+    }
+    if (this.hackathonData.prize < 0 || this.hackathonData.maxNumberTeams < 1 || this.hackathonData.maxTeamMembers < 1) {
+      this.errorMessage.set("Invalid numeric values");
+      return;
+    }
+    if (this.giudiceSelezionato === null) {
+      this.errorMessage.set("Please select a judge");
+      return;
+    }
+    if (this.mentoriSelezionati.length === 0) {
+      this.errorMessage.set("Please select at least one mentor");
+      return;
+    }
+
+    //aggiungo i dati dei giudici, mentori e regole selezionati all'oggetto hackathonData da inviare al backend
+    this.hackathonData.judgeEmail = this.giudiceSelezionato.email;
+    this.hackathonData.mentorEmails = this.mentoriSelezionati.map(m => m.email);
+    this.hackathonData.idRules = this.regoleSelezionate.map(r => r.id);
+    // aggiunge i secondi alle date
+    const data = {
+      ...this.hackathonData,
+      startDate: this.hackathonData.startDate + ':00',
+      endDate: this.hackathonData.endDate + ':00',
+    };
+
+    // invia i dati al backend per creare l'hackathon e gestisce la risposta mostrando messaggi di successo 
+    // o errore e reindirizzando alla pagina dell'hackathon creato in caso di successo
+    this.HackathonService.createHackathon(data).subscribe({
       next: (res) => {
-        this.successMessage.set("Hackathon creato con successo!");
+        this.successMessage.set("Hackathon created successfully!");
         this.errorMessage.set(null);
-        console.log('Hackathon creato:', res);
-        
         setTimeout(() => {
-          this.router.navigate(['/hackathons/' + res.id]);
+          this.router.navigate(['/hackathon/' + res.id]);
         }, 1500);
       },
       error: (err) => {
-        this.errorMessage.set("Errore nella creazione dell'hackathon");
+        this.errorMessage.set("Error creating the hackathon");
         this.successMessage.set(null);
-        console.error(err);
       }
     });
   }
-
   cancelEdit() {
     // Resetta i dati del form
     this.hackathonData = {
-      nome: '',
-      localita: '',
+      name: '',
+      location: '',
+      prize: 0,
+      maxTeamMembers: 1,
+      maxNumberTeams: 1,
       startDate: this.minDate,
       endDate: this.minDate,
-      premio: 0,
-      maxParticipants: 0,
-      maxParticipantsPerTeam: 0,
+      judgeEmail: '',
+      mentorEmails: [],
+      idRules: []
     };
     this.giudiceSelezionato = null;
-    this.searchGiudice = '';
     this.mentoriSelezionati = [];
-    this.searchMentore = '';
     this.regoleSelezionate = [];
+    this.showGiudici.set(false);
+    this.showMentori.set(false);
+    this.showRegole.set(false);
+    this.searchGiudice = '';
+    this.searchMentore = '';
     this.searchRegola = '';
     this.errorMessage.set(null);
     this.successMessage.set(null);
   }
 
-  // --- Filtri e Selezioni ---
 
+  // ---- GIUDICI ----
   filtraGiudici() {
     const val = this.searchGiudice.toLowerCase();
-    this.giudiciFiltrati = this.items.filter(i =>
+    this.giudiciFiltrati = this.accounts.filter(i =>
       val === '' || i.email.toLowerCase().includes(val)
     );
     this.showGiudici.set(true);
   }
 
-  selezionaGiudice(item: Staff) {
+  selezionaGiudice(item: Account) {
     this.searchGiudice = item.email;
     this.giudiceSelezionato = item;
     this.showGiudici.set(false);
   }
 
-  filtraMentori() {
-    const val = this.searchMentore.toLowerCase();
-    this.mentoriFiltrati = this.items.filter(i =>
-      (val === '' || i.email.toLowerCase().includes(val)) &&
-      !this.mentoriSelezionati.find(m => m.id === i.id)
-    );
-    this.showMentori.set(true);
-  }
+  // ---- MENTORI ----
+  
+filtraMentori() {
+  const val = this.searchMentore.toLowerCase();
+  this.mentoriFiltrati = this.accounts.filter(i =>
+    (val === '' || i.email.toLowerCase().includes(val) || i.name.toLowerCase().includes(val)) &&
+    !this.mentoriSelezionati.find(m => m.email === i.email)
+  );
+  this.showMentori.set(true);
+}
 
-  selezionaMentore(item: Staff) {
-    this.mentoriSelezionati.push(item);
-    this.searchMentore = '';
-    this.showMentori.set(false);
-  }
+selezionaMentore(item: Account) {
+  this.mentoriSelezionati.push(item);
+  this.searchMentore = '';
+  this.showMentori.set(false);
+}
 
-  rimuoviMentore(item: Staff) {
-    this.mentoriSelezionati = this.mentoriSelezionati.filter(m => m.id !== item.id);
-  }
+rimuoviMentore(item: Account) {
+  this.mentoriSelezionati = this.mentoriSelezionati.filter(m => m.email !== item.email);
+  const val = this.searchMentore.toLowerCase();
+  this.mentoriFiltrati = this.accounts.filter(i =>
+    (val === '' || i.email.toLowerCase().includes(val) || i.name.toLowerCase().includes(val)) &&
+    !this.mentoriSelezionati.find(m => m.email === i.email)
+  );
+}
 
+
+  // ---- REGOLE ----
   filtraRegole() {
     const val = this.searchRegola.toLowerCase();
     this.regoleFiltrate = this.regole.filter(r =>
@@ -205,19 +235,25 @@ export class CreazioneHackathonComponent implements OnInit {
   selezionaRegola(item: Rule) {
     this.regoleSelezionate.push(item);
     this.searchRegola = '';
+    this.regoleFiltrate = this.regoleFiltrate.filter(r => r.id !== item.id);
     this.showRegole.set(false);
   }
 
   rimuoviRegola(item: Rule) {
     this.regoleSelezionate = this.regoleSelezionate.filter(r => r.id !== item.id);
-  }
 
-  chiudiDropdown(tipo: string) {
-    // setTimeout permette al (mousedown) di completarsi prima che la lista sparisca
-    setTimeout(() => {
-      if (tipo === 'giudice') this.showGiudici.set(false);
-      if (tipo === 'mentore') this.showMentori.set(false);
-      if (tipo === 'regola') this.showRegole.set(false);
-    }, 200);
+    const val = this.searchRegola.toLowerCase();
+    this.regoleFiltrate = this.regole.filter(r =>
+      (val === '' || r.description.toLowerCase().includes(val)) &&
+      !this.regoleSelezionate.find(s => s.id === r.id)
+    );
   }
+chiudiDropdown(tipo: string) {
+  setTimeout(() => {
+    if (tipo === 'giudice') this.showGiudici.set(false);
+    if (tipo === 'mentore') this.showMentori.set(false);
+    if (tipo === 'regola') this.showRegole.set(false);
+  }, 150);
+}
+
 }

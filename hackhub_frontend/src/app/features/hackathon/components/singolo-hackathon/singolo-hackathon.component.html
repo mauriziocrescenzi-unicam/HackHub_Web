@@ -16,14 +16,8 @@
         Torna agli Hackathon 
       </a> 
 
-      <span class="status-badge badge-upcoming">{{ hackathon()?.status || 'UPCOMING' }}</span> 
-      <h1 class="hero-title">{{ hackathon()?.title || 'Titolo non disponibile' }}</h1> 
-
-      <div class="hero-tags"> 
-        <span class="tag">AI</span> 
-        <span class="tag">Innovazione</span> 
-        <span class="tag">Teamwork</span> 
-      </div> 
+      <span class="status-badge">{{ hackathon()?.status || 'REGISTRATION' }}</span> 
+      <h1 class="hero-title">{{ hackathon()?.name || 'Titolo non disponibile' }}</h1> 
     </div> 
   </div> 
 
@@ -31,13 +25,29 @@
     <div class="layout"> 
       <div class="main"> 
         <div class="section"> 
-          <h2 class="section-title">Informazioni</h2> 
-          <p class="section-text">{{ hackathon()?.description || 'Nessuna descrizione disponibile.' }}</p> 
+          <h2 class="section-title">Regole dell'evento</h2> 
+          @if (hackathon()?.rules && hackathon()!.rules.length > 0) {
+            <ul>
+              @for (rule of hackathon()?.rules; track rule.id) {
+                <li><strong>{{ rule.name }}</strong>: {{ rule.description }}</li>
+              }
+            </ul>
+          } @else {
+            <p>Nessuna regola definita per questo evento.</p>
+          }
         </div> 
-        </div> 
+      </div> 
 
       <aside class="sidebar"> 
-        </aside> 
+        <div class="card">
+          <h3>Dettagli</h3>
+          <p><strong>Luogo:</strong> {{ hackathon()?.location }}</p>
+          <p><strong>Premio:</strong> €{{ hackathon()?.prize }}</p>
+          <p><strong>Team massimi:</strong> {{ hackathon()?.maxNumberTeams }}</p>
+          <p><strong>Data Inizio:</strong> {{ hackathon()?.startDate | date:'short' }}</p>
+          <p><strong>Data Fine:</strong> {{ hackathon()?.endDate | date:'short' }}</p>
+        </div>
+      </aside> 
     </div> 
   </div> 
 }

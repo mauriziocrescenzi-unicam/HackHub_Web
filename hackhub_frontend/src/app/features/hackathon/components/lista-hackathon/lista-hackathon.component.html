@@ -7,33 +7,57 @@
       <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
       </svg>
-      <input type="text" class="search-input" placeholder="Search hackathons..." [(ngModel)]="searchQuery" />
+      <input type="text" class="search-input" placeholder="Search hackathons..." [(ngModel)]="searchTerm" />
     </div>
   </div>
 
   <div class="tabs">
-    <button class="tab" [class.active]="currentFilter === 'all'" (click)="currentFilter = 'all'">All</button>
-    <button class="tab" [class.active]="currentFilter === 'upcoming'" (click)="currentFilter = 'upcoming'">Upcoming</button>
-    <button class="tab" [class.active]="currentFilter === 'ongoing'" (click)="currentFilter = 'ongoing'">Ongoing</button>
-    <button class="tab" [class.active]="currentFilter === 'completed'" (click)="currentFilter = 'completed'">Completed</button>
+    <button class="tab" [class.active]="filtroTempo() === 'tutti'" (click)="setFiltroTempo('tutti')">All</button>
+    <button class="tab" [class.active]="filtroTempo() === 'attivi'" (click)="setFiltroTempo('attivi')">Upcoming/Active</button>
+    <button class="tab" [class.active]="filtroTempo() === 'passati'" (click)="setFiltroTempo('passati')">Completed</button>
   </div>
 
   <div class="hackathon-grid">
-    <div class="card" *ngFor="let h of filteredHackathons()">
-      <div class="card-image">
-        <img [src]="h.imageUrl" [alt]="h.name" />
-        <span class="badge" [ngClass]="'badge-' + h.status">{{ h.status }}</span>
-      </div>
-      <div class="card-header">
-        <h2 class="card-title">{{ h.name }}</h2>
-        <p class="card-description">{{ h.description }}</p>
-      </div>
-      <div class="card-content">
-        <div class="tags">
-          <span class="tag" *ngFor="let tag of h.tags">{{ tag }}</span>
+    @for (h of paginato(); track h.id) {
+      <div class="card">
+        <div class="card-image">
+          <img src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=1400&q=80" [alt]="h.name" />
+          <span class="badge badge-upcoming">{{ h.status }}</span>
         </div>
-        <a [routerLink]="['/hackathons', h.id]" class="btn-primary">View Details</a>
+        <div class="card-header">
+          <h2 class="card-title">{{ h.name }}</h2>
+          <p class="card-description">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 14px; margin-right: 4px;">
+              <rect x="3" y="4" width="18" height="18" rx="2"/>
+              <line x1="16" y1="2" x2="16" y2="6"/>
+              <line x1="8" y1="2" x2="8" y2="6"/>
+              <line x1="3" y1="10" x2="21" y2="10"/>
+            </svg>
+            Inizia il: {{ formatDate(h.startDate) }}
+          </p>
+        </div>
+        <div class="card-content">
+          <a [routerLink]="['/hackathons', h.id]" class="btn-primary">View Details</a>
+        </div>
       </div>
-    </div>
+    } @empty {
+      <div style="grid-column: 1 / -1; text-align: center; color: #71717a; padding: 2rem;">
+        <p>Nessun hackathon trovato con i filtri selezionati.</p>
+      </div>
+    }
   </div>
+
+  @if (totalPages() > 1) {
+    <div class="pagination-controls" style="display: flex; justify-content: center; gap: 1rem; margin-top: 2rem;">
+      <button class="btn-outline" [disabled]="currentPage() === 1" (click)="changePage(currentPage() - 1)">Precedente</button>
+      <span style="display: flex; align-items: center;">Pagina {{ currentPage() }} di {{ totalPages() }}</span>
+      <button class="btn-outline" [disabled]="currentPage() === totalPages()" (click)="changePage(currentPage() + 1)">Successivo</button>
+    </div>
+  }
+
+  @if (showScrollTop()) {
+    <button class="scroll-top-btn" (click)="scrollToTop()" style="position: fixed; bottom: 20px; right: 20px; z-index: 1000; background: #a855f7; border: none; border-radius: 50%; width: 40px; height: 40px; color: white; cursor: pointer;">
+      ↑
+    </button>
+  }
 </div>

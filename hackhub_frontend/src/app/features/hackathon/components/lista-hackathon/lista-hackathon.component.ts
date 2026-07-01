@@ -1,53 +1,158 @@
-import { Component, OnInit, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, computed, HostListener, OnInit, signal } from '@angular/core';
+import { Hackathon } from '../../models/hackathon.model';
+import { RouterLink } from '@angular/router';
+import { AuthService } from '../../../auth/service/auth.service';
+import { HackathonService } from '../../service/hackathon.service';
 import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
-import { SingoloHackathon } from '../../models/singolo-hackathon.model';
-import { ListaHackathonService } from '../../service/lista-hackathon.service';
+import { NgClass } from '@angular/common';
 
 @Component({
-  selector: 'app-lista-hackathon',
-  standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
+  selector: 'app-hackathons',
+  imports: [RouterLink, FormsModule, NgClass],
   templateUrl: './lista-hackathon.component.html',
-  styleUrls: ['./lista-hackathon.component.scss']
+  styleUrl: './lista-hackathon.component.scss',
 })
 export class ListaHackathonComponent implements OnInit {
-  currentFilter: string = 'all';
-  searchQuery: string = '';
+  hackathon = signal<Hackathon[]>([]);
+  errorMessage = signal<string | null>(null);
   
-  // Usiamo un segnale per tenere traccia della lista
-  hackathons = signal<SingoloHackathon[]>([]);
+  // Segnali dei filtri
+  searchTerm = signal<string>('');
+  filtroTempo = signal('tutti');
+  filtroPartecipazione = signal('tutti'); 
+  ordinamento = signal('data-asc');
+  
+  showFiltri = false;
+  currentPage = signal<number>(1);
+  itemsPerPage = 9;
 
-  constructor(private listaHackathonService: ListaHackathonService) {}
+  showScrollTop = signal<boolean>(false);
 
-  // Sostituisci il tuo OnInit così:
-  ngOnInit() {
-    console.log("DEBUG: OnInit avviato");
-    
-    // Ignoriamo il service per un secondo, iniettiamo i dati direttamente
-    const datiMock = [
-      { id: 1, title: 'Test 1', status: 'upcoming', description: 'Test', tags: ['T'], imageUrl: 'https://via.placeholder.com/150', startDate: '2026-07-01', registrationDeadline: '2026-07-01' },
-      { id: 2, title: 'Test 2', status: 'ongoing', description: 'Test', tags: ['T'], imageUrl: 'https://via.placeholder.com/150', startDate: '2026-07-01', registrationDeadline: '2026-07-01' }
-    ];
-    
-    this.hackathons.set(datiMock as any);
-    console.log("DEBUG: Dati impostati nel segnale, valore attuale:", this.hackathons());
-
-    /*
-    this.listaHackathonService.getAllHackathons().subscribe({
-      next: (data) => {
-        this.hackathons.set(data);
-      },
-      error: (err) => console.error("Errore nel caricamento della lista:", err)
-    });*/
+  constructor(private hackathonService: HackathonService, protected authService: AuthService) { }
+  
+  ngOnInit(): void {
+    this.caricaHackathon();
   }
 
-  filteredHackathons(): SingoloHackathon[] {
-    return this.hackathons().filter(h => {
-      const matchesFilter = this.currentFilter === 'all' || h.status === this.currentFilter;
-      const matchesSearch = h.name.toLowerCase().includes(this.searchQuery.toLowerCase());
-      return matchesFilter && matchesSearch;
+  caricaHackathon(): void {
+    this.hackathonService.getAll().subscribe({
+      next: (data) => {
+        const ordinati = data
+          .sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime());
+        this.hackathon.set(ordinati);
+      },
+      error: (err) => {
+        this.errorMessage.set(err.message);
+      }
     });
   }
+
+  filtro = computed(() => {
+  if (!this.hackathon()) {
+    return [];
+  }
+  const dataAttuale = new Date();
+  
+  // Otteniamo l'utente corrente dal segnale dell'AuthService
+  const currentUser = this.authService.user(); 
+
+  return this.hackathon()!.filter(hackathon => {
+    
+    // 1. Filtro Nome
+    const termine = this.searchTerm();
+    const nomeMatch = !termine || hackathon.name.toLowerCase().includes(termine.toLowerCase());
+    
+    // 2. Filtro Tempo
+    let tempoMatch = true;
+    if (this.filtroTempo() === 'attivi') {
+      tempoMatch = new Date(hackathon.startDate) > dataAttuale;
+    } else if (this.filtroTempo() === 'passati') {
+      tempoMatch = new Date(hackathon.endDate) < dataAttuale;
+    }
+
+    // 3. Filtro Partecipazione
+    let partecipazioneMatch = true;
+    if (this.filtroPartecipazione() === 'iscritti') {
+        if (!currentUser) {
+            partecipazioneMatch = false; 
+        } else if (this.authService.isStaff()) {
+            partecipazioneMatch = hackathon.staff.organizerId === currentUser.idAccount 
+                                      || hackathon.staff.judgeId === currentUser.idAccount 
+                                        || hackathon.staff.mentors.some(m => m.idAccount === currentUser.idAccount) 
+        } else {
+            partecipazioneMatch = !!hackathon.teams?.some((team: any) => {
+          if (currentUser.idTeam && team.idTeam === currentUser.idTeam) return true;
+          
+          if (team.leader && team.leader.idTeamMember === currentUser.idAccount) return true;
+          
+          if (team.members && team.members.some((m: any) => m.idTeamMember === currentUser.idAccount)) return true;
+          
+          return false;
+        });
+        }
+    }
+
+    return nomeMatch && tempoMatch && partecipazioneMatch;
+
+  }).sort((a, b) => {
+      switch (this.ordinamento()) {
+        case 'data-asc':
+          return new Date(a.startDate).getTime() - new Date(b.startDate).getTime();
+        case 'data-desc':
+          return new Date(b.startDate).getTime() - new Date(a.startDate).getTime();
+        case 'az':
+          return a.name.localeCompare(b.name);
+        case 'za':
+          return b.name.localeCompare(a.name);
+        default:
+          return 0;
+      }
+    });
+  });
+
+  setFiltroPartecipazione(filtro: string) {
+    this.filtroPartecipazione.set(filtro);
+    this.currentPage.set(1);
+  }
+
+  setFiltroTempo(filtro: string) {
+    this.filtroTempo.set(filtro);
+    this.currentPage.set(1);
+  }
+
+  setOrdinamento(ord: string) {
+    this.ordinamento.set(ord);
+    this.currentPage.set(1);
+  }
+
+  formatDate(dateStr: string): string {
+    return new Date(dateStr).toLocaleDateString('it-IT', {
+        day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit'
+    });
+  }
+
+
+paginato = computed(() => {
+    const start = (this.currentPage() - 1) * this.itemsPerPage;
+    const end = start + this.itemsPerPage;
+    return this.filtro().slice(start, end);
+});
+
+totalPages = computed(() => {
+    return Math.ceil(this.filtro().length / this.itemsPerPage);
+});
+
+changePage(page: number) {
+    this.currentPage.set(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+@HostListener('window:scroll')
+onScroll() {
+    this.showScrollTop.set(window.scrollY > 200);
+}
+
+scrollToTop() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
 }

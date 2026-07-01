@@ -2,20 +2,27 @@ crea componente: ng g c /path --type=component
 
 Feature da Implementare
 - dashboard
+    -home --> gaspa
+
+-hackathon
     - creazioneHackathon --> fatto *da rivedere html e app.routes
     - singoloHackathon. -->  fatto
     - modificaHackathon --> gaspa *da rivedere per controllo di organizzatore
     - listaHackathon --> fatto
-    - home. --> gaspa
-- profilo utente --> fatto
-- inviti. --> meuris
+-account 
+    -profilo utente --> fatto
+    -invito --> meuris
 - team --> fatto
     - mio_team --> fatto 
     - teams --> fatto
-
 -users
--reposrts
+    -user --> gaspa
+
+-reports
+    -report --> meuris
+
 -submissions
+    -submission --> gaspa
 
 Altro funzionalità
 - team.guards --> fatto, da capire meglio a cosa serve
@@ -28,3 +35,5 @@ Altro funzionalità
   ngOnInit di lista-hackathon.component.ts --> (Quello originale salvato nelle note di gaspa).
 
   * sistemare visione nav teams per organizzatore. In teoria se sei organizzatore non dovresti avere l'opzione teams
+
+  * vedere come gestire modificaHackathon che non c'è nell'altro progetto.
