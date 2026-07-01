@@ -3,8 +3,8 @@ crea componente: ng g c /path --type=component
 Feature da Implementare
 - dashboard
     - creazioneHackathon --> fatto *da rivedere html e app.routes
-    - singoloHackathon
-    - modificaHackathon 
+    - singoloHackathon. -->  fatto
+    - modificaHackathon --> gaspa
     - listaHackathon --> fatto
     - home
 - profilo utente --> fatto

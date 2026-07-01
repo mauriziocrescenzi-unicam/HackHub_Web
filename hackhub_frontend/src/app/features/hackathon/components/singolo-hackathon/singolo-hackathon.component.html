@@ -1,0 +1,137 @@
+@if (loading()) {
+  <div style="text-align: center; padding: 4rem 0; color: #71717a;">
+    <p>Caricamento dettagli hackathon...</p>
+  </div>
+} @else if (hackathon()) {
+  <div class="hero">
+    <img
+      src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=1400&q=80"
+      alt="Hero Background"
+      class="hero-img"
+    />
+    <div class="hero-overlay"></div>
+
+    <div class="hero-content">
+      <a routerLink="/hackathons" class="back-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="19" y1="12" x2="5" y2="12"/>
+          <polyline points="12 19 5 12 12 5"/>
+        </svg>
+        Torna agli Hackathon
+      </a>
+
+      <span class="status-badge badge-upcoming">{{ hackathon()?.status || 'UPCOMING' }}</span>
+
+      <h1 class="hero-title">{{ hackathon()?.title }}</h1>
+
+      <div class="hero-tags">
+        <span class="tag">AI</span>
+        <span class="tag">Innovazione</span>
+        <span class="tag">Teamwork</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="layout">
+
+      <div class="main">
+
+        <div class="section">
+          <h2 class="section-title">Informazioni</h2>
+          <p class="section-text">
+            {{ hackathon()?.description }}
+          </p>
+        </div>
+
+        <div class="section">
+          <h2 class="section-title">Cosa ti aspetta</h2>
+          <ul class="expect-list">
+            <li>
+              <span class="bullet"></span>
+              Collabora con sviluppatori e designer di talento
+            </li>
+            <li>
+              <span class="bullet"></span>
+              Costruisci soluzioni innovative in team
+            </li>
+            <li>
+              <span class="bullet"></span>
+              Metti alla prova le tue competenze pratiche
+            </li>
+            <li>
+              <span class="bullet"></span>
+              Vinci fantastici premi e arricchisci il tuo curriculum
+            </li>
+          </ul>
+        </div>
+
+      </div>
+
+      <aside class="sidebar">
+
+        <div class="info-card">
+          <div class="info-row">
+            <div class="info-icon info-icon--purple">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="4" width="18" height="18" rx="2"/>
+                <line x1="16" y1="2" x2="16" y2="6"/>
+                <line x1="8" y1="2" x2="8" y2="6"/>
+                <line x1="3" y1="10" x2="21" y2="10"/>
+              </svg>
+            </div>
+            <div>
+              <p class="info-label">Inizio</p>
+              <p class="info-value">{{ hackathon()?.startDate | date:'dd MMM yyyy' }}</p>
+            </div>
+          </div>
+
+          <div class="info-row">
+            <div class="info-icon info-icon--purple">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 6 12 12 16 14"/>
+              </svg>
+            </div>
+            <div>
+              <p class="info-label">Scadenza iscrizioni</p>
+              <p class="info-value">{{ hackathon()?.registrationDeadline | date:'dd MMM yyyy' }}</p>
+            </div>
+          </div>
+
+          <div class="progress-wrap mt-3">
+            <div class="progress-bar">
+              <div class="progress-fill" style="width: 45%"></div>
+            </div>
+            <p class="progress-label">Iscrizioni aperte</p>
+          </div>
+
+          <button class="btn-register mt-2" [disabled]="!isUser()">
+            {{ isUser() ? 'Iscriviti Ora' : 'Iscrizione riservata agli Utenti' }}
+          </button>
+        </div>
+
+        @if (isUser() && !hasTeam()) {
+          <div class="team-card">
+            <h3 class="team-card-title">Hai bisogno di un Team?</h3>
+            <p class="team-card-sub">Crea la tua squadra per poter partecipare.</p>
+            <a routerLink="/teams" class="btn-outline">Gestisci Team</a>
+          </div>
+        }
+
+        @if (!isUser()) {
+          <div class="team-card" style="background: linear-gradient(to bottom right, rgba(234, 179, 8, 0.1), rgba(239, 68, 68, 0.1));">
+            <h3 class="team-card-title">Gestione Hackathon</h3>
+            <p class="team-card-sub">Modifica i dettagli di questo evento.</p>
+            <button class="btn-outline">Modifica Evento</button>
+          </div>
+        }
+
+      </aside>
+    </div>
+  </div>
+} @else {
+  <div style="text-align: center; padding: 4rem 0; color: #ef4444;">
+    <p>Ops! Impossibile caricare i dati dell'hackathon.</p>
+  </div>
+}

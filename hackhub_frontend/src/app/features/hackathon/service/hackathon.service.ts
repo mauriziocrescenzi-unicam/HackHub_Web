@@ -1,19 +1,25 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { Hackathon } from '../models/hackathon.model'; // <-- Importiamo il modello!
 
 @Injectable({
   providedIn: 'root'
 })
 export class HackathonService {
-  // Sostituisci questo URL con l'endpoint esatto del tuo controller Spring Boot
-  private apiUrl = 'http://localhost:8080/api/hackathons'; 
+  // URL dell'endpoint Spring Boot
+  private apiUrl = 'http://localhost:8080/api/hackathons';
 
   constructor(private http: HttpClient) { }
 
-  // Metodo che riceve il payload dal componente e lo spedisce al server
+  // Metodo per creare un hackathon
   createHackathon(payload: any): Observable<any> {
-    // Se il tuo endpoint è /api/hackathons/create, aggiungi '/create' qui sotto
     return this.http.post(`${this.apiUrl}`, payload);
+  }
+
+  // NUOVO METODO: Recupera un singolo hackathon tramite il suo ID
+  getHackathonById(id: number): Observable<Hackathon> {
+    // Fa una chiamata GET a http://localhost:8080/api/hackathons/1 (ad esempio)
+    return this.http.get<Hackathon>(`${this.apiUrl}/${id}`);
   }
 }
