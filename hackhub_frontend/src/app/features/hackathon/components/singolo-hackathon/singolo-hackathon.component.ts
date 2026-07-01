@@ -33,21 +33,21 @@ export class SingoloHackathonComponent implements OnInit {
     }
   }
 
-  private loadHackathon(id: number) {
-    this.loading.set(true);
-    
-    this.hackathonService.getHackathonById(id).subscribe({
-      next: (data) => {
-        this.hackathon.set(data);
-        this.loading.set(false);
-      },
-      error: (err) => {
-        console.error("Errore durante il caricamento dell'hackathon:", err);
-        this.hackathon.set(null);
-        this.loading.set(false);
-      }
-    });
-  }
+private loadHackathon(id: number) {
+  this.loading.set(true);
+  this.hackathon.set(null); // <--- Resetta i dati precedenti
+  
+  this.hackathonService.getHackathonById(id).subscribe({
+    next: (data) => {
+      this.hackathon.set(data);
+      this.loading.set(false);
+    },
+    error: (err) => {
+      console.error("Errore durante il caricamento dell'hackathon:", err);
+      this.loading.set(false);
+    }
+  });
+}
 
   isUser(): boolean {
     return this.authService.isUser();

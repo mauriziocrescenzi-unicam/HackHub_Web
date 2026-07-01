@@ -1,0 +1,229 @@
+<div class="page">
+  @if (loading()) {
+    <div style="text-align: center; padding: 4rem 0; color: #71717a;">
+      <p>Caricamento dati in corso...</p>
+    </div>
+  } @else {
+    <div class="page-header">
+      <a [routerLink]="['/hackathons', hackathonId]" class="back-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="19" y1="12" x2="5" y2="12"/>
+          <polyline points="12 19 5 12 12 5"/>
+        </svg>
+        Torna all'Hackathon
+      </a>
+      <div class="header-row">
+        <div>
+          <h1 class="page-title">Modifica Hackathon</h1>
+          <p class="page-subtitle">Aggiorna i dettagli dell'evento</p>
+        </div>
+        <span class="status-badge badge-upcoming">{{ formData.status }}</span>
+      </div>
+    </div>
+
+    <form class="form-card" (ngSubmit)="onSubmit()">
+      <div class="card-bar"></div>
+      <div class="card-body">
+
+        @if (errorMessage()) {
+          <div class="alert alert-error">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+              <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+            </svg>
+            <span>{{ errorMessage() }}</span>
+          </div>
+        }
+
+        @if (successMessage()) {
+          <div class="alert alert-success">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/>
+              <polyline points="22 4 12 14.01 9 11.01"/>
+            </svg>
+            <span>{{ successMessage() }}</span>
+          </div>
+        }
+
+        <div class="section">
+          <h2 class="section-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/>
+            </svg>
+            Informazioni Principali
+          </h2>
+          <div class="form-grid">
+            <div class="form-group full">
+              <label for="title">Titolo <span class="required">*</span></label>
+              <input type="text" id="title" name="title" [(ngModel)]="formData.title" required />
+            </div>
+
+            <div class="form-group full">
+              <label for="description">Descrizione <span class="required">*</span></label>
+              <textarea id="description" name="description" rows="4" [(ngModel)]="formData.description" required></textarea>
+            </div>
+
+            <div class="form-group full">
+              <label for="imageUrl">URL Immagine di Copertina</label>
+              <input type="url" id="imageUrl" name="imageUrl" [(ngModel)]="formData.imageUrl" />
+              <p class="field-hint">Lascia vuoto per usare un'immagine predefinita</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="section">
+          <h2 class="section-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="4" width="18" height="18" rx="2"/>
+              <line x1="16" y1="2" x2="16" y2="6"/>
+              <line x1="8" y1="2" x2="8" y2="6"/>
+              <line x1="3" y1="10" x2="21" y2="10"/>
+            </svg>
+            Date e Luogo
+          </h2>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="startDate">Data Inizio <span class="required">*</span></label>
+              <input type="date" id="startDate" name="startDate" [(ngModel)]="formData.startDate" required />
+            </div>
+
+            <div class="form-group">
+              <label for="endDate">Data Fine <span class="required">*</span></label>
+              <input type="date" id="endDate" name="endDate" [(ngModel)]="formData.endDate" required />
+            </div>
+
+            <div class="form-group full">
+              <label for="location">Luogo <span class="required">*</span></label>
+              <input type="text" id="location" name="location" [(ngModel)]="formData.location" required />
+            </div>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="section">
+          <h2 class="section-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
+              <circle cx="9" cy="7" r="4"/>
+              <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/>
+            </svg>
+            Partecipanti e Premio
+          </h2>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="maxParticipants">Max Partecipanti <span class="required">*</span></label>
+              <input type="number" id="maxParticipants" name="maxParticipants" min="1" [(ngModel)]="formData.maxParticipants" required />
+            </div>
+
+            <div class="form-group">
+              <label for="prize">Prize Pool <span class="required">*</span></label>
+              <input type="text" id="prize" name="prize" [(ngModel)]="formData.prize" required />
+            </div>
+
+            <div class="form-group">
+              <label for="status">Status <span class="required">*</span></label>
+              <div class="select-wrapper">
+                <select id="status" name="status" [(ngModel)]="formData.status" required>
+                  <option value="upcoming">Upcoming</option>
+                  <option value="ongoing">Ongoing</option>
+                  <option value="completed">Completed</option>
+                </select>
+                <svg class="select-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="6 9 12 15 18 9"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="section">
+          <h2 class="section-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/>
+              <line x1="7" y1="7" x2="7.01" y2="7"/>
+            </svg>
+            Tag
+          </h2>
+          <div class="form-group full">
+            <label for="tagInput">Aggiungi tag</label>
+            <div class="tag-input-row">
+              <input type="text" id="tagInput" name="tagInput" placeholder="es. AI, Web3..." 
+                     [ngModel]="newTag()" (ngModelChange)="newTag.set($event)" 
+                     (keydown)="handleTagKey($event)" />
+              <button type="button" class="btn-add-tag" (click)="addTag()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                </svg>
+                Aggiungi
+              </button>
+            </div>
+            <p class="field-hint">Premi Invio o clicca Aggiungi per inserire un tag</p>
+            
+            <div class="tags-list">
+              @for (t of tags(); track t) {
+                <span class="tag">
+                  {{ t }}
+                  <button type="button" class="tag-remove" (click)="removeTag(t)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                  </button>
+                </span>
+              }
+            </div>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="section">
+          <h2 class="section-title section-title--danger">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+              <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+            </svg>
+            Zona Pericolosa
+          </h2>
+          <div class="danger-box">
+            <div class="danger-info">
+              <p class="danger-title">Elimina Hackathon</p>
+              <p class="danger-desc">Questa azione è irreversibile. Tutti i dati associati verranno eliminati.</p>
+            </div>
+            <button type="button" class="btn-danger" (click)="confirmDelete()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="3 6 5 6 21 6"/>
+                <path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/>
+                <path d="M10 11v6M14 11v6"/>
+                <path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"/>
+              </svg>
+              Elimina
+            </button>
+          </div>
+        </div>
+
+        <div class="action-buttons">
+          <a [routerLink]="['/hackathons', hackathonId]" class="btn-outline">Annulla</a>
+          <button type="submit" class="btn-primary" [disabled]="saving()">
+            @if (saving()) {
+              <span class="spinner"></span> Salvataggio...
+            } @else {
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/>
+                <polyline points="17 21 17 13 7 13 7 21"/>
+                <polyline points="7 3 7 8 15 8"/>
+              </svg>
+              Salva Modifiche
+            }
+          </button>
+        </div>
+
+      </div>
+    </form>
+  }
+</div>

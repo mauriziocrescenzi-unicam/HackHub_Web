@@ -5,6 +5,7 @@ import { ProfileComponent } from './features/account/components/profile/profile.
 import { ListaHackathonComponent } from './features/hackathon/components/lista-hackathon/lista-hackathon.component';
 import { CreazioneHackathonComponent } from './features/hackathon/components/creazione-hackathon/creazione-hackathon.component';
 import { SingoloHackathonComponent } from './features/hackathon/components/singolo-hackathon/singolo-hackathon.component';
+import { ModificaHackathonComponent } from './features/hackathon/components/modifica-hackathon/modifica-hackathon.component';
 import { TeamComponent } from './features/team/components/team/team.component';
 import { HackerTeamComponent } from './features/team/components/hacker-team/hacker-team.component';
 import { authGuard } from './core/guard/auth.guard';
@@ -19,7 +20,7 @@ export const routes: Routes = [
   // 1. Lista generale degli hackathon
   { path: 'hackathons', component: ListaHackathonComponent },
   
-  // 2. Creazione Hackathon (Rotta fissa). Va SEMPRE prima di quella dinamica
+  // 2. Creazione Hackathon 
   { 
     path: 'hackathons/create', 
     component: CreazioneHackathonComponent, 
@@ -27,13 +28,21 @@ export const routes: Routes = [
     data: { expectedRole: 'ORGANIZER' } 
   },
   
-  // 3. Dettaglio Singolo Hackathon (Rotta dinamica)
+  // 3. Dettaglio Singolo Hackathon
   { path: 'hackathons/:id', component: SingoloHackathonComponent },
+
+  // 4. Modifica Hackathon 
+  { 
+    path: 'hackathons/:id/edit', 
+    component: ModificaHackathonComponent, 
+    canActivate: [authGuard, roleGuard], 
+    data: { expectedRole: 'ORGANIZER' } 
+  },
 
   // Gestione Team
   { path: 'teams', component: TeamComponent, canActivate: [TeamGuard] },
   { path: 'teams/my', component: HackerTeamComponent, canActivate: [authGuard] },
   
-  // Rotta di fallback (Wildcard) - TASSATIVAMENTE per ultima, intercetta tutto il resto
+  // Rotta di fallback (Wildcard)
   { path: '**', redirectTo: '' }
 ];
