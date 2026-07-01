@@ -1,10 +1,12 @@
+/* Reset base */
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
-body {
+:host {
+  display: block;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   background-color: #09090b;
   color: #fafafa;
@@ -148,6 +150,69 @@ body {
   font-size: 1rem;
 }
 
+/* ── Upcoming Events & Search ────────────────────────────── */
+.upcoming-events {
+  padding: 4rem 0;
+  background-color: #09090b;
+}
+
+.error-message {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.search-container {
+  max-width: 400px;
+  margin: 0 auto 2rem auto;
+}
+
+.search-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid #3f3f46;
+  background-color: #18181b;
+  color: #fafafa;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+
+  &::placeholder {
+    color: #71717a;
+  }
+
+  &:focus {
+    border-color: #a855f7;
+    box-shadow: 0 0 0 2px rgba(168, 85, 247, 0.2);
+  }
+}
+
+.event-date {
+  margin-top: 0.5rem;
+}
+
+.event-link {
+  display: inline-block;
+  margin-top: 1rem;
+  color: #a855f7;
+  text-decoration: none;
+  font-weight: 600;
+  
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.empty-state {
+  grid-column: 1 / -1;
+  text-align: center;
+  color: #a1a1aa;
+}
+
 /* ── Features ────────────────────────────────────────────── */
 .features {
   padding: 5rem 0;
@@ -255,6 +320,3 @@ body {
   margin-bottom: 2rem;
   line-height: 1.7;
 }
-
-/* ── Utility ─────────────────────────────────────────────── */
-.hidden { display: none !important; }

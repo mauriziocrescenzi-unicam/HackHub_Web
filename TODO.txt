@@ -37,3 +37,7 @@ Altro funzionalità
   * sistemare visione nav teams per organizzatore. In teoria se sei organizzatore non dovresti avere l'opzione teams
 
   * vedere come gestire modificaHackathon che non c'è nell'altro progetto.
+
+
+
+CAPIRE GLI ERRORI CHE PARTONO QUANDO SI FA ng serve -o 

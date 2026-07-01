@@ -85,7 +85,7 @@
                     </div>
                   </div>
                 }
-                @for (member of team.members?.slice(0, 2); track member.id) {
+                @for (member of team.members.slice(0, 2); track member.id) {
                   <div class="member-chip">
                     <div class="avatar">{{ member.nickname.charAt(0) | uppercase }}</div>
                     <div class="member-info">
@@ -100,8 +100,8 @@
             <div class="skills-section">
               <p class="section-label">Statistiche</p>
               <div class="skills-list">
-                <span class="skill">Vittorie: {{ team.teamStats?.hackthonsWon || 0 }}</span>
-                <span class="skill">Win Rate: {{ team.teamStats?.winRate || 0 }}%</span>
+                <span class="skill">Vittorie: {{ team.teamStats.hackthonsWon || 0 }}</span>
+                <span class="skill">Win Rate: {{ team.teamStats.winRate || 0 }}%</span>
               </div>
             </div>
             
@@ -143,19 +143,19 @@
         <div class="stats-grid">
           <div class="stat-box">
             <span class="stat-label">Giocati</span>
-            <span class="stat-value">{{ selectedTeam()!.teamStats?.hackathonsPlayed || 0 }}</span>
+            <span class="stat-value">{{ selectedTeam()!.teamStats.hackathonsPlayed || 0 }}</span>
           </div>
           <div class="stat-box">
             <span class="stat-label">Vittorie</span>
-            <span class="stat-value highlight">{{ selectedTeam()!.teamStats?.hackthonsWon || 0 }}</span>
+            <span class="stat-value highlight">{{ selectedTeam()!.teamStats.hackthonsWon || 0 }}</span>
           </div>
           <div class="stat-box">
             <span class="stat-label">Podi</span>
-            <span class="stat-value">{{ selectedTeam()!.teamStats?.podiums || 0 }}</span>
+            <span class="stat-value">{{ selectedTeam()!.teamStats.podiums || 0 }}</span>
           </div>
           <div class="stat-box">
             <span class="stat-label">Win Rate</span>
-            <span class="stat-value">{{ selectedTeam()!.teamStats?.winRate || 0 }}%</span>
+            <span class="stat-value">{{ selectedTeam()!.teamStats.winRate || 0 }}%</span>
           </div>
         </div>
 

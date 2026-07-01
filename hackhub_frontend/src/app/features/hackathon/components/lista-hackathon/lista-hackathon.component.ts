@@ -4,11 +4,11 @@ import { RouterLink } from '@angular/router';
 import { AuthService } from '../../../auth/service/auth.service';
 import { HackathonService } from '../../service/hackathon.service';
 import { FormsModule } from '@angular/forms';
-import { NgClass } from '@angular/common';
+//import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'app-hackathons',
-  imports: [RouterLink, FormsModule, NgClass],
+  imports: [RouterLink, FormsModule, /*NgClass*/],
   templateUrl: './lista-hackathon.component.html',
   styleUrl: './lista-hackathon.component.scss',
 })

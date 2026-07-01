@@ -68,4 +68,8 @@ export class HackathonService {
     return this.http.get<Team>(`${this.BASE_URL}/winner/hackathons/${idHackathon}`);
   }
 
+  deleteHackathon(id: number): Observable<any> {
+    return this.http.delete<any>(`${this.BASE_URL}/${id}`);
+  }
+
 }

@@ -51,7 +51,7 @@ export class ModificaHackathonComponent implements OnInit {
   }
 
   private loadHackathon() {
-    this.hackathonService.getHackathonById(this.hackathonId).subscribe({
+    this.hackathonService.getById(this.hackathonId).subscribe({
       next: (data: Hackathon) => {
         this.formData = { ...data };
         this.loading.set(false);
@@ -96,7 +96,7 @@ export class ModificaHackathonComponent implements OnInit {
 
     this.saving.set(true);
 
-    this.hackathonService.updateHackathon(this.hackathonId, this.formData).subscribe({
+    this.hackathonService.updateHackathon(this.formData).subscribe({
       next: () => {
         this.saving.set(false);
         this.successMessage.set('Hackathon aggiornato con successo!');
