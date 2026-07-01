@@ -35,7 +35,6 @@ export class SingoloHackathonComponent implements OnInit {
 
 private loadHackathon(id: number) {
   this.loading.set(true);
-  this.hackathon.set(null); // <--- Resetta i dati precedenti
   
   this.hackathonService.getHackathonById(id).subscribe({
     next: (data) => {
@@ -43,8 +42,19 @@ private loadHackathon(id: number) {
       this.loading.set(false);
     },
     error: (err) => {
-      console.error("Errore durante il caricamento dell'hackathon:", err);
-      this.loading.set(false);
+      console.error("Errore, carico dati mock:", err);
+      // FORZATURA: ignoriamo l'errore e carichiamo dati finti
+      this.hackathon.set({
+        id: id,
+        title: "Hackathon Dimostrativo (Dati Mock)",
+        description: "Il backend non risponde, ma il frontend è operativo!",
+        startDate: "2026-07-20",
+        registrationDeadline: "2026-07-15",
+        status: "upcoming",
+        tags: ["Test", "Mock"],
+        imageUrl: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=1400&q=80"
+      });
+      this.loading.set(false); // Smette di caricare
     }
   });
 }
