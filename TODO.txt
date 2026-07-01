@@ -4,7 +4,7 @@ Feature da Implementare
 - dashboard
     - creazioneHackathon --> fatto *da rivedere html e app.routes
     - singoloHackathon. -->  fatto
-    - modificaHackathon --> gaspa
+    - modificaHackathon --> gaspa *da rivedere per controllo di organizzatore
     - listaHackathon --> fatto
     - home
 - profilo utente --> fatto
@@ -24,3 +24,7 @@ Altro funzionalità
    - singolo-hackathon.component.ts: in loadHackathon,, rimuovere la lagico di forzatura del blocco error.
    - singolo-hackathon.component.html: rimetti @if(...) @else if (hackathon()) @else {...}.
 TUTTI E 3 I CODICI VECCHI SONO SALVATI NELLE NOTE DI GASPA
+
+
+* sistemare problema backend di listaHackathon e una volta sistemato i problemi del backend ripristinare 
+  ngOnInit di lista-hackathon.component.ts --> (Quello originale salvato nelle note di gaspa).
