@@ -3,8 +3,8 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 
 import { AuthService } from '../../../auth/service/auth.service';
-import { HackathonService } from '../../service/hackathon.service';
-import { Hackathon } from '../../models/hackathon.model'; 
+import { SingoloHackathonService } from '../../service/singolo-hackathon.service';
+import { SingoloHackathon } from '../../models/singolo-hackathon.model'; 
 
 @Component({
   selector: 'app-singolo-hackathon',
@@ -16,10 +16,10 @@ import { Hackathon } from '../../models/hackathon.model';
 export class SingoloHackathonComponent implements OnInit {
   
   private route = inject(ActivatedRoute);
-  private hackathonService = inject(HackathonService);
+  private hackathonService = inject(SingoloHackathonService);
   private authService = inject(AuthService);
 
-  hackathon = signal<Hackathon | null>(null);
+  hackathon = signal<SingoloHackathon | null>(null);
   loading = signal<boolean>(true);
 
   ngOnInit() {

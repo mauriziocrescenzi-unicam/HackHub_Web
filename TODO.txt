@@ -6,25 +6,25 @@ Feature da Implementare
     - singoloHackathon. -->  fatto
     - modificaHackathon --> gaspa *da rivedere per controllo di organizzatore
     - listaHackathon --> fatto
-    - home
+    - home. --> gaspa
 - profilo utente --> fatto
-- inviti
-- team
-    - mio_team --> prossimo da fare maurizio
+- inviti. --> meuris
+- team --> fatto
+    - mio_team --> fatto 
     - teams --> fatto
+
+-users
+-reposrts
+-submissions
 
 Altro funzionalità
 - team.guards --> fatto, da capire meglio a cosa serve
 
 * togliere commenti su hacker-team.ts, InvitationService negli import e nel costruttore appena implementato il componente
 
-* sistemare problema backend per singoloHackathon. Una volta sistemato singolohackathon rispistinare:
-   - hackathon.service.ts --> Elimina il blocco .pipe(catchError(...)) e i relativi import (of, catchError). 
-                              Torna alla versione originale che effettua semplicemente la chiamata http.get;
-   - singolo-hackathon.component.ts: in loadHackathon,, rimuovere la lagico di forzatura del blocco error.
-   - singolo-hackathon.component.html: rimetti @if(...) @else if (hackathon()) @else {...}.
-TUTTI E 3 I CODICI VECCHI SONO SALVATI NELLE NOTE DI GASPA
-
+* sistemare singolo-hackathon.model + tutti i vari html e ts
 
 * sistemare problema backend di listaHackathon e una volta sistemato i problemi del backend ripristinare 
   ngOnInit di lista-hackathon.component.ts --> (Quello originale salvato nelle note di gaspa).
+
+  * sistemare visione nav teams per organizzatore. In teoria se sei organizzatore non dovresti avere l'opzione teams

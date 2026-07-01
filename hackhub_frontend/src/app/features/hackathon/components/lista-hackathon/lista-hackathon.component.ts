@@ -2,8 +2,8 @@ import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { Hackathon } from '../../models/hackathon.model';
-import { HackathonService } from '../../service/hackathon.service'; // Assicurati che il path sia corretto
+import { SingoloHackathon } from '../../models/singolo-hackathon.model';
+import { ListaHackathonService } from '../../service/lista-hackathon.service';
 
 @Component({
   selector: 'app-lista-hackathon',
@@ -17,9 +17,9 @@ export class ListaHackathonComponent implements OnInit {
   searchQuery: string = '';
   
   // Usiamo un segnale per tenere traccia della lista
-  hackathons = signal<Hackathon[]>([]);
+  hackathons = signal<SingoloHackathon[]>([]);
 
-  constructor(private hackathonService: HackathonService) {}
+  constructor(private listaHackathonService: ListaHackathonService) {}
 
   // Sostituisci il tuo OnInit così:
   ngOnInit() {
@@ -31,14 +31,22 @@ export class ListaHackathonComponent implements OnInit {
       { id: 2, title: 'Test 2', status: 'ongoing', description: 'Test', tags: ['T'], imageUrl: 'https://via.placeholder.com/150', startDate: '2026-07-01', registrationDeadline: '2026-07-01' }
     ];
     
-    this.hackathons.set(datiMock as Hackathon[]);
+    this.hackathons.set(datiMock as any);
     console.log("DEBUG: Dati impostati nel segnale, valore attuale:", this.hackathons());
+
+    /*
+    this.listaHackathonService.getAllHackathons().subscribe({
+      next: (data) => {
+        this.hackathons.set(data);
+      },
+      error: (err) => console.error("Errore nel caricamento della lista:", err)
+    });*/
   }
 
-  filteredHackathons(): Hackathon[] {
+  filteredHackathons(): SingoloHackathon[] {
     return this.hackathons().filter(h => {
       const matchesFilter = this.currentFilter === 'all' || h.status === this.currentFilter;
-      const matchesSearch = h.title.toLowerCase().includes(this.searchQuery.toLowerCase());
+      const matchesSearch = h.name.toLowerCase().includes(this.searchQuery.toLowerCase());
       return matchesFilter && matchesSearch;
     });
   }

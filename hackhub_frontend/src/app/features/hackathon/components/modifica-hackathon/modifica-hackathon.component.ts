@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 
 import { HackathonService } from '../../service/hackathon.service';
-import { Hackathon } from '../../models/hackathon.model'; 
+import { Hackathon } from '../../models/singolo-hackathon.model'; 
 
 @Component({
   selector: 'app-modifica-hackathon',

@@ -1,9 +1,204 @@
 <div class="page">
   <div class="page-header">
-    <a routerLink="/hackathons" class="back-link">...</a>
-    <h1 class="page-title">Create Hackathon</h1>
+    <a routerLink="/hackathons" class="back-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="19" y1="12" x2="5" y2="12"/>
+        <polyline points="12 19 5 12 12 5"/>
+      </svg>
+      Torna agli Hackathon
+    </a>
+    <h1 class="page-title">Crea Hackathon</h1>
+    <p class="page-subtitle">Compila i dettagli per pubblicare un nuovo evento hackathon</p>
   </div>
 
-  <form class="form-card" [formGroup]="hackathonForm" (ngSubmit)="onSubmit()">
-    </form>
+  <div class="form-card">
+    <div class="card-bar"></div>
+    <div class="card-body">
+
+      @if (errorMessage()) {
+        <div class="alert alert-error">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+            <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+          </svg>
+          <span>{{ errorMessage() }}</span>
+        </div>
+      }
+
+      @if (successMessage()) {
+        <div class="alert alert-success">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/>
+            <polyline points="22 4 12 14.01 9 11.01"/>
+          </svg>
+          <span>{{ successMessage() }}</span>
+        </div>
+      }
+
+      <div class="section">
+        <h2 class="section-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+          </svg>
+          Informazioni Principali
+        </h2>
+        <div class="form-grid">
+          <div class="form-group full">
+            <label>Nome <span class="required">*</span></label>
+            <input type="text" placeholder="es. AI Innovation Challenge 2026" [(ngModel)]="hackathonData.nome" />
+          </div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="section">
+        <h2 class="section-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="4" width="18" height="18" rx="2"/>
+            <line x1="16" y1="2" x2="16" y2="6"/>
+            <line x1="8" y1="2" x2="8" y2="6"/>
+            <line x1="3" y1="10" x2="21" y2="10"/>
+          </svg>
+          Date e Luogo
+        </h2>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Data Inizio <span class="required">*</span></label>
+            <input type="datetime-local" [(ngModel)]="hackathonData.startDate" [min]="minDate" />
+          </div>
+          <div class="form-group">
+            <label>Data Fine <span class="required">*</span></label>
+            <input type="datetime-local" [(ngModel)]="hackathonData.endDate" [min]="hackathonData.startDate" />
+          </div>
+          <div class="form-group full">
+            <label>Luogo <span class="required">*</span></label>
+            <input type="text" placeholder="es. Camerino, Italia oppure Remote" [(ngModel)]="hackathonData.localita" />
+          </div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="section">
+        <h2 class="section-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/>
+          </svg>
+          Partecipanti e Premio
+        </h2>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Max numero di Team <span class="required">*</span></label>
+            <input type="number" min="1" placeholder="1" [(ngModel)]="hackathonData.maxParticipants" />
+          </div>
+          <div class="form-group">
+            <label>Max membri per Team <span class="required">*</span></label>
+            <input type="number" min="1" placeholder="1" [(ngModel)]="hackathonData.maxParticipantsPerTeam" />
+          </div>
+          <div class="form-group full">
+            <label>Prize Pool (€) <span class="required">*</span></label>
+            <input type="number" min="0" placeholder="0" [(ngModel)]="hackathonData.premio" />
+          </div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="section">
+        <h2 class="section-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/>
+            <line x1="7" y1="7" x2="7.01" y2="7"/>
+          </svg>
+          Staff & Regole
+        </h2>
+        
+        <div class="form-group full search-wrap">
+          <label>Giudice <span class="required">*</span></label>
+          <input type="text" placeholder="Cerca giudice..." autocomplete="off"
+                 [(ngModel)]="searchGiudice" (focus)="filtraGiudici()" (input)="filtraGiudici()" (blur)="chiudiDropdown('giudice')" />
+          
+          @if (showGiudici() && giudiciFiltrati.length > 0) {
+            <div class="dropdown-menu">
+              @for (item of giudiciFiltrati; track item.id) {
+                <div class="dropdown-item" (mousedown)="selezionaGiudice(item)">
+                  {{ item.email }}
+                </div>
+              }
+            </div>
+          }
+        </div>
+
+        <div class="form-group full search-wrap" style="margin-top: 1rem;">
+          <label>Mentori <span class="required">*</span></label>
+          <input type="text" placeholder="Cerca mentori..." autocomplete="off"
+                 [(ngModel)]="searchMentore" (focus)="filtraMentori()" (input)="filtraMentori()" (blur)="chiudiDropdown('mentore')" />
+          
+          @if (showMentori() && mentoriFiltrati.length > 0) {
+            <div class="dropdown-menu">
+              @for (item of mentoriFiltrati; track item.id) {
+                <div class="dropdown-item" (mousedown)="selezionaMentore(item)">
+                  {{ item.email }}
+                </div>
+              }
+            </div>
+          }
+          <div class="tags-list">
+            @for (mentore of mentoriSelezionati; track mentore.id) {
+              <span class="tag">
+                {{ mentore.email }}
+                <button type="button" class="tag-remove" (click)="rimuoviMentore(mentore)">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+              </span>
+            }
+          </div>
+        </div>
+
+        <div class="form-group full search-wrap" style="margin-top: 1rem;">
+          <label>Regole</label>
+          <input type="text" placeholder="Cerca regole..." autocomplete="off"
+                 [(ngModel)]="searchRegola" (focus)="filtraRegole()" (input)="filtraRegole()" (blur)="chiudiDropdown('regola')" />
+          
+          @if (showRegole() && regoleFiltrate.length > 0) {
+            <div class="dropdown-menu">
+              @for (item of regoleFiltrate; track item.id) {
+                <div class="dropdown-item" (mousedown)="selezionaRegola(item)">
+                  <span class="dropdown-item-name">{{ item.name }}</span>
+                  <span class="dropdown-item-desc">{{ item.description }}</span>
+                </div>
+              }
+            </div>
+          }
+          <div class="tags-list">
+            @for (regola of regoleSelezionate; track regola.id) {
+              <span class="tag">
+                {{ regola.description }}
+                <button type="button" class="tag-remove" (click)="rimuoviRegola(regola)">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+              </span>
+            }
+          </div>
+        </div>
+      </div>
+
+      <div class="action-buttons">
+        <button class="btn-outline" (click)="cancelEdit()">Annulla</button>
+        <button class="btn-primary" (click)="saveChanges()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/>
+            <polyline points="17 21 17 13 7 13 7 21"/>
+            <polyline points="7 3 7 8 15 8"/>
+          </svg>
+          Crea Hackathon
+        </button>
+      </div>
+
+    </div>
+  </div>
 </div>

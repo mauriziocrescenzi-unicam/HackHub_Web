@@ -21,11 +21,11 @@
   <div class="hackathon-grid">
     <div class="card" *ngFor="let h of filteredHackathons()">
       <div class="card-image">
-        <img [src]="h.imageUrl" [alt]="h.title" />
+        <img [src]="h.imageUrl" [alt]="h.name" />
         <span class="badge" [ngClass]="'badge-' + h.status">{{ h.status }}</span>
       </div>
       <div class="card-header">
-        <h2 class="card-title">{{ h.title }}</h2>
+        <h2 class="card-title">{{ h.name }}</h2>
         <p class="card-description">{{ h.description }}</p>
       </div>
       <div class="card-content">
