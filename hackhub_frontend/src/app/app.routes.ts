@@ -14,6 +14,7 @@ import { TeamGuard } from './core/guard/team.guard';
 import { roleGuard } from './core/guard/role.guard';
 
 export const routes: Routes = [
+  { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: 'register', component: RegisterComponent },
   { path: 'login', component: LoginComponent },
   { path: 'home', component: HomeComponent },
