@@ -1,0 +1,508 @@
+<div class="page">
+
+  <a [routerLink]="['/hackathons', hackathonId()]" class="back-link">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <line x1="19" y1="12" x2="5" y2="12" />
+      <polyline points="12 19 5 12 12 5" />
+    </svg>
+    Details
+  </a>
+
+  @if (successMessage()) {
+    <div class="alert alert-success">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M22 11.08V12a10 10 0 11-5.93-9.14" />
+        <polyline points="22 4 12 14.01 9 11.01" />
+      </svg>
+      <span>{{ successMessage() }}</span>
+    </div>
+  }
+
+  @if (errorMessage()) {
+    <div class="alert alert-error">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
+        <line x1="12" y1="9" x2="12" y2="13" />
+        <line x1="12" y1="17" x2="12.01" y2="17" />
+      </svg>
+      <span>{{ errorMessage() }}</span>
+    </div>
+  }
+
+  @if (winner()) {
+    <div class="winner-banner">
+      <div class="winner-banner__icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="8" r="6" />
+          <path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11" />
+        </svg>
+      </div>
+      <div>
+        <h2 class="winner-banner__title">Hackathon Concluded!</h2>
+        <p class="winner-banner__sub">The winning team is: <strong>{{ winner()?.name }}</strong></p>
+      </div>
+    </div>
+  }
+
+  @if (isTeamMember()) {
+    <div>
+      @if (myTeamDisabled()) {
+        <div class="alert alert-warning mb-3">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
+            <line x1="12" y1="9" x2="12" y2="13" />
+            <line x1="12" y1="17" x2="12.01" y2="17" />
+          </svg>
+          <div>
+            <strong>Your team has been disabled.</strong>
+            <p>You cannot submit or edit your project while your team is disabled. Contact the organizers for more information.</p>
+          </div>
+        </div>
+      }
+
+      @if (!mySubmissionId()) {
+        <div class="section-card">
+          <div class="section-card__bar"></div>
+          <div class="section-card__inner">
+            <div class="section-header">
+              <div class="section-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
+                  <polyline points="17 8 12 3 7 8" />
+                  <line x1="12" y1="3" x2="12" y2="15" />
+                </svg>
+              </div>
+              <div>
+                <h3 class="section-title">Team Project Submission</h3>
+                <p class="section-sub">Submit your team's project repository for evaluation by the judges.</p>
+              </div>
+            </div>
+
+            <form (ngSubmit)="submitGithubRepo()">
+              <div class="form-group" style="margin-top:1.25rem;">
+                <label class="field-label" for="githubUrl">GitHub Repository URL</label>
+                <div class="input-icon-wrap">
+                  <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22" />
+                  </svg>
+                  <input type="url" class="field-input field-input--icon" 
+                         [ngModel]="githubUrl()" (ngModelChange)="githubUrl.set($event)" 
+                         name="githubUrl" id="githubUrl" placeholder="https://github.com/your-team/project" required />
+                </div>
+                <p class="field-hint">Make sure your repository is public or accessible to judges.</p>
+              </div>
+
+              <div class="form-actions" style="margin-top:1.25rem;">
+                <button type="submit" class="btn-primary" [disabled]="isSubmitting() || !githubUrl() || myTeamDisabled()">
+                  @if (isSubmitting()) {
+                    <i class="fa-solid fa-spinner fa-spin me-2"></i>
+                  } @else {
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
+                      <polyline points="17 8 12 3 7 8" />
+                      <line x1="12" y1="3" x2="12" y2="15" />
+                    </svg>
+                  }
+                  Submit Project
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      }
+
+      @else {
+        <div class="section-card">
+          <div class="section-card__bar" style="background: linear-gradient(to right, #00c896, #4ade80);"></div>
+          <div class="section-card__inner">
+            <div class="section-header">
+              <div class="section-icon section-icon--green">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M22 11.08V12a10 10 0 11-5.93-9.14" />
+                  <polyline points="22 4 12 14.01 9 11.01" />
+                </svg>
+              </div>
+              <div>
+                <h3 class="section-title">Project Submitted</h3>
+                <p class="section-sub">Your project has been received and is awaiting evaluation.</p>
+              </div>
+            </div>
+
+            <div class="data-rows">
+              <div class="data-row">
+                <span class="data-label">Repository</span>
+                <a [href]="githubUrl()" target="_blank" class="data-link">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22" />
+                  </svg>
+                  {{ githubUrl() }}
+                </a>
+              </div>
+              <div class="data-row">
+                <span class="data-label">Submitted at</span>
+                <span class="data-value">{{ submittedAt() | date:'dd/MM/yyyy HH:mm' }}</span>
+              </div>
+            </div>
+
+            @if (myScore() !== null) {
+              <div class="eval-block">
+                <div class="eval-score-row">
+                  <span class="eval-score">{{ myScore() | number:'1.1-1' }}</span>
+                  <span class="eval-score-label">out of 10</span>
+                </div>
+                <div class="eval-progress-bar">
+                  <div class="eval-progress-fill" [style.width.%]="(myScore()! / 10) * 100"></div>
+                </div>
+                @if (myJudgment()) {
+                  <div class="eval-comment">
+                    <p class="eval-comment-label">Judge's Comment</p>
+                    <p class="eval-comment-text">{{ myJudgment() }}</p>
+                  </div>
+                }
+              </div>
+            }
+
+            @if(hackathon()?.status === 'ONGOING') {
+              @if (!editMode()) {
+                <div class="form-actions" style="margin-top:1.25rem;">
+                  <button class="btn-ghost" (click)="startEdit()" [disabled]="myTeamDisabled()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" />
+                      <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" />
+                    </svg>
+                    Edit
+                  </button>
+                  <button class="btn-primary" (click)="updateCommit()" [disabled]="myTeamDisabled() || isUpdating()">
+                    @if (isUpdating()) {
+                      <i class="fa-solid fa-spinner fa-spin me-2"></i>
+                    } @else {
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="23 4 23 10 17 10" />
+                        <path d="M20.49 15a9 9 0 11-2.12-9.36L23 10" />
+                      </svg>
+                    }
+                    Update Commit
+                  </button>
+                </div>
+              } @else {
+                <form (ngSubmit)="saveEdit()" class="mt-4 pt-3 border-top border-secondary">
+                  <div class="form-group mb-3">
+                    <label class="field-label">Edit Repository URL</label>
+                    <input type="url" class="field-input" 
+                           [ngModel]="editUrlTemp()" (ngModelChange)="editUrlTemp.set($event)" 
+                           name="editUrl" required>
+                  </div>
+                  <div class="form-actions">
+                    <button type="button" class="btn-ghost" (click)="cancelEdit()">Cancel</button>
+                    <button type="submit" class="btn-primary" [disabled]="isSubmitting()">
+                      Save Changes
+                    </button>
+                  </div>
+                </form>
+              }
+            }
+          </div>
+        </div>
+      }
+    </div>
+  }
+
+  @if (isStaff()) {
+    <div>
+      <div class="staff-header mb-4">
+        <div>
+          <h2 class="staff-title">Submissions Hub</h2>
+          <p class="staff-sub">Review and evaluate all team project submissions.</p>
+        </div>
+        
+        @if (isOrganizer() && hackathon()?.status === 'EVALUATION' && !winner()) {
+          <button class="btn-primary" [disabled]="!allEvaluated()" (click)="showWinnerModal.set(true)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="8" r="6" />
+              <path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11" />
+            </svg>
+            Declare Winner
+          </button>
+        }
+      </div>
+
+      <div class="table-wrap">
+        <table class="sub-table">
+          <thead>
+            <tr>
+              <th>TEAM</th>
+              <th>REPOSITORY</th>
+              <th>SUBMISSION DATE</th>
+              @if(hackathon()?.status === 'EVALUATION') {
+                <th>EVALUATION</th>
+              }
+              @if (canDoAction()) {
+                <th>ACTIONS</th>
+              }
+            </tr>
+          </thead>
+          <tbody>
+            @for (sub of submissions(); track sub.id) {
+              <tr>
+                <td>
+                  <span class="team-name">{{ sub.team }}</span>
+                  @if (sub.teamDisabled) {
+                    <span class="disabled-badge">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                        <path d="M7 11V7a5 5 0 0110 0v4" />
+                      </svg>
+                      disabled
+                    </span>
+                  }
+                </td>
+                <td>
+                  <a [href]="sub.repositoryUrl" target="_blank" class="data-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22" />
+                    </svg>
+                    <span class="d-inline-block text-truncate" style="max-width: 200px;">
+                      {{ sub.repositoryUrl }}
+                    </span>
+                  </a>
+                </td>
+                <td class="text-muted">{{ sub.submittedAt | date:'MMM d, y – HH:mm' }}</td>
+                
+                @if(hackathon()?.status === 'EVALUATION') {
+                  <td>
+                    <span class="score-badge" [class.score-badge--none]="sub.score == null">
+                      {{ sub.score ?? 'None' }}
+                    </span>
+                  </td>
+                }
+
+                @if (canDoAction()) {
+                  <td>
+                    <div class="action-group">
+                      @if (isJudge() && hackathon()?.status === 'EVALUATION' && sub.score == null && !sub.teamDisabled) {
+                        <button class="tbl-btn" title="Evaluate" (click)="openEvaluate(sub)">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                          </svg>
+                          Evaluate
+                        </button>
+                      }
+
+                      @if (isMentor() && hackathon()?.status === 'ONGOING') {
+                        <button class="tbl-btn" title="Flag" (click)="openReport(sub)">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z" />
+                            <line x1="4" y1="22" x2="4" y2="15" />
+                          </svg>
+                          Flag
+                        </button>
+                      }
+
+                      @if (isOrganizer() && hackathon()?.status === 'ONGOING') {
+                        <button class="tbl-btn" title="Reports" (click)="openReportList(sub)">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                          </svg>
+                          Reports
+                        </button>
+                      }
+                    </div>
+                  </td>
+                }
+              </tr>
+            } @empty {
+              <tr>
+                <td [attr.colspan]="canDoAction() ? (hackathon()?.status === 'EVALUATION' ? 5 : 4) : 4">
+                  <div class="table-empty">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                      <polyline points="22 12 16 12 14 15 10 15 8 12 2 12" />
+                      <path d="M5.45 5.11L2 12v6a2 2 0 002 2h16a2 2 0 002-2v-6l-3.45-6.89A2 2 0 0016.76 4H7.24a2 2 0 00-1.79 1.11z" />
+                    </svg>
+                    <p>No projects submitted by teams yet.</p>
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  }
+
+</div>@if (showReportModal()) {
+  <div class="modal-backdrop" (click)="closeModals()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <button class="modal-close" (click)="closeModals()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
+        </svg>
+      </button>
+      <div class="modal-header">
+        <div class="modal-icon modal-icon--danger">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z" />
+            <line x1="4" y1="22" x2="4" y2="15" />
+          </svg>
+        </div>
+        <div>
+          <h3 class="modal-title">Report Team</h3>
+          <p class="modal-sub">{{ activeSubmission()?.team }}</p>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="field-label">Category</label>
+          <input type="text" class="field-input" placeholder="e.g. Plagiarism, Code of Conduct..." 
+                 [ngModel]="reportReason()" (ngModelChange)="reportReason.set($event)" />
+        </div>
+        <div class="form-group">
+          <label class="field-label">Description</label>
+          <textarea class="field-input field-textarea" rows="4" placeholder="Describe the issue in detail..."
+                    [ngModel]="reportDescription()" (ngModelChange)="reportDescription.set($event)"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-ghost" (click)="closeModals()">Cancel</button>
+        <button class="btn-danger" [disabled]="isReporting() || !reportReason() || !reportDescription().trim()" (click)="submitReport()">
+          @if (isReporting()) { <i class="fa-solid fa-spinner fa-spin me-1"></i> }
+          Submit Report
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+@if (showEvaluateModal()) {
+  <div class="modal-backdrop" (click)="closeModals()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <button class="modal-close" (click)="closeModals()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
+        </svg>
+      </button>
+      <div class="modal-header">
+        <div class="modal-icon modal-icon--purple">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+          </svg>
+        </div>
+        <div>
+          <h3 class="modal-title">Evaluate Project</h3>
+          <p class="modal-sub">{{ activeSubmission()?.team }}</p>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="field-label">Score: <strong>{{ evalScore() | number:'1.1-1' }}</strong> / 10</label>
+          <div class="range-wrap">
+            <span class="range-label">0</span>
+            <input type="range" class="range-input" min="0" max="10" step="0.5" 
+                   [ngModel]="evalScore()" (ngModelChange)="evalScore.set(+$event)" />
+            <span class="range-label">10</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="field-label">Written Judgment</label>
+          <textarea class="field-input field-textarea" rows="4" placeholder="Provide detailed feedback on the project..."
+                    [ngModel]="evalJudgment()" (ngModelChange)="evalJudgment.set($event)"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-ghost" (click)="closeModals()">Cancel</button>
+        <button class="btn-primary" [disabled]="isEvaluating() || !evalJudgment().trim()" (click)="submitEvaluation()">
+          @if (isEvaluating()) { <i class="fa-solid fa-spinner fa-spin me-1"></i> }
+          Submit Evaluation
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+@if (showReportListModal() && isOrganizer()) {
+  <div class="modal-backdrop" (click)="closeModals()">
+    <div class="modal modal--wide" (click)="$event.stopPropagation()">
+      <button class="modal-close" (click)="closeModals()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
+        </svg>
+      </button>
+      <div class="modal-header">
+        <div class="modal-icon modal-icon--yellow">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+          </svg>
+        </div>
+        <div>
+          <h3 class="modal-title">Team Reports</h3>
+          <p class="modal-sub">{{ activeSubmission()?.team }}</p>
+        </div>
+      </div>
+      <div class="modal-body">
+        @if (isLoadingReports()) {
+          <div class="text-center py-4 text-muted">
+            <i class="fa-solid fa-spinner fa-spin me-2"></i> Loading reports...
+          </div>
+        } @else if (teamReports().length === 0) {
+          <div class="text-center py-4 text-muted">
+            No reports filed for this team.
+          </div>
+        } @else {
+          <div class="reports-list">
+            @for (report of teamReports(); track report.id) {
+              <div class="report-card">
+                <div class="report-card__top">
+                  <span class="report-category">{{ report.reason }}</span>
+                  <span class="report-date">{{ report.date | date:'dd/MM/yyyy HH:mm' }}</span>
+                </div>
+                <p class="report-desc">{{ report.description }}</p>
+                <p class="report-author">Reported by <strong>{{ report.mentorName }}</strong></p>
+              </div>
+            }
+          </div>
+        }
+      </div>
+      <div class="modal-footer">
+        <button class="btn-ghost" (click)="closeModals()">Close</button>
+        <button [class]="activeSubmission()?.teamDisabled ? 'btn-primary' : 'btn-danger'" 
+                (click)="toggleTeamStatus(activeSubmission())">
+          {{ activeSubmission()?.teamDisabled ? 'Enable Team' : 'Disable Team' }}
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+@if (showWinnerModal()) {
+  <div class="modal-backdrop" (click)="showWinnerModal.set(false)">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <button class="modal-close" (click)="showWinnerModal.set(false)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
+        </svg>
+      </button>
+      <div class="modal-header">
+        <div class="modal-icon modal-icon--yellow">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="8" r="6" />
+            <path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11" />
+          </svg>
+        </div>
+        <div>
+          <h3 class="modal-title">Declare Winner</h3>
+          <p class="modal-sub">This action will conclude the hackathon.</p>
+        </div>
+      </div>
+      <div class="modal-body">
+        <p class="text-muted" style="font-size: 0.9rem; line-height: 1.5;">
+          Are you sure you want to declare the winner? The system will automatically calculate the highest score among all evaluated projects and close the hackathon permanently.
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-ghost" (click)="showWinnerModal.set(false)">Cancel</button>
+        <button class="btn-primary" (click)="declareWinner(); showWinnerModal.set(false)">
+          Confirm Winner
+        </button>
+      </div>
+    </div>
+  </div>
+}

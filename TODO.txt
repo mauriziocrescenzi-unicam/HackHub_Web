@@ -38,6 +38,11 @@ Altro funzionalità
 
   * vedere come gestire modificaHackathon che non c'è nell'altro progetto.
 
+  *controllare la gestione dei ruoli staff e organizzatore
 
+* togliere i commenti in submissione compnent negli import di report. Li avevo commentati perchè ancora non è stato 
+creato il componente report.
+Da rivedere la parte submission perchè fino a quando non è implementato report non posso controllare se si vede bene o no.
+Capire anche a che rendere visibile la parte submission
 
 CAPIRE GLI ERRORI CHE PARTONO QUANDO SI FA ng serve -o 

@@ -22,6 +22,7 @@
 
         @if (userProfile()?.role === 'STAFF') {
           <a routerLink="/users" routerLinkActive="active" class="nav-link">Utenti</a>
+          <a routerLink="/hackathons" routerLinkActive="active" class="nav-link">Valutazioni</a>
         }
 
         <div class="auth-buttons">
@@ -62,6 +63,7 @@
 
       @if (userProfile()?.role === 'STAFF') {
         <a routerLink="/users" class="nav-link-mobile">Utenti</a>
+        <a routerLink="/hackathons" class="nav-link-mobile">Valutazioni</a>
       }
 
       <div class="mobile-auth">
