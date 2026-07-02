@@ -2,7 +2,7 @@
   <div class="navbar-container">
     <div class="navbar-inner">
 
-      <a routerLink="/" class="navbar-logo">
+      <a routerLink="/home" class="navbar-logo">
         <div class="logo-icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M12 2L2 7l10 5 10-5-10-5z"/>
@@ -16,8 +16,12 @@
       <div class="navbar-links">
         <a routerLink="/hackathons" routerLinkActive="active" class="nav-link">Hackathons</a>
         
-        @if(isAuthenticated()) {
+        @if (isAuthenticated() && userProfile()?.role === 'USER') {
           <a routerLink="/teams" routerLinkActive="active" class="nav-link">Teams</a>
+        }
+
+        @if (userProfile()?.role === 'STAFF') {
+          <a routerLink="/users" routerLinkActive="active" class="nav-link">Utenti</a>
         }
 
         <div class="auth-buttons">
@@ -51,9 +55,15 @@
 
     <div class="mobile-menu" [class.open]="isMobileMenuOpen()">
       <a routerLink="/hackathons" class="nav-link-mobile">Hackathons</a>
-      @if(isAuthenticated()) {
+      
+      @if (isAuthenticated() && userProfile()?.role === 'USER') {
         <a routerLink="/teams" class="nav-link-mobile">Teams</a>
       }
+
+      @if (userProfile()?.role === 'STAFF') {
+        <a routerLink="/users" class="nav-link-mobile">Utenti</a>
+      }
+
       <div class="mobile-auth">
         @if (!isAuthenticated()) {
           <a routerLink="/login" class="btn btn-outline w-full">Login</a>

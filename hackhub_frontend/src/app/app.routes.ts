@@ -9,6 +9,7 @@ import { SingoloHackathonComponent } from './features/hackathon/components/singo
 import { ModificaHackathonComponent } from './features/hackathon/components/modifica-hackathon/modifica-hackathon.component';
 import { TeamComponent } from './features/team/components/team/team.component';
 import { HackerTeamComponent } from './features/team/components/hacker-team/hacker-team.component';
+import { UserComponent } from './features/users/components/user/user.component';
 import { authGuard } from './core/guard/auth.guard';
 import { TeamGuard } from './core/guard/team.guard';
 import { roleGuard } from './core/guard/role.guard';
@@ -17,13 +18,14 @@ export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: 'register', component: RegisterComponent },
   { path: 'login', component: LoginComponent },
+  { path: 'users', component: UserComponent, canActivate: [authGuard, roleGuard], data: { expectedRole: 'STAFF'}},
   { path: 'home', component: HomeComponent },
   { path: 'profile', component: ProfileComponent, canActivate: [authGuard] },
   { path: 'hackathon', component: ListaHackathonComponent },
-  { path: 'hackathon/create', component: CreazioneHackathonComponent, canActivate: [authGuard, roleGuard], data: { expectedRole: 'ORGANIZER' } },
+  { path: 'hackathon/create', component: CreazioneHackathonComponent, canActivate: [authGuard, roleGuard], data: { expectedRole: 'STAFF' } },
   { path: 'hackathons/:id', component: SingoloHackathonComponent },
-  { path: 'hackathons/:id/edit', component: ModificaHackathonComponent, canActivate: [authGuard, roleGuard], data: { expectedRole: 'ORGANIZER' } },
-  { path: 'teams', component: TeamComponent, canActivate: [TeamGuard] },
-  { path: 'teams/my', component: HackerTeamComponent, canActivate: [authGuard] },
+  { path: 'hackathons/:id/edit', component: ModificaHackathonComponent, canActivate: [authGuard, roleGuard], data: { expectedRole: 'STAFF' } },
+  { path: 'teams', component: TeamComponent, canActivate: [authGuard, roleGuard, TeamGuard], data: { expectedRole: 'USER'} },
+  { path: 'teams/my', component: HackerTeamComponent, canActivate: [authGuard, roleGuard], data: { expectedRole: 'USER'} },
   { path: '**', redirectTo: '' }
 ];

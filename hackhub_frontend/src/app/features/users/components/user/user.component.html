@@ -1,0 +1,185 @@
+<section class="profile-section relative-section">
+  <div class="container py-5">
+
+    <div class="page-header mb-3">
+      <h3 class="pr-title">User <span class="accent">Management</span></h3>
+      <p class="pr-text-muted mt-2">View and manage all platform accounts.</p>
+    </div>
+
+    <div class="row justify-content-center mb-3">
+      <div class="col-12 col-lg-10">
+        @if (errorMessage()) {
+          <div class="alert alert-error">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <span>{{ errorMessage() }}</span>
+          </div>
+        }
+        @if (successMessage()) {
+          <div class="alert alert-success">
+            <i class="fa-solid fa-circle-check"></i>
+            <span>{{ successMessage() }}</span>
+          </div>
+        }
+      </div>
+    </div>
+
+    <div class="row justify-content-center mb-4">
+      <div class="col-12 col-lg-10">
+        <div class="d-flex flex-column flex-md-row gap-3">
+
+          <div class="h-search-box flex-grow-1">
+            <i class="bi bi-search h-search-icon"></i>
+            <input
+              type="text"
+              class="pr-input w-100"
+              placeholder="Search by name, nickname or email..."
+              [value]="searchQuery()"
+              (input)="updateSearch($event)"
+            />
+          </div>
+
+          <div class="au-filter-group">
+            @for (f of filters; track f.value) {
+              <button
+                class="au-filter-btn"
+                [class.au-filter-btn--active]="activeFilter() === f.value"
+                (click)="setFilter(f.value)"
+              >
+                {{ f.label }}
+              </button>
+            }
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    @if (isLoading()) {
+      <div class="text-center py-5">
+        <div class="mt-loading">
+          <span class="mt-loading__dot"></span>
+          <span class="mt-loading__dot"></span>
+          <span class="mt-loading__dot"></span>
+        </div>
+        <p class="pr-label mt-3">Loading users...</p>
+      </div>
+    }
+
+    @else if (filteredAccounts().length === 0) {
+      <div class="row justify-content-center">
+        <div class="col-12 col-lg-8">
+          <div class="pr-card text-center p-5">
+            <i class="fa-solid fa-ghost mb-3" style="font-size: 2.5rem; color: #cbd5e1;"></i>
+            <p class="pr-value mb-0">No users found.</p>
+          </div>
+        </div>
+      </div>
+    }
+
+    @else {
+      <div class="row justify-content-center">
+        <div class="col-12 col-lg-10 d-flex flex-column gap-3">
+
+          @for (account of filteredAccounts(); track account.idAccount) {
+            <div class="pr-card" [class.au-card--disabled]="account.disabled">
+              <div class="pr-card-bar" [style.background]="account.disabled ? '#94a3b8' : '#00c896'"></div>
+
+              <div class="pr-card-body p-4">
+                <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center gap-4">
+
+                  <div class="d-flex align-items-center gap-3" style="min-width: 260px;">
+                    <div class="au-avatar flex-shrink-0" [class.au-avatar--disabled]="account.disabled">
+                      {{ account.name.charAt(0) | uppercase }}{{ account.surname.charAt(0) | uppercase }}
+                    </div>
+                    <div>
+                      <div class="d-flex align-items-center gap-2 flex-wrap">
+                        <h4 class="pr-value m-0" style="font-size: 1rem;">
+                          {{ account.name }} {{ account.surname }}
+                        </h4>
+                        <span class="au-role-badge au-role-badge--{{ account.role | lowercase }}">
+                          {{ account.role }}
+                        </span>
+                      </div>
+                      <span class="pr-label" style="text-transform: none;">@{{ account.nickname }}</span>
+                    </div>
+                  </div>
+
+                  <div class="flex-grow-1 border-start border-end border-0 border-md px-md-4 py-2 py-md-0" style="border-color: #e5e7eb !important;">
+                    <p class="pr-text-muted mb-1" style="font-size: 13px; font-style: normal;">
+                      <i class="fa-solid fa-envelope me-1" style="color: #94a3b8;"></i>
+                      {{ account.email }}
+                    </p>
+                    @if (account.teamName) {
+                      <p class="pr-text-muted mb-0" style="font-size: 13px; font-style: normal;">
+                        <i class="fa-solid fa-users me-1" style="color: #94a3b8;"></i>
+                        {{ account.teamName }}
+                      </p>
+                    } @else {
+                      <p class="pr-text-muted mb-0" style="font-size: 13px;">No team</p>
+                    }
+                  </div>
+
+                  <div class="d-flex flex-column align-items-end gap-2 flex-shrink-0">
+                    <span class="au-status-badge" [class.au-status-badge--active]="!account.disabled" [class.au-status-badge--disabled]="account.disabled">
+                      <span class="au-status-badge__dot"></span>
+                      {{ account.disabled ? 'Disabled' : 'Active' }}
+                    </span>
+                    <button
+                      class="au-toggle-btn"
+                      [class.au-toggle-btn--enable]="account.disabled"
+                      [class.au-toggle-btn--disable]="!account.disabled"
+                      (click)="askToggleStatus(account)"
+                    >
+                      @if (account.disabled) {
+                        <i class="fa-solid fa-lock-open me-1"></i> Enable
+                      } @else {
+                        <i class="fa-solid fa-lock me-1"></i> Disable
+                      }
+                    </button>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          }
+
+        </div>
+      </div>
+    }
+
+  </div>
+</section>
+
+@if (confirmDialog()) {
+  <div class="mt-dialog-overlay" (click)="closeDialog()">
+    <div class="mt-dialog" (click)="$event.stopPropagation()">
+
+      <div class="mt-dialog__icon" [class.mt-dialog__icon--danger]="confirmDialog()!.type === 'danger'">
+        <i [class]="confirmDialog()!.icon"></i>
+      </div>
+
+      <h4 class="mt-dialog__title">{{ confirmDialog()!.title }}</h4>
+      <p class="mt-dialog__body">{{ confirmDialog()!.message }}</p>
+
+      @if (confirmDialog()!.warning) {
+        <div class="mt-dialog__warning">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+          <span>{{ confirmDialog()!.warning }}</span>
+        </div>
+      }
+
+      <div class="mt-dialog__actions">
+        <button class="mt-btn-ghost" (click)="closeDialog()">Cancel</button>
+        <button
+          class="mt-dialog__confirm-btn"
+          [class.mt-dialog__confirm-btn--danger]="confirmDialog()!.type === 'danger'"
+          [class.mt-dialog__confirm-btn--success]="confirmDialog()!.type === 'default'"
+          (click)="confirmDialog()!.onConfirm()"
+        >
+          {{ confirmDialog()!.confirmLabel }}
+        </button>
+      </div>
+
+    </div>
+  </div>
+}

@@ -16,7 +16,7 @@ Feature da Implementare
     - mio_team --> fatto 
     - teams --> fatto
 -users
-    -user --> gaspa
+    -user --> fatto
 
 -reports
     -report --> meuris
@@ -34,7 +34,7 @@ Altro funzionalità
 * sistemare problema backend di listaHackathon e una volta sistemato i problemi del backend ripristinare 
   ngOnInit di lista-hackathon.component.ts --> (Quello originale salvato nelle note di gaspa).
 
-  * sistemare visione nav teams per organizzatore. In teoria se sei organizzatore non dovresti avere l'opzione teams
+  * sistemare visione nav teams per organizzatore. In teoria se sei organizzatore non dovresti avere l'opzione teams --> fatto
 
   * vedere come gestire modificaHackathon che non c'è nell'altro progetto.
 
