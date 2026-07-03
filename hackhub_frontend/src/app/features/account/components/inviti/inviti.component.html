@@ -1,0 +1,58 @@
+<section class="profile-section">
+  <div class="container py-5">
+    <div class="row justify-content-center mb-4">
+      <div class="col-12 col-lg-10 text-center">
+        <h3 class="fw-bold mb-2">Inviti <span style="color: #a855f7;">Ricevuti</span></h3>
+        <p class="text-muted">Gestisci le richieste per unirti a nuovi team.</p>
+      </div>
+    </div>
+
+    <div class="row justify-content-center mb-4">
+      <div class="col-12 col-lg-10">
+        @if (errorMessage()) { <div class="alert alert-danger">{{ errorMessage() }}</div> }
+        @if (successMessage()) { <div class="alert alert-success">{{ successMessage() }}</div> }
+      </div>
+    </div>
+
+    @if (isLoading()) {
+      <div class="text-center py-5"><div class="spinner-border text-primary"></div></div>
+    } @else if (inviti().length === 0) {
+      <div class="row justify-content-center">
+        <div class="col-12 col-lg-8">
+          <div class="hd-section-card p-5 text-center shadow-sm">
+            <i class="fa-solid fa-envelope-open mb-3 fs-1 text-secondary"></i>
+            <p class="mb-0">Non hai nuovi inviti al momento.</p>
+          </div>
+        </div>
+      </div>
+    } @else {
+      <div class="row justify-content-center">
+        <div class="col-12 col-lg-10 d-flex flex-column gap-3">
+          @for (invito of inviti(); track invito.idInvitation) {
+            <div class="hd-section-card shadow-sm">
+              <div class="hd-section-card__inner p-4">
+                <div class="d-flex flex-column flex-md-row align-items-md-center gap-4">
+                  <div class="d-flex align-items-center gap-3" style="min-width: 250px;">
+                    <div class="team-avatar">{{ invito.invitingTeamName.charAt(0) | uppercase }}</div>
+                    <div>
+                      <h5 class="m-0 fw-bold">{{ invito.invitingTeamName }}</h5>
+                      <small class="text-muted">{{ invito.invitationDate | date:'dd/MM/yyyy' }}</small>
+                    </div>
+                  </div>
+                  <div class="flex-grow-1 border-start px-md-4 py-2 py-md-0" style="border-color: #27272a;">
+                    <p class="text-muted mb-2" style="font-size: 0.9rem;">Sei stato invitato a unirti al team.</p>
+                    <span class="badge" style="background: rgba(168,85,247,0.1); color: #a855f7;">{{ invito.state }}</span>
+                  </div>
+                  <div class="d-flex gap-2">
+                    <button class="hd-btn-ghost" (click)="respond(invito.idInvitation, false)">Rifiuta</button>
+                    <button class="hd-btn-primary" (click)="respond(invito.idInvitation, true)">Accetta</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    }
+  </div>
+</section>

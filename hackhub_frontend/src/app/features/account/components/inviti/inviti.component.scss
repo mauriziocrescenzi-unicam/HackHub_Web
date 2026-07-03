@@ -1,0 +1,26 @@
+:host {
+  display: block;
+
+  .team-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #a855f7, #ec4899);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  /* Riuso i tuoi bottoni globali definiti nel design system */
+  .hd-btn-primary { 
+    padding: 0.5rem 1.5rem; 
+  }
+  
+  .hd-btn-ghost { 
+    padding: 0.5rem 1.5rem; 
+  }
+}

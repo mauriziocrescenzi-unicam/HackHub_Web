@@ -38,6 +38,11 @@
               
               <ul class="dropdown-menu shadow" [class.show]="isProfileDropdownOpen()">
                 <li><a class="dropdown-item" routerLink="/profile">Il mio profilo</a></li>
+                
+                @if (userProfile()?.role === 'USER') {
+                  <li><a class="dropdown-item" routerLink="/inviti">I miei inviti</a></li>
+                }
+
                 <li><button class="dropdown-item text-danger" (click)="logout()">Logout</button></li>
               </ul>
             </div>
@@ -72,7 +77,12 @@
           <a routerLink="/register" class="btn btn-gradient w-full">Sign Up</a>
         } @else {
           <a routerLink="/profile" class="btn btn-outline w-full">Il mio profilo</a>
-          <button (click)="logout()" class="btn btn-ghost w-full" style="color: #ef4444;">Logout</button>
+          
+          @if (userProfile()?.role === 'USER') {
+            <a routerLink="/inviti" class="btn btn-outline w-full" style="margin-top: 0.5rem;">I miei inviti</a>
+          }
+
+          <button (click)="logout()" class="btn btn-ghost w-full" style="color: #ef4444; margin-top: 0.5rem;">Logout</button>
         }
       </div>
     </div>

@@ -22,14 +22,10 @@ export class AuthService {
 
     if (token) {
       this.loadUser$().subscribe({
-        next: (user) => console.log('✅ Sessione ripristinata con successo! Utente:', user),
+        next: (user) => console.log('✅ Sessione ripristinata con successo!'),
         error: (err) => {
-          console.error('❌ Errore durante il ripristino:', err);
-          // Esegui il logout solo se l'errore indica che il token è davvero invalido (es. 401 Unauthorized)
           if (err.status === 401 || err.status === 403) {
             this.logout();
-          } else {
-            console.warn('Errore di sistema o rete, evitiamo il logout forzato.');
           }
         },
       });
@@ -63,6 +59,7 @@ export class AuthService {
   logout() {
     localStorage.removeItem(this.tokenKey);
     this.userSignal.set(null);
+    this.userLoaded = false;
   }
 
   // ---------------- TOKEN ----------------
@@ -83,6 +80,7 @@ export class AuthService {
 
   setUser(user: Account) {
     this.userSignal.set(user);
+    this.userLoaded = true;
   }
 
   loadUser$(): Observable<Account> {
@@ -106,6 +104,15 @@ export class AuthService {
     }
   }
 
+  // NUOVO: Aggiunto per gestire il nome del team
+  updateTeamName(teamName: string | null) {
+    const current = this.currentUser;
+    if (current) {
+      const updated = { ...current, teamName: teamName };
+      this.userSignal.set(updated);
+    }
+  }
+
   get currentUser(): Account | null {
     return this.userSignal();
   }
@@ -116,6 +123,11 @@ export class AuthService {
 
   get teamId(): number | null {
     return this.currentUser?.idTeam ?? null;
+  }
+
+  // CORRETTO: In precedenza ritornava idTeam, ora ritorna il nome
+  get teamName(): string | null {
+    return this.currentUser?.teamName ?? null;
   }
 
   get role(): string | null {
