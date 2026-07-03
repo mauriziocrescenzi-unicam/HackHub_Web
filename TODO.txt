@@ -46,3 +46,5 @@ Da rivedere la parte submission perchè fino a quando non è implementato report
 Capire anche a che rendere visibile la parte submission
 
 CAPIRE GLI ERRORI CHE PARTONO QUANDO SI FA ng serve -o 
+
+* rivedere parte login e registrazione, guardie e interceptor
