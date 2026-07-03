@@ -7,10 +7,10 @@ import { SubmissionService } from '../../service/submission.service';
 import { SubmissionResponse, SubmitProjectPayload } from '../../model/submission.model';
 import { Team } from '../../../team/model/team.model';
 import { AuthService } from '../../../auth/service/auth.service';
-//import { ReportService } from '../../reports/service/report.service';
 import { HackathonService } from '../../../hackathon/service/hackathon.service';
 import { Hackathon } from '../../../hackathon/models/hackathon.model';
-//import { Report } from '../../reports/model/report.model';
+import { ReportService } from '../../../report/service/report.service';
+import { Report } from '../../../report/models/report.model';
 
 @Component({
   selector: 'app-submission',

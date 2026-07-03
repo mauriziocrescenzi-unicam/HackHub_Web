@@ -11,7 +11,7 @@ Feature da Implementare
     - listaHackathon --> fatto
 -account 
     -profilo utente --> fatto
-    -invito --> meuris
+    -invito --> meuris --> fatto
 - team --> fatto
     - mio_team --> fatto 
     - teams --> fatto
@@ -19,7 +19,7 @@ Feature da Implementare
     -user --> fatto
 
 -reports
-    -report --> meuris
+    -report --> meuris --> fatto
 
 -submissions
     -submission --> gaspa
