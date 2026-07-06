@@ -22,15 +22,15 @@ import { Report } from '../../../report/models/report.model';
 export class SubmissionComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private submissionService = inject(SubmissionService);
-  protected authService = inject(AuthService); // Protected for HTML template use
+  protected authService = inject(AuthService);
   private reportService = inject(ReportService);
 
   hackathonId = signal<number | null>(null);
   hackathon = signal<Hackathon | null>(null);
 
   // --- DATA STATES ---
-  submissions = signal<SubmissionResponse[]>([]); // Staff only
-  winner = signal<Team | null>(null);             // Everyone
+  submissions = signal<SubmissionResponse[]>([]);
+  winner = signal<Team | null>(null);             
 
   // --- FORM & UI STATES ---
   githubUrl = signal<string>('');
@@ -97,12 +97,10 @@ export class SubmissionComponent implements OnInit {
       this.hackathonId.set(numId);
     }
     
-    // Retrieve hackathon data
     this.hackathonService.getById(this.hackathonId()!).subscribe({
       next: (hackathon) => {
         this.hackathon.set(hackathon);
         
-        // As soon as I have the hackathon, check if there's already a winner
         this.checkWinner(this.hackathonId()!); 
       },
       error: (err: any) => this.showError(err)
@@ -116,7 +114,6 @@ export class SubmissionComponent implements OnInit {
         this.winner.set(winnerTeam);
       },
       error: (err: any) => {
-        // If it receives 404, it means the winner hasn't been proclaimed yet
         if (err.status === 404) {
            this.winner.set(null);
         } else {
@@ -136,8 +133,6 @@ export class SubmissionComponent implements OnInit {
         // Show success message from backend
         this.showSuccess(message || 'Winner proclaimed successfully!');
         
-        // Now that it has been proclaimed, make a GET request to retrieve team data 
-        // and update the UI in real-time
         this.checkWinner(id);
       },
       error: (err: any) => this.showError(err)
@@ -347,7 +342,6 @@ export class SubmissionComponent implements OnInit {
       source: newUrl
     };
 
-    // Activate loading signal
     this.isSubmitting.set(true);
 
     this.submissionService.submitProject(payload).subscribe({
@@ -370,7 +364,6 @@ export class SubmissionComponent implements OnInit {
     this.editUrlTemp.set(this.githubUrl());
   }
 
-  // Staff method to set winner
   isOrganizer = computed(() => {
     const user = this.authService.user();
     const hackathon = this.hackathon();

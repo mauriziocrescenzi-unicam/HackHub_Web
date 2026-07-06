@@ -1,13 +1,28 @@
 <div class="page">
+  <!-- HEADER CON TITOLO, BOTTONE STAFF E RICERCA -->
   <div class="page-header">
-    <h1 class="page-title">Hackathons</h1>
-    <p class="page-subtitle">Discover and join amazing hackathons from around the world</p>
+    <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem;">
+      <div>
+        <h1 class="page-title">Hackathons</h1>
+        <p class="page-subtitle">Discover and join amazing hackathons from around the world</p>
+      </div>
+      
+      @if (authService.isStaff()) {
+        <a routerLink="/hackathons/create" class="btn-primary" style="width: auto; padding: 0.6rem 1.2rem; display: flex; align-items: center; gap: 0.5rem; text-decoration: none;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 1rem; height: 1rem;">
+            <line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+          Crea Hackathon
+        </a>
+      }
+    </div>
     
     <div class="search-wrapper">
       <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
       </svg>
-      <input type="text" class="search-input" placeholder="Search hackathons..." [(ngModel)]="searchTerm" />
+      <!-- Sintassi corretta per Signals con ngModel -->
+      <input type="text" class="search-input" placeholder="Search hackathons..." [ngModel]="searchTerm()" (ngModelChange)="searchTerm.set($event); currentPage.set(1)" />
     </div>
   </div>
 
@@ -17,6 +32,7 @@
     <button class="tab" [class.active]="filtroTempo() === 'passati'" (click)="setFiltroTempo('passati')">Completed</button>
   </div>
 
+  <!-- GRIGLIA HACKATHON -->
   <div class="hackathon-grid">
     @for (h of paginato(); track h.id) {
       <div class="card">
@@ -37,27 +53,49 @@
           </p>
         </div>
         <div class="card-content">
-          <a [routerLink]="['/hackathons', h.id]" class="btn-primary">View Details</a>
+          <a [routerLink]="['/hackathons', h.id]" class="btn-primary" style="text-decoration: none; text-align: center;">View Details</a>
         </div>
       </div>
     } @empty {
-      <div style="grid-column: 1 / -1; text-align: center; color: #71717a; padding: 2rem;">
-        <p>Nessun hackathon trovato con i filtri selezionati.</p>
+      <!-- GESTIONE STATO VUOTO -->
+      <div style="grid-column: 1 / -1; text-align: center; padding: 4rem 1rem; background: #09090b; border: 1px dashed #27272a; border-radius: 1rem; display: flex; flex-direction: column; align-items: center;">
+        
+        <!-- Caso 1: Database completamente vuoto -->
+        @if (hackathon().length === 0) {
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width: 4rem; height: 4rem; margin-bottom: 1rem; color: #52525b;">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line>
+          </svg>
+          <p style="font-size: 1.1rem; color: #a1a1aa; margin-bottom: 1.5rem;">Nessun hackathon disponibile al momento nella piattaforma.</p>
+          
+          @if (authService.isStaff()) {
+            <a routerLink="/hackathons/create" class="btn-primary" style="width: auto; display: inline-flex; align-items: center; gap: 0.5rem; text-decoration: none; padding: 0.75rem 1.5rem;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 1.2rem; height: 1.2rem;"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+              Organizza il primo Hackathon
+            </a>
+          }
+        } 
+        <!-- Caso 2: Ricerca o filtri non producono risultati -->
+        @else {
+          <p style="font-size: 1.1rem; color: #a1a1aa;">Nessun hackathon trovato con i filtri selezionati.</p>
+        }
       </div>
     }
   </div>
 
   @if (totalPages() > 1) {
-    <div class="pagination-controls" style="display: flex; justify-content: center; gap: 1rem; margin-top: 2rem;">
+    <div class="pagination-controls" style="display: flex; justify-content: center; gap: 1rem; margin-top: 2.5rem;">
       <button class="btn-outline" [disabled]="currentPage() === 1" (click)="changePage(currentPage() - 1)">Precedente</button>
-      <span style="display: flex; align-items: center;">Pagina {{ currentPage() }} di {{ totalPages() }}</span>
+      <span style="display: flex; align-items: center; color: #a1a1aa; font-size: 0.9rem;">Pagina {{ currentPage() }} di {{ totalPages() }}</span>
       <button class="btn-outline" [disabled]="currentPage() === totalPages()" (click)="changePage(currentPage() + 1)">Successivo</button>
     </div>
   }
 
   @if (showScrollTop()) {
-    <button class="scroll-top-btn" (click)="scrollToTop()" style="position: fixed; bottom: 20px; right: 20px; z-index: 1000; background: #a855f7; border: none; border-radius: 50%; width: 40px; height: 40px; color: white; cursor: pointer;">
-      ↑
+    <button class="scroll-top-btn" (click)="scrollToTop()" style="position: fixed; bottom: 2rem; right: 2rem; z-index: 50; background: linear-gradient(to right, #a855f7, #ec4899); border: none; border-radius: 50%; width: 3rem; height: 3rem; color: white; cursor: pointer; box-shadow: 0 4px 12px rgba(168, 85, 247, 0.4); display: flex; align-items: center; justify-content: center;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 1.25rem; height: 1.25rem;">
+        <line x1="12" y1="19" x2="12" y2="5"></line>
+        <polyline points="5 12 12 5 19 12"></polyline>
+      </svg>
     </button>
   }
 </div>

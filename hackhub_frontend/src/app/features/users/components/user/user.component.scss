@@ -26,141 +26,157 @@
     }
   }
 
-  /* ── Toolbar ─────────────────────────────────────────────── */
-  .toolbar {
+  /* ── Contenitore Toolbar ────────────────────────────────── */
+  .h-toolbar {
     display: flex;
     flex-direction: column;
-    gap: 0.75rem;
-    margin-bottom: 1.5rem;
+    align-items: flex-start;
+    gap: 2rem; /* Allineato esattamento allo scarto di margin-bottom: 2rem degli Hackathons */
+    width: 100%;
+  }
 
-    @media (min-width: 640px) {
-      flex-direction: row;
-      align-items: center;
-      justify-content: space-between;
+  /* ── Search Box & Filters (Specificità Aumentata) ── */
+  div.h-search-box {
+    position: relative;
+    width: 100%;
+    max-width: 28rem; /* Allineato ai 28rem di Hackathons */
+
+    .h-search-icon {
+      position: absolute;
+      left: 0.75rem;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 1.25rem; /* Dimensioni icona Hackathons */
+      height: 1.25rem;
+      color: #71717a;
+      pointer-events: none;
     }
 
-    /* Search Box */
-    .h-search-box {
-      position: relative;
-      flex: 1;
-      max-width: 32rem;
-
-      .h-search-icon {
-        position: absolute;
-        left: 0.75rem;
-        top: 50%;
-        transform: translateY(-50%);
-        width: 1.1rem;
-        height: 1.1rem;
-        color: #71717a;
-        pointer-events: none;
-      }
-
-      .search-input {
-        width: 100%;
-        padding: 0.55rem 0.75rem 0.55rem 2.4rem;
-        border-radius: 0.5rem;
-        border: 1px solid #27272a;
-        background-color: #18181b;
-        color: #fafafa;
-        font-size: 0.875rem;
-        outline: none;
-        transition: border-color 0.2s, box-shadow 0.2s;
-
-        &::placeholder {
-          color: #52525b;
-        }
-
-        &:focus {
-          border-color: #a855f7;
-          box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.15);
-        }
-      }
-    }
-
-    /* Filter Group */
-    .au-filter-group {
-      display: flex;
-      gap: 0.25rem;
-      background-color: #18181b;
+    input.search-input {
+      width: 100%;
+      padding: 0.55rem 0.75rem 0.55rem 2.5rem; /* Padding esatto Hackathons (2.5rem a sinistra) */
+      border-radius: 0.5rem;
       border: 1px solid #27272a;
-      border-radius: 0.6rem;
-      padding: 0.25rem;
-      flex-shrink: 0;
+      background-color: #18181b;
+      color: #fafafa;
+      font-size: 0.875rem;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
 
-      .au-filter-btn {
-        padding: 0.4rem 0.9rem;
-        border-radius: 0.4rem;
-        border: none;
-        background: transparent;
-        color: #71717a;
-        font-size: 0.8rem;
-        font-weight: 500;
-        cursor: pointer;
-        white-space: nowrap;
-        transition: background 0.2s, color 0.2s;
+      &::placeholder {
+        color: #52525b;
+      }
 
-        &:hover {
-          color: #fafafa;
-        }
-
-        &--active {
-          background-color: #27272a;
-          color: #fafafa;
-        }
+      &:focus {
+        border-color: #a855f7;
+        box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.15);
       }
     }
   }
 
-  /* ── User List ───────────────────────────────────────────── */
-  .user-list {
+  div.au-filter-group {
     display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
+    gap: 0.25rem;
+    width: max-content;
+    background-color: #18181b;
+    border: 1px solid #27272a;
+    border-radius: 0.6rem;
+    padding: 0.25rem;
+    flex-shrink: 0;
+
+    button.au-filter-btn {
+      padding: 0.4rem 0.9rem;
+      border-radius: 0.4rem;
+      border: none;
+      background: transparent;
+      color: #71717a;
+      font-size: 0.8rem;
+      font-weight: 500;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.2s, color 0.2s;
+
+      &:hover {
+        color: #fafafa;
+      }
+
+      &--active {
+        background-color: #27272a;
+        color: #fafafa;
+      }
+    }
   }
 
-  /* ── User Card ───────────────────────────────────────────── */
+  /* ── Spaziatura Toolbar Personalizzata ───────────────────── */
+  .toolbar-spacing {
+    margin-bottom: 3rem;
+  }
+
+  /* ── User Card Modificata (Flexbox) ──────────────────────── */
   .pr-card {
-    display: grid;
-    grid-template-columns: 1fr auto 1.1fr auto 1fr;
-    align-items: center;
-    gap: 0;
+    display: flex; 
+    align-items: stretch;
     border: 1px solid #27272a;
     border-radius: 0.75rem;
     background-color: rgba(9, 9, 11, 0.5);
     overflow: hidden;
     transition: border-color 0.2s;
+    margin-bottom: 1.5rem;
 
-    &:hover {
-      border-color: #3f3f46;
-    }
+    &:hover { border-color: #3f3f46; }
+    &--disabled { opacity: 0.65; }
 
-    &--disabled {
-      opacity: 0.65;
-    }
-
-    @media (max-width: 768px) {
-      grid-template-columns: 1fr;
-    }
-
-    /* Barra di accento verticale */
     .pr-card-bar {
       width: 4px;
-      align-self: stretch;
       flex-shrink: 0;
     }
 
     .pr-card-body {
+      flex-grow: 1;
       padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
 
-      /* Colonne */
-      .col-identity,
-      .col-contact,
-      .col-actions {
-        padding: 0.75rem 1.25rem;
+      @media (min-width: 768px) {
+        flex-direction: row;
+        align-items: center;
+        gap: 2rem;
       }
 
-      /* Identity Column */
+      .col-identity {
+          flex: 1;
+          display: flex;
+          align-items: center;
+          gap: 1rem;
+      }
+
+      .col-info {
+          flex: 1.5;
+          border-left: 1px solid #27272a;
+          padding-left: 1.5rem;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+
+          @media (max-width: 768px) { 
+            border-left: none; 
+            padding-left: 0; 
+          }
+      }
+
+      .col-actions {
+          flex-shrink: 0;
+          display: flex;
+          flex-direction: column;
+          align-items: flex-end;
+          gap: 0.6rem;
+
+          @media (max-width: 768px) {
+            align-items: flex-start;
+          }
+      }
+
       .au-avatar {
         width: 2.75rem;
         height: 2.75rem;
@@ -179,33 +195,6 @@
         }
       }
 
-      .identity-info {
-        display: flex;
-        flex-direction: column;
-        gap: 0.15rem;
-        min-width: 0;
-
-        .name-row {
-          display: flex;
-          align-items: center;
-          gap: 0.5rem;
-          flex-wrap: wrap;
-
-          .user-name {
-            font-size: 0.9rem;
-            font-weight: 600;
-            color: #fafafa;
-            white-space: nowrap;
-          }
-        }
-
-        .nickname {
-          font-size: 0.78rem;
-          color: #71717a;
-        }
-      }
-
-      /* Role Badges */
       .au-role-badge {
         display: inline-block;
         padding: 0.1rem 0.45rem;
@@ -227,50 +216,6 @@
         }
       }
 
-      /* Contact Column */
-      .col-contact {
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-
-        .contact-row {
-          display: flex;
-          align-items: center;
-          gap: 0.5rem;
-          font-size: 0.8rem;
-          color: #a1a1aa;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-
-          i {
-            width: 0.85rem;
-            height: 0.85rem;
-            flex-shrink: 0;
-            stroke: #71717a;
-          }
-        }
-
-        .muted {
-          color: #52525b;
-          font-style: italic;
-        }
-      }
-
-      /* Actions Column */
-      .col-actions {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-end;
-        gap: 0.6rem;
-
-        @media (max-width: 768px) {
-          align-items: flex-start;
-          padding-top: 1rem;
-        }
-      }
-
-      /* Status Badges */
       .au-status-badge {
         display: inline-flex;
         align-items: center;
@@ -308,7 +253,6 @@
         }
       }
 
-      /* Action Buttons */
       .au-toggle-btn {
         display: inline-flex;
         align-items: center;
