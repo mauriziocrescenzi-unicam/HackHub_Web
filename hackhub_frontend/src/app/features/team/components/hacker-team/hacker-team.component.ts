@@ -2,10 +2,11 @@ import { ChangeDetectorRef, Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Team } from '../../model/team.model'; // Verifica che il percorso sia corretto
+import { Team } from '../../model/team.model'; 
 import { TeamService } from '../../service/team.service';
-//
 import { AuthService } from '../../../auth/service/auth.service';
+import { InvitiService } from '../../../account/service/inviti.service'; 
+import { ModaleConferma } from '../../model/modale-conferma.model';
 
 @Component({
   selector: 'app-hacker-team',
@@ -22,18 +23,18 @@ export class HackerTeamComponent implements OnInit {
   loading = signal(true);
 
   newMemberEmail = signal('');
-
   showModifyForm = false;
-
   name = '';
   description = '';
-
   isLeader = false;  
+
+  confirmDialog = signal<ModaleConferma | null>(null);
+  private messageTimeout: any;
 
   constructor(
     private router: Router,
     private teamService: TeamService,
-    //private invitationService: InvitationService,
+    private invitiService: InvitiService, // Utilizzo di InvitiService
     protected authService: AuthService,
     private cdr: ChangeDetectorRef
   ) {}
@@ -51,7 +52,6 @@ export class HackerTeamComponent implements OnInit {
         this.loading.set(false);
 
         const currentUserId = this.authService.currentUser?.idAccount;
-
         this.isLeader = currentUserId !== null && data.leader?.id === currentUserId;
 
         this.name = this.team()!.name;
@@ -61,7 +61,7 @@ export class HackerTeamComponent implements OnInit {
         if(this.authService.isUser()){
           this.router.navigate(['/teams']);
         } else {
-          this.router.navigate(['/dashboard']);
+          this.router.navigate(['/home']);
         }
       }
     });
@@ -69,25 +69,24 @@ export class HackerTeamComponent implements OnInit {
 
   inviteMember(){
     this.errorMessage.set(null);
-
     if (!this.newMemberEmail()) return;
 
-    // this.invitationService.invite(this.newMemberEmail()).subscribe({
-    //   next: () => {
-    //     this.successMessage.set('Invito inviato con successo!');
-    //     this.newMemberEmail.set('');
-    //     setTimeout(() => this.successMessage.set(null), 3000);
-    //   },
-    //  error: err => {
-    //    this.errorMessage.set(err.message || 'Errore durante l\'invio dell\'invito.');
-    //  }
-    //});
+    this.invitiService.invite(this.newMemberEmail()).subscribe({
+      next: () => {
+        this.successMessage.set('Invito inviato con successo!');
+        this.newMemberEmail.set('');
+        this.clearMessagesAfterDelay();
+      },
+      error: (err: any) => {
+        const backendMessage = typeof err.error === 'string' ? err.error : err.error?.message;
+        this.errorMessage.set(backendMessage || 'Errore durante l\'invio dell\'invito.');
+        this.clearMessagesAfterDelay();
+      }
+    });
   }
   
   leave(){
     this.errorMessage.set(null);
-    if (!confirm('Sei sicuro di voler lasciare il team?')) return;
-
     if(this.isLeader) {
       this.leaveTeamForLeader();
     } else {
@@ -101,11 +100,15 @@ export class HackerTeamComponent implements OnInit {
         this.successMessage.set('Hai lasciato il team!');
         this.team.set(null);
         this.authService.updateTeamId(null);
-        setTimeout(() => this.successMessage.set(null), 3000);
-        this.router.navigate(['/teams']);
+        setTimeout(() => {
+          this.successMessage.set(null);
+          this.router.navigate(['/teams']);
+        }, 1500);
       },
-      error: err => {
-        this.errorMessage.set(err.message);
+      error: (err: any) => {
+        const backendMessage = typeof err.error === 'string' ? err.error : err.error?.message;
+        this.errorMessage.set(backendMessage || 'Errore durante l\'abbandono del team.');
+        this.clearMessagesAfterDelay();
       }
     });
   }
@@ -116,11 +119,15 @@ export class HackerTeamComponent implements OnInit {
         this.successMessage.set('Hai lasciato il team!');
         this.team.set(null);
         this.authService.updateTeamId(null);
-        setTimeout(() => this.successMessage.set(null), 3000);
-        this.router.navigate(['/teams']);
+        setTimeout(() => {
+          this.successMessage.set(null);
+          this.router.navigate(['/teams']);
+        }, 1500);
       },
-      error: err => {
-        this.errorMessage.set(err.message);
+      error: (err: any) => {
+        const backendMessage = typeof err.error === 'string' ? err.error : err.error?.message;
+        this.errorMessage.set(backendMessage || 'Errore durante l\'abbandono del team.');
+        this.clearMessagesAfterDelay();
       }
     });
   }
@@ -140,17 +147,18 @@ export class HackerTeamComponent implements OnInit {
         this.description = team.description;
         this.showModifyForm = false;
         this.cdr.detectChanges();
-        setTimeout(() => this.successMessage.set(null), 3000);
+        this.clearMessagesAfterDelay();
       },
-      error: err => {
-        this.errorMessage.set(err.message);
+      error: (err: any) => {
+        const backendMessage = typeof err.error === 'string' ? err.error : err.error?.message;
+        this.errorMessage.set(backendMessage || 'Errore durante l\'aggiornamento del team.');
+        this.clearMessagesAfterDelay();
       }
     });
   }
 
   removeMember(id: number) {
     this.errorMessage.set(null);
-    if (!confirm('Vuoi davvero rimuovere questo membro dal team?')) return;
 
     this.teamService.removeMember(id).subscribe({
       next: () => {
@@ -160,11 +168,76 @@ export class HackerTeamComponent implements OnInit {
           team.members = (team.members ?? []).filter(m => m.id !== id);
         }
         this.cdr.detectChanges();
-        setTimeout(() => this.successMessage.set(null), 3000);
+        this.clearMessagesAfterDelay();
       },
-      error: err => {
-        this.errorMessage.set(err.message);
+      error: (err: any) => {
+        const backendMessage = typeof err.error === 'string' ? err.error : err.error?.message;
+        this.errorMessage.set(backendMessage || 'Errore durante la rimozione del membro.');
+        this.clearMessagesAfterDelay();
       }
     });
+  }
+
+  // --- LOGICA MODALE DI CONFERMA ---
+
+  closeDialog() {
+    this.confirmDialog.set(null);
+  }
+
+  askLeave() {
+    const hasMembers = (this.team()?.members?.length ?? 0) > 0;
+
+    if (this.isLeader) {
+      this.confirmDialog.set({
+        type: 'danger',
+        icon: 'fa-solid fa-arrow-right-from-bracket',
+        title: 'Abbandona il team',
+        message: 'Stai per lasciare il team di cui sei Leader.',
+        warning: hasMembers
+          ? 'Il ruolo di Leader verrà assegnato casualmente a un altro membro del team.'
+          : 'Non ci sono altri membri: se abbandoni il team, verrà eliminato definitivamente.',
+        confirmLabel: 'Sì, abbandona',
+        onConfirm: () => {
+          this.closeDialog();
+          this.leave();
+        }
+      });
+    } else {
+      this.confirmDialog.set({
+        type: 'danger',
+        icon: 'fa-solid fa-arrow-right-from-bracket',
+        title: 'Abbandona il team',
+        message: 'Sei sicuro di voler lasciare il team? Potrai unirti a uno nuovo in qualsiasi momento.',
+        confirmLabel: 'Sì, abbandona',
+        onConfirm: () => {
+          this.closeDialog();
+          this.leave();
+        }
+      });
+    }
+  }
+
+  askRemoveMember(member: any) {
+    this.confirmDialog.set({
+      type: 'danger',
+      icon: 'fa-solid fa-user-xmark',
+      title: 'Rimuovi membro',
+      message: `Stai per rimuovere ${member.nickname} dal team. Potrai inviargli un nuovo invito in futuro.`,
+      confirmLabel: 'Rimuovi',
+      onConfirm: () => {
+        this.closeDialog();
+        this.removeMember(member.id);
+      }
+    });
+  }
+
+  private clearMessagesAfterDelay() {
+    if (this.messageTimeout) {
+      clearTimeout(this.messageTimeout);
+    }
+    this.messageTimeout = setTimeout(() => {
+      this.errorMessage.set(null);
+      this.successMessage.set(null);
+    }, 5000);
   }
 }

@@ -1,6 +1,4 @@
 import { HttpInterceptorFn } from '@angular/common/http';
-import { inject } from '@angular/core';
-import { AuthService } from '../../features/auth/service/auth.service';
 
 /**
  * Aggiunge il token JWT a tutte le richieste HTTP in uscita che intercetta, se l'utente è autenticato.

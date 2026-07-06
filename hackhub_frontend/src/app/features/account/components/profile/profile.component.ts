@@ -1,4 +1,4 @@
-import { Component, signal, computed, effect } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../../auth/service/auth.service';
@@ -26,14 +26,14 @@ export class ProfileComponent {
   
   errorMessage = signal<string | null>(null);
   successMessage = signal<string | null>(null);
+  
+  // Reintrodotta la regex di sicurezza
+  private passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
   private messageTimeout: any;
 
-  constructor(public authService: AuthService) {
-    // Il costruttore ora è pulito, nessuna scrittura sui signal in background
-  }
+  constructor(public authService: AuthService) {}
 
   toggleEdit() {
-    // Riversiamo i dati attuali nel form solo nell'istante in cui l'utente clicca "Modifica"
     const user = this.authService.user();
     if (user) {
       this.editName.set(user.name || '');
@@ -45,47 +45,75 @@ export class ProfileComponent {
 
   cancelEdit() { 
     this.isEditing.set(false); 
-    
-    // Svuotiamo i campi password per sicurezza se l'utente annulla l'operazione
     this.editOldPassword.set('');
     this.editNewPassword.set('');
     this.editConfirmPassword.set('');
+    this.errorMessage.set(null);
+  }
+
+  // Reintrodotto il metodo per prevenire bug sui messaggi che spariscono troppo in fretta
+  private clearMessagesAfterDelay() {
+    if (this.messageTimeout) {
+      clearTimeout(this.messageTimeout);
+    }
+    this.messageTimeout = setTimeout(() => {
+      this.errorMessage.set(null);
+      this.successMessage.set(null);
+    }, 5000);
   }
 
   saveChanges() {
     this.isSaving.set(true);
+    this.errorMessage.set(null);
     
-    // Recuperiamo l'utente corrente per estrarre l'email
     const currentUser = this.authService.user();
 
     const data: any = { 
       name: this.editName(), 
       surname: this.editSurname(), 
       nickname: this.editNickname(),
-      email: currentUser?.email // <-- Aggiunta l'email obbligatoria per il backend
+      email: currentUser?.email 
     };
     
-    if (this.editNewPassword()) {
+    // Controllo Password
+    if (this.editOldPassword() || this.editNewPassword()) {
+      
       if (this.editNewPassword() !== this.editConfirmPassword()) {
-        this.errorMessage.set('Passwords do not match!');
+        this.errorMessage.set('Le nuove password non coincidono.');
         this.isSaving.set(false);
+        this.clearMessagesAfterDelay();
         return;
       }
+
+      if (!this.passwordRegex.test(this.editNewPassword())) {
+        this.errorMessage.set('La password deve essere di almeno 8 caratteri e contenere una maiuscola, una minuscola e un numero.');
+        this.isSaving.set(false);
+        this.clearMessagesAfterDelay();
+        return;
+      }
+
       data.oldPassword = this.editOldPassword();
       data.newPassword = this.editNewPassword();
     }
 
     this.authService.updateProfile(data).subscribe({
       next: () => {
-        this.successMessage.set('Profile updated!');
+        this.successMessage.set('Profilo aggiornato con successo!');
         this.isSaving.set(false);
         this.isEditing.set(false);
-        setTimeout(() => this.successMessage.set(null), 5000);
+        
+        // Pulizia campi password
+        this.editOldPassword.set('');
+        this.editNewPassword.set('');
+        this.editConfirmPassword.set('');
+        
+        this.clearMessagesAfterDelay();
       },
-      error: (err) => {
+      error: (err: any) => {
         this.isSaving.set(false);
-        this.errorMessage.set(err.message || 'Error updating profile');
-        setTimeout(() => this.errorMessage.set(null), 5000);
+        const backendMessage = typeof err.error === 'string' ? err.error : err.error?.message;
+        this.errorMessage.set(backendMessage || 'Errore durante l\'aggiornamento del profilo.');
+        this.clearMessagesAfterDelay();
       }
     });
   }

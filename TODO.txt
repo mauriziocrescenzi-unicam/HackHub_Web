@@ -4,7 +4,8 @@ Feature da Implementare
 - dashboard
     -home --> gaspa
 
--hackathon
+*NOTE da rivedere in fondo al file
+-hackathon 
     - creazioneHackathon --> fatto *da rivedere html e app.routes
     - singoloHackathon. -->  fatto
     - modificaHackathon --> gaspa *da rivedere per controllo di organizzatore
@@ -47,4 +48,8 @@ Capire anche a che rendere visibile la parte submission
 
 CAPIRE GLI ERRORI CHE PARTONO QUANDO SI FA ng serve -o 
 
-* rivedere parte login e registrazione, guardie e interceptor
+* Per il gaspacho 
+    - da vedere con accesso STAFF, cliccando su Hackathon nella navbar cosa succede (attualmente il db non è popolato, quindi
+      dovrebbe comparire una scheramta con la searchbar, un messaggio del tipo "Non ci sono hackathon" e il bottone per 
+      crearli che porta alla pagina di creazione con il form)
+    - rivedere il css per la sezione user che era un po' disallineato

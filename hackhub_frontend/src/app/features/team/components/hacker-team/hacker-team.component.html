@@ -6,7 +6,6 @@
     </div>
   } @else {
 
-    <!-- ── ALERTS ── -->
     @if (successMessage()) {
       <div class="alert alert-success">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
@@ -21,7 +20,6 @@
       </div>
     }
 
-    <!-- ── HERO CARD ── -->
     <div class="hero">
       <div class="hero-bg" aria-hidden="true"></div>
       <div class="hero-inner">
@@ -42,14 +40,13 @@
               Modifica
             </button>
           }
-          <button class="btn-leave" (click)="leave()">
+          <button class="btn-leave" (click)="askLeave()">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
             Lascia
           </button>
         </div>
       </div>
 
-      <!-- Stats strip -->
       <div class="stats-strip">
         <div class="stat">
           <span class="stat-value">{{ team()?.teamStats?.hackathonsPlayed || 0 }}</span>
@@ -57,7 +54,7 @@
         </div>
         <div class="stat-sep"></div>
         <div class="stat">
-          <span class="stat-value stat-value--green">{{ team()?.teamStats?.hackthonsWon || 0 }}</span>
+          <span class="stat-value stat-value--green">{{ team()?.teamStats?.hackathonsWon || 0 }}</span>
           <span class="stat-label">Vittorie</span>
         </div>
         <div class="stat-sep"></div>
@@ -73,7 +70,6 @@
       </div>
     </div>
 
-    <!-- ── FORM MODIFICA ── -->
     @if (showModifyForm) {
       <div class="section-card">
         <div class="section-card-bar"></div>
@@ -112,7 +108,7 @@
           <div class="edit-actions">
             <button class="btn-ghost" (click)="showModifyForm = false">Annulla</button>
             <button class="btn-primary" (click)="modifyTeam()">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
               Salva modifiche
             </button>
           </div>
@@ -121,7 +117,6 @@
       </div>
     }
 
-    <!-- ── MEMBRI E INVITI ── -->
     <div class="section-card">
       <div class="section-card-bar"></div>
       <div class="section-card-inner">
@@ -138,7 +133,6 @@
 
         <div class="members-list">
           
-          <!-- Leader -->
           @if (team()?.leader) {
             <div class="member member--leader">
               <div class="member-avatar member-avatar--leader">
@@ -161,7 +155,6 @@
             <div class="members-sep"><span>Membri</span></div>
           }
 
-          <!-- Altri Membri -->
           @for (member of team()?.members; track member.id) {
             <div class="member">
               <div class="member-avatar">
@@ -172,7 +165,7 @@
                 <span class="member-email">{{ member.email }}</span>
               </div>
               @if (isLeader) {
-                <button class="member-remove" title="Rimuovi {{ member.nickname }}" (click)="removeMember(member.id)">
+                <button class="member-remove" title="Rimuovi {{ member.nickname }}" (click)="askRemoveMember(member)">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                 </button>
               }
@@ -180,7 +173,6 @@
           }
         </div>
 
-        <!-- Invita Membro (solo Leader) -->
         @if (isLeader) {
           <div class="invite">
             <div class="invite-header">
@@ -196,7 +188,7 @@
                        (input)="newMemberEmail.set($any($event.target).value)" 
                        (keyup.enter)="inviteMember()" />
               </div>
-              <button class="btn-primary" (click)="inviteMember()">
+              <button class="btn-primary" (click)="inviteMember()" [disabled]="!newMemberEmail().trim()">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
                 Invita
               </button>
@@ -208,3 +200,41 @@
     </div>
   }
 </div>
+
+@if (confirmDialog()) {
+  <div class="custom-modal-overlay" (click)="closeDialog()">
+    <div class="custom-modal-content" (click)="$event.stopPropagation()" style="max-width: 450px;">
+      
+      <div class="modal-header" [style.border-bottom]="confirmDialog()!.type === 'danger' ? '1px solid rgba(239, 68, 68, 0.3)' : ''">
+        <div style="display: flex; align-items: center; gap: 0.75rem;">
+          <svg *ngIf="confirmDialog()!.type === 'danger'" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" style="width: 1.5rem; height: 1.5rem;">
+            <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+            <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+          </svg>
+          <h3 class="section-title" [style.color]="confirmDialog()!.type === 'danger' ? '#ef4444' : ''">{{ confirmDialog()!.title }}</h3>
+        </div>
+        <button class="btn-close" (click)="closeDialog()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <p style="color: #d4d4d8; font-size: 0.95rem; line-height: 1.5;">{{ confirmDialog()!.message }}</p>
+        
+        @if (confirmDialog()!.warning) {
+          <div class="alert-error" style="margin-top: 1rem; margin-bottom: 0;">
+            {{ confirmDialog()!.warning }}
+          </div>
+        }
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-ghost" (click)="closeDialog()" style="padding: 0.7rem 1.2rem; border: none; background: transparent; color: #a1a1aa; cursor: pointer;">Annulla</button>
+        <button class="btn-primary" [style.background]="confirmDialog()!.type === 'danger' ? '#ef4444' : ''" [style.width]="'auto'" (click)="confirmDialog()!.onConfirm()">
+          {{ confirmDialog()!.confirmLabel }}
+        </button>
+      </div>
+
+    </div>
+  </div>
+}

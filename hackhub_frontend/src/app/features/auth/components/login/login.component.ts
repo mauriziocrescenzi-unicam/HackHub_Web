@@ -50,9 +50,10 @@ export class LoginComponent {
       password: this.loginForm.value.password 
     };
 
+    // Dopo aver eseguito il login si viene reindirizzati alla home page
     this.authService.login(req).subscribe({
       next: () => {
-        this.router.navigate(['/']);
+        this.router.navigate(['/home']);
       },
       error: err => {
         this.errorMessage.set(err.message || 'Errore durante il login. Controlla le credenziali.');

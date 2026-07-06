@@ -1,4 +1,4 @@
-import { Component, computed, effect, signal } from '@angular/core';
+import { Component, computed, effect, HostListener, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -23,16 +23,6 @@ export class TeamComponent {
   messageTimeout: any;
 
   showCreateForm = signal<boolean>(false);
-
-  // Ricerca e filtro
-  filteredTeams = computed(() => {
-    const query = this.searchQuery().toLowerCase();
-    return this.teams().filter(team => 
-      team.name.toLowerCase().includes(query) || 
-      (team.description && team.description.toLowerCase().includes(query))
-    );
-  });
-
   myTeam = signal<Team | null>(null); 
   selectedTeam = signal<Team | null>(null);
 
@@ -43,17 +33,56 @@ export class TeamComponent {
   createErrorMessage = signal<string | null>(null);
   createSuccessMessage = signal<string | null>(null);
 
-  // Limite massimo membri per un team (usato per calcolare i badge Full/Looking)
+  // Paginazione e UI
+  currentPage = signal<number>(1);
+  itemsPerPage = 8;
+  showScrollTop = signal<boolean>(false);
   maxMembers = 5;
 
   constructor(private teamService: TeamService, private authService: AuthService, private router: Router) {
+    // Gestione reattiva dell'utente: se ha un team lo manda via, altrimenti carica i team
     effect(() => {
       const user = this.authService.user();
-      this.isLoggedIn.set(!!user);
-      this.myTeam.set(null); 
-      this.loadTeams();
-    }, { allowSignalWrites: true }); 
+      if (user) {
+        this.isLoggedIn.set(true);
+        if (user.idTeam) {
+          this.loadMyTeam();
+          return;
+        }
+        this.myTeam.set(null);
+        this.loadTeams();
+      } else {
+        this.isLoggedIn.set(false);
+        this.myTeam.set(null);
+        this.loadTeams();
+      }
+    }, { allowSignalWrites: true });
   }
+
+  // --- COMPULSIONE REATTIVA (COMPUTED) ---
+
+  // 1. Filtra i team in base alla ricerca testuale
+  filteredTeams = computed(() => {
+    const query = this.searchQuery().toLowerCase();
+    return this.teams().filter(team => 
+      team.name.toLowerCase().includes(query) || 
+      (team.description && team.description.toLowerCase().includes(query))
+    );
+  });
+
+  // 2. Taglia i team filtrati in base alla pagina corrente
+  paginato = computed(() => {
+    const start = (this.currentPage() - 1) * this.itemsPerPage;
+    const end = start + this.itemsPerPage;
+    return this.filteredTeams().slice(start, end);
+  });
+
+  // 3. Calcola il numero totale di pagine
+  totalPages = computed(() => {
+    return Math.ceil(this.filteredTeams().length / this.itemsPerPage);
+  });
+
+  // --- CARICAMENTO DATI E NAVIGAZIONE ---
 
   loadMyTeam() {
     this.router.navigate(['/teams/my']);
@@ -75,23 +104,26 @@ export class TeamComponent {
     });
   }
 
-  private clearMessagesAfterDelay() {
-    if (this.messageTimeout) {
-      clearTimeout(this.messageTimeout);
-    }
-    this.messageTimeout = setTimeout(() => {
-      this.errorMessage.set(null);
-    }, 5000);
-  }
-
-  openCreateTeam() {
-    this.showCreateForm.set(true);
-    document.body.style.overflow = 'hidden';
-  }
+  // --- GESTIONE INTERFACCIA E LISTENER ---
 
   updateSearch(event: Event) {
     const input = event.target as HTMLInputElement;
     this.searchQuery.set(input.value);
+    this.currentPage.set(1); // Torna alla pagina 1 quando cerchi
+  }
+
+  changePage(page: number) {
+    this.currentPage.set(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  @HostListener('window:scroll')
+  onScroll() {
+    this.showScrollTop.set(window.scrollY > 200);
+  }
+
+  scrollToTop() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   openTeamDetails(team: Team) {
@@ -102,6 +134,13 @@ export class TeamComponent {
   closePopup() {
     this.selectedTeam.set(null);
     document.body.style.overflow = 'auto';
+  }
+
+  // --- CREAZIONE TEAM ---
+
+  openCreateTeam() {
+    this.showCreateForm.set(true);
+    document.body.style.overflow = 'hidden';
   }
 
   closeCreateForm() {
@@ -135,21 +174,32 @@ export class TeamComponent {
         
         setTimeout(() => {
           this.closeCreateForm();
-          this.loadTeams(); 
+          // Dopo la creazione, l'utente è leader del team, mandiamolo alla sua pagina!
+          this.loadMyTeam(); 
         }, 1500);
       },
-      error: (err) => {
+      error: (err: any) => {
         this.isCreating.set(false);
-        this.createErrorMessage.set(
-          err?.error?.message || 'Errore durante la creazione del team. Riprova.'
-        );
+        const backendMessage = typeof err.error === 'string' ? err.error : err.error?.message;
+        this.createErrorMessage.set(backendMessage || 'Errore durante la creazione del team.');
       }
     });
   }
+
+  // --- UTILITY ---
 
   getTotalMembers(team: Team): number {
     const membersCount = team.members ? team.members.length : 0;
     const leaderCount = team.leader ? 1 : 0;
     return membersCount + leaderCount;
+  }
+
+  private clearMessagesAfterDelay() {
+    if (this.messageTimeout) {
+      clearTimeout(this.messageTimeout);
+    }
+    this.messageTimeout = setTimeout(() => {
+      this.errorMessage.set(null);
+    }, 5000);
   }
 }

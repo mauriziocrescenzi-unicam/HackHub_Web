@@ -1,6 +1,6 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
-import { AuthService } from '../../features/auth/service/auth.service'; // Usa il path corretto
+import { AuthService } from '../../features/auth/service/auth.service'; 
 
 export const roleGuard: CanActivateFn = (route, state) => {
   const authService = inject(AuthService);
@@ -10,7 +10,6 @@ export const roleGuard: CanActivateFn = (route, state) => {
   const expectedRole = route.data['expectedRole'];
   
   // Accede al ruolo dell'utente che l'authGuard ha già caricato in memoria.
-  // Sostituisci 'role' con il nome esatto della proprietà che hai nel tuo modello utente (es. 'ruolo', 'userType')
   const userRole = authService.currentUser?.role;
 
   if (userRole === expectedRole) {

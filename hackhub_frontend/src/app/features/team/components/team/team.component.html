@@ -37,7 +37,7 @@
   } @else {
     
     <div class="team-grid">
-      @for (team of filteredTeams(); track team.id) {
+      @for (team of paginato(); track team.id) {
         <div class="card" (click)="openTeamDetails(team)">
           
           <div class="card-header">
@@ -100,7 +100,7 @@
             <div class="skills-section">
               <p class="section-label">Statistiche</p>
               <div class="skills-list">
-                <span class="skill">Vittorie: {{ team.teamStats.hackthonsWon || 0 }}</span>
+                <span class="skill">Vittorie: {{ team.teamStats.hackathonsWon || 0 }}</span>
                 <span class="skill">Win Rate: {{ team.teamStats.winRate || 0 }}%</span>
               </div>
             </div>
@@ -110,6 +110,14 @@
         </div>
       }
     </div>
+
+    @if (totalPages() > 1) {
+      <div class="pagination">
+        <button (click)="changePage(currentPage() - 1)" [disabled]="currentPage() === 1">Precedente</button>
+        <span>Pagina {{ currentPage() }} di {{ totalPages() }}</span>
+        <button (click)="changePage(currentPage() + 1)" [disabled]="currentPage() === totalPages()">Successiva</button>
+      </div>
+    }
 
     @if (filteredTeams().length === 0) {
       <div class="empty-state">
@@ -147,7 +155,7 @@
           </div>
           <div class="stat-box">
             <span class="stat-label">Vittorie</span>
-            <span class="stat-value highlight">{{ selectedTeam()!.teamStats.hackthonsWon || 0 }}</span>
+            <span class="stat-value highlight">{{ selectedTeam()!.teamStats.hackathonsWon || 0 }}</span>
           </div>
           <div class="stat-box">
             <span class="stat-label">Podi</span>
@@ -231,4 +239,13 @@
 
     </div>
   </div>
+}
+
+@if (showScrollTop()) {
+  <button class="scroll-to-top" (click)="scrollToTop()" aria-label="Torna in cima">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="12" y1="19" x2="12" y2="5"></line>
+      <polyline points="5 12 12 5 19 12"></polyline>
+    </svg>
+  </button>
 }

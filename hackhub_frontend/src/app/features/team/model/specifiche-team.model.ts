@@ -1,6 +1,6 @@
 export interface SpecificheTeam {
     hackathonsPlayed: number;
-    hackthonsWon:number;
+    hackathonsWon:number;
     podiums:number;
     winRate:number;
 }

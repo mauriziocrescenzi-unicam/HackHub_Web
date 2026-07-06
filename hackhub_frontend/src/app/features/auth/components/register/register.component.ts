@@ -89,7 +89,7 @@ export class RegisterComponent {
     // Dopo la registrazione l'utente viene reindirizzato alla home
     this.authService.signup(req).subscribe({
       next: () => {
-        this.router.navigate(['/']);
+        this.router.navigate(['/home']);
       },
       error: err => {
         this.errorMessage.set(err.message || 'Errore durante la registrazione.');

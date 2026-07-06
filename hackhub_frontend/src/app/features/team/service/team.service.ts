@@ -83,9 +83,9 @@ export class TeamService {
       // Mappatura sicura delle statistiche verso l'interfaccia SpecificheTeam
       teamStats: {
         hackathonsPlayed: backendObj.teamStats?.hackathonsPlayed || 0,
-        hackthonsWon: backendObj.teamStats?.hackthonsWon || 0, 
+        hackathonsWon: backendObj.teamStats?.hackathonsWon || 0, 
         podiums: backendObj.teamStats?.podiums || 0,
-        winRate: backendObj.teamStats?.winRate || 0
+        winRate: Math.trunc((backendObj.stats?.winRate || 0) * 100) / 100
       } as SpecificheTeam
     };
   }
