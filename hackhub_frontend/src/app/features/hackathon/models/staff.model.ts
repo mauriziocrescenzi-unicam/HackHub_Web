@@ -1,6 +1,8 @@
+import { Account } from "../../account/models/account.model";
+
 export interface Staff {
-    id: number;
-    name: string;
-    email: string;
-    role?: 'ORGANIZER' | 'JUDGE' | 'MENTOR'; 
+    idStaff: number;
+    organizer: Account;
+    judge: Account;
+    mentors: Account[];
 }

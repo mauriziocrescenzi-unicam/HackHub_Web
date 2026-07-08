@@ -56,3 +56,5 @@ Sistemare il pulsante singnup nella pagina di login. Non porta alla pagina di re
       dovrebbe comparire una scheramta con la searchbar, un messaggio del tipo "Non ci sono hackathon" e il bottone per 
       crearli che porta alla pagina di creazione con il form) --> FATTO
     - rivedere il css per la sezione user che era un po' disallineato --> FATTO
+
+*scrivere il readme

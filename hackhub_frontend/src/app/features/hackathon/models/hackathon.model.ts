@@ -1,5 +1,4 @@
 import { Team } from '../../team/model/team.model';
-import { Staff } from './staff.model';
 import { Rule } from './rule.model';
 import { StaffResponse } from './staffResponse.model';
 
