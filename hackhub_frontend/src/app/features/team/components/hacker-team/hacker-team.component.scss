@@ -553,3 +553,74 @@
 
   &:hover { background-color: #27272a; }
 }
+
+/* ── Modal Overlay ── */
+.custom-modal-overlay {
+  position: fixed; /* Si fissa allo schermo, indipendentemente dallo scroll */
+  top: 0;
+  left: 0;
+  width: 100vw; /* Occupa tutta la larghezza dello schermo */
+  height: 100vh; /* Occupa tutta l'altezza dello schermo */
+  background-color: rgba(0, 0, 0, 0.7); /* Sfondo scuro semi-trasparente */
+  backdrop-filter: blur(4px); /* Effetto sfocatura moderno sullo sfondo (opzionale) */
+  display: flex; /* Permette di centrare il contenuto interno */
+  align-items: center; /* Centra verticalmente */
+  justify-content: center; /* Centra orizzontalmente */
+  z-index: 9999; /* Assicura che la modale sia sempre sopra a tutto il resto */
+  padding: 1rem; /* Margine di sicurezza sui dispositivi piccoli */
+}
+
+/* ── Modal Content ── */
+.custom-modal-content {
+  background-color: #09090b; /* Stesso sfondo scuro delle card */
+  border: 1px solid #27272a;
+  border-radius: 0.75rem;
+  width: 100%;
+  max-width: 450px; /* Larghezza massima come definito nel tuo HTML inline */
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.3); /* Ombra profonda */
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* Evita sbavature dei bordi */
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid #27272a;
+}
+
+.modal-body {
+  padding: 1.5rem;
+}
+
+.modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  padding: 1.25rem 1.5rem;
+  border-top: 1px solid #27272a;
+  background-color: rgba(255, 255, 255, 0.02);
+}
+
+.btn-close {
+  background: transparent;
+  border: none;
+  color: #71717a;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.25rem;
+  border-radius: 0.375rem;
+  transition: background 0.2s, color 0.2s;
+
+  svg { width: 1.25rem; height: 1.25rem; }
+
+  &:hover {
+    background-color: #27272a;
+    color: #fafafa;
+  }
+}

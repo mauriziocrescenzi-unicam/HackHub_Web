@@ -2,7 +2,7 @@ import { Component, OnInit, computed, effect, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { catchError, map, Observable, of } from 'rxjs';
 import { FormsModule } from '@angular/forms';
-import { DatePipe, JsonPipe } from '@angular/common';
+import { DatePipe, CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { Hackathon } from '../../models/hackathon.model';
 import { Rule } from '../../models/rule.model';
@@ -13,27 +13,23 @@ import { AuthService } from '../../../auth/service/auth.service';
 import { TeamService } from '../../../team/service/team.service';
 import { StaffService } from '../../service/staff.service';
 
-
 @Component({
   selector: 'app-hackathon-detail',
   standalone: true,
-  imports: [RouterLink, FormsModule, DatePipe], // Ho aggiunto DatePipe qui visto che la usi nell'HTML
+  imports: [RouterLink, DatePipe, FormsModule, CommonModule],
   templateUrl: './singolo-hackathon.component.html',
   styleUrl: './singolo-hackathon.component.scss'
 })
 export class SingoloHackathonComponent implements OnInit {
 
-  loading = signal<boolean>(true); // AGGIUNTO: Risolve l'errore nel template
   successMessage = signal<string | null>(null);
   errorMessage = signal<string | null>(null);
 
-  // Timer per evitare sovrapposizioni se l'utente clicca più volte
   private successTimeoutId: any;
   private errorTimeoutId: any;
 
   hackathon = signal<Hackathon | null>(null);
   modifiedHackathon = signal<Hackathon | null>(null);
-
 
   isOrganizer = false;
   showModifyForm = false;
@@ -42,35 +38,34 @@ export class SingoloHackathonComponent implements OnInit {
     const user = this.authService.user();
     const hackathon = this.hackathon();
 
-    if (!user || !hackathon || !hackathon.teams) return false;
+    if (!user || !hackathon || !(hackathon as any).teams) return false;
 
-    return hackathon.teams.some((team: any) => {
+    return (hackathon as any).teams.some((team: any) => {
       if (user.idTeam && team.idTeam == user.idTeam) return true;
       if (team.leader && team.leader.idTeamMember == user.idAccount) return true;
       if (team.members && team.members.some((m: any) => m.idTeamMember == user.idAccount)) return true;
       return false;
     });
   });
+
   isStaff = computed(() => {
     const user = this.authService.user();
     const hackathon = this.hackathon();
-    if (!user || !hackathon || !hackathon.staff) return false;
+    if (!user || !hackathon || !(hackathon as any).staff) return false;
 
     return (
-      hackathon.staff.organizerId === user.idAccount ||
-      hackathon.staff.judgeId === user.idAccount ||
-      hackathon.staff.mentors?.some((m: any) => m.idAccount === user.idAccount)
+      (hackathon as any).staff.organizerId === user.idAccount ||
+      (hackathon as any).staff.judgeId === user.idAccount ||
+      (hackathon as any).staff.mentors?.some((m: any) => m.idAccount === user.idAccount)
     );
   });
 
   private leaderInternal = signal(false);
   leader = computed(() => this.leaderInternal());
 
-  // --- LISTE DATI ---
   rules = signal<Rule[]>([]);
   accounts: Account[] = [];
 
-  // --- STATI E RICERCA MENU A TENDINA ---
   ruleSearch = '';
   ruleFocused = signal(false);
   filteredRules = signal<Rule[]>([]);
@@ -111,9 +106,8 @@ export class SingoloHackathonComponent implements OnInit {
 
     this.hackathonService.getById(id).subscribe({
       next: (data: any) => {
-        this.hackathon.set(data);
-        this.loading.set(false); // AGGIUNTO: Risolve l'errore di caricamento
 
+        this.hackathon.set(data);
         const currentUserId = this.authService.userId;
 
         this.isOrganizer =
@@ -130,6 +124,7 @@ export class SingoloHackathonComponent implements OnInit {
         }
 
         this.modifiedHackathon.set({ ...data });
+
         this.loadRules();
 
         if (this.isOrganizer) {
@@ -137,13 +132,11 @@ export class SingoloHackathonComponent implements OnInit {
         }
       },
       error: () => {
-        this.loading.set(false); // AGGIUNTO: Risolve l'errore di caricamento
         this.router.navigate(['/hackathons']);
       }
     });
   }
 
-  // --- METODI HELPER PER MESSAGGI ---
   private showSuccess(message: string) {
     this.successMessage.set(message);
     if (this.successTimeoutId) clearTimeout(this.successTimeoutId);
@@ -153,11 +146,11 @@ export class SingoloHackathonComponent implements OnInit {
   private showError(err: any) {
     const backendMessage = err?.error?.message || err?.error || err?.message || 'Si è verificato un errore imprevisto';
     this.errorMessage.set(backendMessage);
+
     if (this.errorTimeoutId) clearTimeout(this.errorTimeoutId);
     this.errorTimeoutId = setTimeout(() => this.errorMessage.set(null), 5000);
   }
 
-  // --- METODI LOAD E ALTRO ---
   loadRules() {
     this.errorMessage.set(null);
     this.hackathonService.getRules().subscribe({
@@ -284,7 +277,7 @@ export class SingoloHackathonComponent implements OnInit {
         this.showSuccess('Rule added successfully!');
         this.hackathon.update(h => {
           if (!h) return h;
-          return { ...h, rules: [...(h.rules ?? []), ruleData] };
+          return { ...h, rules: [...((h as any).rules ?? []), ruleData] };
         });
         this.selectedRule.set(null);
         this.ruleSearch = '';
@@ -300,7 +293,7 @@ export class SingoloHackathonComponent implements OnInit {
         this.showSuccess('Rule removed successfully!');
         this.hackathon.update(h => {
           if (!h) return h;
-          return { ...h, rules: h.rules?.filter(r => r.id !== id) ?? [] };
+          return { ...h, rules: (h as any).rules?.filter((r: any) => r.id !== id) ?? [] };
         });
       },
       error: err => this.showError(err)
@@ -347,7 +340,7 @@ export class SingoloHackathonComponent implements OnInit {
         this.showSuccess("Mentor added successfully!");
         this.hackathon.update(h => {
           if (!h) return h;
-          return { ...h, staff: { ...h.staff, mentors: [...(h.staff.mentors ?? []), res] } };
+          return { ...h, staff: { ...h.staff, mentors: [...((h as any).staff.mentors ?? []), res] } };
         });
 
         this.newMentorEmail.set('');
@@ -360,30 +353,23 @@ export class SingoloHackathonComponent implements OnInit {
   removeMentor(idAccount: number) {
     this.errorMessage.set(null);
     const hackathonId = this.hackathon()?.id;
-    if (!hackathonId || !idAccount) {
-      console.error("ID Hackathon o ID Account mancante", { hackathonId, idAccount });
-      return;
-    }
+    if (!hackathonId || !idAccount) return;
 
     this.hackathonService.removeMentor(hackathonId, idAccount).subscribe({
       next: () => {
         this.showSuccess("Mentor removed successfully!");
-
         this.hackathon.update(h => {
           if (!h || !h.staff) return h;
           return {
             ...h,
             staff: {
               ...h.staff,
-              mentors: h.staff.mentors?.filter((m: any) => m.idAccount !== idAccount) ?? []
+              mentors: (h as any).staff.mentors?.filter((m: any) => m.idAccount !== idAccount) ?? []
             }
           };
         });
       },
-      error: err => {
-        console.error(err);
-        this.showError(err);
-      }
+      error: err => this.showError(err)
     });
   }
 }

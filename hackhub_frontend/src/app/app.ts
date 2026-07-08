@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal, OnInit } from '@angular/core';
+import { Component, computed, inject, signal, OnInit, HostListener, ViewChild, ElementRef } from '@angular/core';
 import { RouterModule, RouterOutlet, Router } from '@angular/router';
 import { AuthService } from './features/auth/service/auth.service';
 
@@ -13,6 +13,9 @@ export class App implements OnInit {
   private authService = inject(AuthService);
   private router = inject(Router);
 
+  // Agganciamo il div specifico del menu a tendina tramite il suo ID di template #userDropdown
+  @ViewChild('userDropdown') userDropdown!: ElementRef;
+
   // Segnale calcolato per autenticazione (true se user è presente)
   isAuthenticated = computed(() => !!this.authService.user());
   
@@ -24,16 +27,29 @@ export class App implements OnInit {
   isProfileDropdownOpen = signal<boolean>(false);
 
   ngOnInit() {
-    // Carica i dati dell'utente se il token esiste ma non abbiamo ancora i dati
     if (this.authService.getToken() && !this.authService.user()) {
       this.authService.loadUser$().subscribe({
-        error: () => this.logout() // Se il token non è valido, pulisce tutto
+        error: () => this.logout()
       });
     }
   }
 
-  toggleMobileMenu() { this.isMobileMenuOpen.update(v => !v); }
-  toggleProfileDropdown() { this.isProfileDropdownOpen.update(v => !v); }
+  // Ascoltatore globale che verifica dove avviene il click
+  @HostListener('document:click', ['$event'])
+  clickout(event: Event) {
+    // Se il menu è aperto E il click avviene fuori dal div #userDropdown, lo chiudiamo
+    if (this.isProfileDropdownOpen() && this.userDropdown && !this.userDropdown.nativeElement.contains(event.target)) {
+      this.isProfileDropdownOpen.set(false);
+    }
+  }
+
+  toggleMobileMenu() { 
+    this.isMobileMenuOpen.update(v => !v); 
+  }
+
+  toggleProfileDropdown() { 
+    this.isProfileDropdownOpen.update(v => !v); 
+  }
 
   logout() {
     this.authService.logout();

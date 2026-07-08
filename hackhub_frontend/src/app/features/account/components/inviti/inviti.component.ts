@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, signal, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { InvitiService } from '../../service/inviti.service'; // Aggiornato
-import { Invito } from '../../models/invito.model';          // Aggiornato
+import { InvitiService } from '../../service/inviti.service';
+import { Invito } from '../../models/invito.model';          
 import { AuthService } from '../../../auth/service/auth.service';
 
 @Component({

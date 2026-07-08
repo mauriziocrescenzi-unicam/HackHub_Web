@@ -13,12 +13,10 @@ export class ReportService {
   private apiUrl = environment.apiUrl + '/reports';
 
   reportTeam(payload: ReportRequest) {
-    // Aggiunto responseType: 'text' nel caso il backend ritorni una stringa
     return this.http.post(this.apiUrl, payload, { responseType: 'text' });
   }
 
   reportManagement(idHackathon: number, idTeam: number, disabled: boolean) {
-    // Aggiunto responseType: 'text'
     return this.http.patch(
       `${this.apiUrl}/management/hackathons/${idHackathon}/teams/${idTeam}?disabled=${disabled}`,
       {},

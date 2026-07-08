@@ -14,15 +14,14 @@
       </a>
 
       <div class="navbar-links">
-        <a routerLink="/hackathons" routerLinkActive="active" class="nav-link">Hackathons</a>
+        <a routerLink="/hackathons" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link">Hackathons</a>
         
         @if (isAuthenticated() && userProfile()?.role === 'USER') {
-          <a routerLink="/teams" routerLinkActive="active" class="nav-link">Teams</a>
+          <a routerLink="/teams" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link">Teams</a>
         }
 
         @if (userProfile()?.role === 'STAFF') {
-          <a routerLink="/users" routerLinkActive="active" class="nav-link">Utenti</a>
-          <a routerLink="/hackathons" routerLinkActive="active" class="nav-link">Valutazioni</a>
+          <a routerLink="/users" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link">Utenti</a>
         }
 
         <div class="auth-buttons">
@@ -30,7 +29,7 @@
             <a routerLink="/login" class="btn btn-ghost">Login</a>
             <a routerLink="/register" class="btn btn-gradient">Sign Up</a>
           } @else {
-            <div class="profile-dropdown">
+            <div class="profile-dropdown" #userDropdown>
               <button class="dropdown-toggle" (click)="toggleProfileDropdown()">
                 <img [src]="'https://ui-avatars.com/api/?name=' + userProfile()?.nickname + '&background=0f172a&color=fff'" 
                      alt="Avatar" class="profile-avatar">
@@ -60,15 +59,14 @@
     </div>
 
     <div class="mobile-menu" [class.open]="isMobileMenuOpen()">
-      <a routerLink="/hackathons" class="nav-link-mobile">Hackathons</a>
+      <a routerLink="/hackathons" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link-mobile">Hackathons</a>
       
       @if (isAuthenticated() && userProfile()?.role === 'USER') {
-        <a routerLink="/teams" class="nav-link-mobile">Teams</a>
+        <a routerLink="/teams" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link-mobile">Teams</a>
       }
 
       @if (userProfile()?.role === 'STAFF') {
-        <a routerLink="/users" class="nav-link-mobile">Utenti</a>
-        <a routerLink="/hackathons" class="nav-link-mobile">Valutazioni</a>
+        <a routerLink="/users" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link-mobile">Utenti</a>
       }
 
       <div class="mobile-auth">

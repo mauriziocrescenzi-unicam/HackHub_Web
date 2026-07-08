@@ -6,7 +6,6 @@ import { ProfileComponent } from './features/account/components/profile/profile.
 import { ListaHackathonComponent } from './features/hackathon/components/lista-hackathon/lista-hackathon.component';
 import { CreazioneHackathonComponent } from './features/hackathon/components/creazione-hackathon/creazione-hackathon.component';
 import { SingoloHackathonComponent } from './features/hackathon/components/singolo-hackathon/singolo-hackathon.component';
-import { ModificaHackathonComponent } from './features/hackathon/components/modifica-hackathon/modifica-hackathon.component';
 import { TeamComponent } from './features/team/components/team/team.component';
 import { HackerTeamComponent } from './features/team/components/hacker-team/hacker-team.component';
 import { UserComponent } from './features/users/components/user/user.component';
@@ -26,7 +25,6 @@ export const routes: Routes = [
   { path: 'hackathons', component: ListaHackathonComponent },
   { path: 'hackathons/create', component: CreazioneHackathonComponent, canActivate: [authGuard, roleGuard], data: { expectedRole: 'STAFF' } },
   { path: 'hackathons/:id', component: SingoloHackathonComponent },
-  { path: 'hackathons/:id/edit', component: ModificaHackathonComponent, canActivate: [authGuard, roleGuard], data: { expectedRole: 'STAFF' } },
   { path: 'hackathons/:id/submission', component: SubmissionComponent, canActivate: [authGuard] },
   { path: 'inviti', component: InvitiComponent, canActivate: [authGuard, roleGuard], data: { expectedRole: 'USER' } },
   { path: 'teams', component: TeamComponent, canActivate: [authGuard, roleGuard, teamGuard], data: { expectedRole: 'USER'} },
