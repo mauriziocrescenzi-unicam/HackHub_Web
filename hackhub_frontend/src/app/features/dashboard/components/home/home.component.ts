@@ -1,8 +1,9 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, inject, computed } from '@angular/core';
 import { HackathonService } from '../../../hackathon/service/hackathon.service';
 import { Hackathon } from '../../../hackathon/models/hackathon.model';
 import { RouterLink } from "@angular/router";
 import { FormsModule } from '@angular/forms';
+import { AuthService } from '../../../../features/auth/service/auth.service';
 
 @Component({
   selector: 'app-home',
@@ -12,11 +13,16 @@ import { FormsModule } from '@angular/forms';
   imports: [RouterLink, FormsModule]
 })
 export class HomeComponent implements OnInit {
+  private hackathonService = inject(HackathonService);
+  private authService = inject(AuthService);
+  
+  isAuthenticated = computed(() => !!this.authService.user());
+
   hackathon = signal<Hackathon[]>([]);
   errorMessage = signal<string | null>(null);
   search = '';
 
-  constructor(private hackathonService: HackathonService) { }
+  constructor() { }
 
   ngOnInit(): void {
     this.caricaHackathon();
@@ -25,7 +31,6 @@ export class HomeComponent implements OnInit {
   caricaHackathon(): void {
     this.hackathonService.getAll().subscribe({
       next: (data) => {
-        // Filtra e ordina gli hackathon in base alla data di inizio, mostrando solo quelli futuri
         const ora = new Date();
         const ordinati = data
           .filter(h => new Date(h.startDate) > ora)
@@ -40,9 +45,7 @@ export class HomeComponent implements OnInit {
   }
 
   filtro(): Hackathon[] {
-    if (!this.hackathon()) {
-      return [];
-    }
+    if (!this.hackathon()) return [];
     return this.hackathon()!.filter(h => {
       return !this.search || h.name.toLowerCase().includes(this.search.toLowerCase());
     });
