@@ -1,7 +1,7 @@
 import { Component, computed, signal } from '@angular/core';
 import { Account } from '../../../account/models/account.model';
 import { AccountService } from '../../../account/service/account.service';
-import { UpperCasePipe, LowerCasePipe } from '@angular/common';
+import { LowerCasePipe } from '@angular/common';
 import { ModaleConferma } from '../../../team/model/modale-conferma.model';
 import { AuthService } from '../../../auth/service/auth.service';
 
@@ -9,7 +9,7 @@ type FilterValue = 'ALL' | 'USER' | 'STAFF' | 'ADMIN' | 'DISABLED';
 
 @Component({
   selector: 'app-user.component',
-  imports: [UpperCasePipe, LowerCasePipe],
+  imports: [LowerCasePipe],
   templateUrl: './user.component.html',
   styleUrl: './user.component.scss',
 })
