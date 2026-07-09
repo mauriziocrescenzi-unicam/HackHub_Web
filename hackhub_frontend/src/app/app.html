@@ -1,27 +1,44 @@
 <nav class="navbar">
   <div class="navbar-container">
     <div class="navbar-inner">
-
       <a routerLink="/home" class="navbar-logo">
         <div class="logo-icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M12 2L2 7l10 5 10-5-10-5z"/>
-            <path d="M2 17l10 5 10-5"/>
-            <path d="M2 12l10 5 10-5"/>
+            <path d="M12 2L2 7l10 5 10-5-10-5z" />
+            <path d="M2 17l10 5 10-5" />
+            <path d="M2 12l10 5 10-5" />
           </svg>
         </div>
         <span class="logo-text">Hack<span class="logo-accent">Hub</span></span>
       </a>
 
       <div class="navbar-links">
-        <a routerLink="/hackathons" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link">Hackathon</a>
-        
+        <a
+          routerLink="/hackathons"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          class="nav-link"
+          >Hackathon</a
+        >
+
         @if (isAuthenticated() && userProfile()?.role === 'USER') {
-          <a routerLink="/teams" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link">Team</a>
+          <a
+            routerLink="/teams"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: true }"
+            class="nav-link"
+            >Team</a
+          >
         }
 
         @if (userProfile()?.role === 'STAFF') {
-          <a routerLink="/users" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link">Utenti</a>
+          <a
+            routerLink="/users"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: true }"
+            class="nav-link"
+            >Utenti</a
+          >
         }
 
         <div class="auth-buttons">
@@ -31,13 +48,20 @@
           } @else {
             <div class="profile-dropdown" #userDropdown>
               <button class="dropdown-toggle" (click)="toggleProfileDropdown()">
-                <img [src]="'https://ui-avatars.com/api/?name=' + userProfile()?.nickname + '&background=0f172a&color=fff'" 
-                     alt="Avatar" class="profile-avatar">
+                <img
+                  [src]="
+                    'https://ui-avatars.com/api/?name=' +
+                    userProfile()?.nickname +
+                    '&background=0f172a&color=fff'
+                  "
+                  alt="Avatar"
+                  class="profile-avatar"
+                />
               </button>
-              
+
               <ul class="dropdown-menu shadow" [class.show]="isProfileDropdownOpen()">
                 <li><a class="dropdown-item" routerLink="/profile">Il mio profilo</a></li>
-                
+
                 @if (userProfile()?.role === 'USER') {
                   <li><a class="dropdown-item" routerLink="/inviti">I miei inviti</a></li>
                 }
@@ -51,36 +75,84 @@
 
       <button class="mobile-toggle" (click)="toggleMobileMenu()">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <line x1="3" y1="6" x2="21" y2="6"/>
-          <line x1="3" y1="12" x2="21" y2="12"/>
-          <line x1="3" y1="18" x2="21" y2="18"/>
+          <line x1="3" y1="6" x2="21" y2="6" />
+          <line x1="3" y1="12" x2="21" y2="12" />
+          <line x1="3" y1="18" x2="21" y2="18" />
         </svg>
       </button>
     </div>
 
     <div class="mobile-menu" [class.open]="isMobileMenuOpen()">
-      <a routerLink="/hackathons" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link-mobile">Hackathon</a>
-      
+      <a
+        routerLink="/hackathons"
+        (click)="isMobileMenuOpen.set(false)"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        class="nav-link-mobile"
+        >Hackathon</a
+      >
+
       @if (isAuthenticated() && userProfile()?.role === 'USER') {
-        <a routerLink="/teams" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link-mobile">Team</a>
+        <a
+          routerLink="/teams"
+          (click)="isMobileMenuOpen.set(false)"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          class="nav-link-mobile"
+          >Team</a
+        >
       }
 
       @if (userProfile()?.role === 'STAFF') {
-        <a routerLink="/users" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link-mobile">Utenti</a>
+        <a
+          routerLink="/users"
+          (click)="isMobileMenuOpen.set(false)"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          class="nav-link-mobile"
+          >Utenti</a
+        >
       }
 
       <div class="mobile-auth">
         @if (!isAuthenticated()) {
-          <a routerLink="/login" class="btn btn-outline w-full">Accedi</a>
-          <a routerLink="/register" class="btn btn-gradient w-full">Registrati</a>
+          <a
+            routerLink="/login"
+            (click)="isMobileMenuOpen.set(false)"
+            class="btn btn-outline w-full"
+            >Accedi</a
+          >
+          <a
+            routerLink="/register"
+            (click)="isMobileMenuOpen.set(false)"
+            class="btn btn-gradient w-full"
+            >Registrati</a
+          >
         } @else {
-          <a routerLink="/profile" class="btn btn-outline w-full">Il mio profilo</a>
-          
+          <a
+            routerLink="/profile"
+            (click)="isMobileMenuOpen.set(false)"
+            class="btn btn-outline w-full"
+            >Il mio profilo</a
+          >
+
           @if (userProfile()?.role === 'USER') {
-            <a routerLink="/inviti" class="btn btn-outline w-full" style="margin-top: 0.5rem;">I miei inviti</a>
+            <a
+              routerLink="/inviti"
+              (click)="isMobileMenuOpen.set(false)"
+              class="btn btn-outline w-full"
+              style="margin-top: 0.5rem"
+              >I miei inviti</a
+            >
           }
 
-          <button (click)="logout()" class="btn btn-ghost w-full" style=" margin-top: 0.5rem;">Esci</button>
+          <button
+            (click)="logout(); isMobileMenuOpen.set(false)"
+            class="btn btn-ghost w-full"
+            style="margin-top: 0.5rem"
+          >
+            Esci
+          </button>
         }
       </div>
     </div>
