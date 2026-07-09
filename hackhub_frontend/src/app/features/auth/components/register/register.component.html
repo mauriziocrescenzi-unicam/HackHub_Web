@@ -2,8 +2,8 @@
   <div class="card">
     
     <div class="card-header">
-      <h1 class="card-title">Create Account</h1>
-      <p class="card-description">Join HackHub and start your hackathon journey</p>
+      <h1 class="card-title">Crea Account</h1>
+      <p class="card-description">Unisciti a HackHub e inizia la tua avventura negli hackathon</p>
     </div>
 
     <div class="card-content">
@@ -11,26 +11,26 @@
 
         <div class="form-row">
           <div class="form-group">
-            <label for="name">Name</label>
-            <input id="name" type="text" formControlName="name" placeholder="John" 
+            <label for="name">Nome</label>
+            <input id="name" type="text" formControlName="name" placeholder="Mario" 
                    [class.invalid-input]="registerForm.get('name')?.invalid && registerForm.get('name')?.touched" />
           </div>
           <div class="form-group">
-            <label for="surname">Surname</label>
-            <input id="surname" type="text" formControlName="surname" placeholder="Doe" 
+            <label for="surname">Cognome</label>
+            <input id="surname" type="text" formControlName="surname" placeholder="Rossi" 
                    [class.invalid-input]="registerForm.get('surname')?.invalid && registerForm.get('surname')?.touched" />
           </div>
         </div>
 
         <div class="form-group">
           <label for="nickname">Nickname</label>
-          <input id="nickname" type="text" formControlName="nickname" placeholder="johndoe99" 
+          <input id="nickname" type="text" formControlName="nickname" placeholder="mariorossi99" 
                  [class.invalid-input]="registerForm.get('nickname')?.invalid && registerForm.get('nickname')?.touched" />
         </div>
 
         <div class="form-group">
           <label for="email">Email</label>
-          <input id="email" type="email" formControlName="email" placeholder="john@example.com" 
+          <input id="email" type="email" formControlName="email" placeholder="mario@esempio.com" 
                  [class.invalid-input]="registerForm.get('email')?.invalid && registerForm.get('email')?.touched" />
           @if (registerForm.get('email')?.invalid && registerForm.get('email')?.touched) {
             <span class="error-text">Inserisci un'email valida.</span>
@@ -53,7 +53,7 @@
         </div>
 
         <div class="form-group">
-          <label for="confirmPassword">Confirm Password</label>
+          <label for="confirmPassword">Conferma Password</label>
           <div class="input-icon-wrapper">
             <input [type]="isConfirmPasswordVisible ? 'text' : 'password'" id="confirmPassword" formControlName="confirmPassword" placeholder="••••••••" 
                    [class.invalid-input]="registerForm.get('confirmPassword')?.invalid && registerForm.get('confirmPassword')?.touched" />
@@ -68,12 +68,12 @@
         </div>
 
         <div class="form-group">
-          <label for="role">Role</label>
+          <label for="role">Ruolo</label>
           <select id="role" formControlName="role" 
                   [class.invalid-input]="registerForm.get('role')?.invalid && registerForm.get('role')?.touched">
-            <option value="" disabled selected hidden>Select your role</option>
-            <option value="USER">User (Hacker)</option>
-            <option value="STAFF">Staff (Organizer)</option>
+            <option value="" disabled selected hidden>Seleziona il tuo ruolo</option>
+            <option value="USER">Utente (Hacker)</option>
+            <option value="STAFF">Staff (Organizzatore)</option>
           </select>
         </div>
 
@@ -84,14 +84,14 @@
         }
 
         <button type="submit" class="btn-submit" [disabled]="registerForm.invalid">
-          Create Account
+          Registrati
         </button>
 
       </form>
 
       <p class="login-link">
-        <span>Already have an account? </span>
-        <a routerLink="/login">Login</a>
+        <span>Hai già un account? </span>
+        <a routerLink="/login">Accedi</a>
       </p>
     </div>
 

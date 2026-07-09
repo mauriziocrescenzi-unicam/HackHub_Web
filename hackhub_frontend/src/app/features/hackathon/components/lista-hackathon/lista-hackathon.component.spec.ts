@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { ListaHackathonComponent } from './lista-hackathon.component';
 
 describe('ListaHackathonComponent', () => {

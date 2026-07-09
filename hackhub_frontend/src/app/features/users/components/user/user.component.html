@@ -2,8 +2,8 @@
   <div class="container py-5">
 
     <div class="page-header mb-3">
-      <h3 class="pr-title">User <span class="accent">Management</span></h3>
-      <p class="pr-text-muted mt-2">View and manage all platform accounts.</p>
+      <h3 class="pr-title">Gestione <span class="accent">Utenti</span></h3>
+      <p class="pr-text-muted mt-2">Visualizza e gestisci tutti gli account della piattaforma.</p>
     </div>
 
     <div class="row justify-content-center mb-3">
@@ -27,7 +27,6 @@
       <div class="col-12 col-lg-10">
         
         <div class="h-toolbar">
-
           <div class="h-search-box flex-grow-1">
             <svg class="h-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
@@ -35,7 +34,7 @@
             <input
               type="text"
               class="search-input w-100"
-              placeholder="Search by name, nickname or email..."
+              placeholder="Cerca per nome, nickname o email..."
               [value]="searchQuery()"
               (input)="updateSearch($event)"
             />
@@ -43,16 +42,11 @@
 
           <div class="au-filter-group">
             @for (f of filters; track f.value) {
-              <button
-                class="au-filter-btn"
-                [class.au-filter-btn--active]="activeFilter() === f.value"
-                (click)="setFilter(f.value)"
-              >
+              <button class="au-filter-btn" [class.au-filter-btn--active]="activeFilter() === f.value" (click)="setFilter(f.value)">
                 {{ f.label }}
               </button>
             }
           </div>
-
         </div>
 
       </div>
@@ -65,7 +59,7 @@
           <span class="mt-loading__dot"></span>
           <span class="mt-loading__dot"></span>
         </div>
-        <p class="pr-label mt-3">Loading users...</p>
+        <p class="pr-label mt-3">Caricamento utenti...</p>
       </div>
     }
 
@@ -74,7 +68,7 @@
         <div class="col-12 col-lg-8">
           <div class="pr-card text-center p-5 empty-state" style="border-color: #27272a;">
             <i class="fa-solid fa-ghost mb-3" style="font-size: 2.5rem; color: #cbd5e1;"></i>
-            <p class="pr-value mb-0">No users found.</p>
+            <p class="pr-value mb-0">Nessun utente trovato.</p>
           </div>
         </div>
       </div>
@@ -82,57 +76,66 @@
 
     @else {
       <div class="row justify-content-center">
-        <div class="col-12 col-lg-10 d-flex flex-column">
-
-          @for (account of filteredAccounts(); track account.idAccount) {
-            <div class="pr-card" [class.au-card--disabled]="account.disabled">
-              <div class="pr-card-bar" [style.background]="account.disabled ? '#94a3b8' : '#00c896'"></div>
-
-              <div class="pr-card-body">
-                <div class="col-identity">
-                    <div class="au-avatar flex-shrink-0" [class.au-avatar--disabled]="account.disabled">
-                        {{ account.name.charAt(0) | uppercase }}{{ account.surname.charAt(0) | uppercase }}
-                    </div>
-                    <div>
-                        <div class="d-flex align-items-center gap-2 flex-wrap">
-                            <h4 class="pr-value m-0" style="font-size: 1rem;">{{ account.name }} {{ account.surname }}</h4>
-                            <span class="au-role-badge au-role-badge--{{ account.role | lowercase }}">{{ account.role }}</span>
-                        </div>
-                        <span class="pr-label" style="text-transform: none;">@{{ account.nickname }}</span>
-                    </div>
-                </div>
-
-                <div class="col-info">
-                    <p class="pr-text-muted mb-1" style="font-size: 13px; font-style: normal;">
-                      <i class="fa-solid fa-envelope me-2" style="color: #94a3b8;"></i>{{ account.email }}
-                    </p>
-                    @if (account.teamName) {
-                      <p class="pr-text-muted mb-0" style="font-size: 13px; font-style: normal;">
-                        <i class="fa-solid fa-users me-2" style="color: #94a3b8;"></i>{{ account.teamName }}
-                      </p>
-                    } @else {
-                      <p class="pr-text-muted mb-0" style="font-size: 13px;">No team</p>
-                    }
-                </div>
-
-                <div class="col-actions">
-                    <span class="au-status-badge" [class.au-status-badge--active]="!account.disabled" [class.au-status-badge--disabled]="account.disabled">
-                        <span class="au-status-badge__dot"></span> {{ account.disabled ? 'Disabled' : 'Active' }}
-                    </span>
-                    <button class="au-toggle-btn" 
-                            [class.au-toggle-btn--enable]="account.disabled" 
-                            [class.au-toggle-btn--disable]="!account.disabled" 
-                            (click)="askToggleStatus(account)">
-                        @if (account.disabled) {
-                          <i class="fa-solid fa-lock-open me-1"></i> Enable
-                        } @else {
-                          <i class="fa-solid fa-lock me-1"></i> Disable
+        <div class="col-12 col-lg-10">
+          
+          <div class="table-wrapper">
+            <table class="users-table">
+              <thead>
+                <tr>
+                  <th>Utente</th>
+                  <th>Email</th>
+                  <th>Ruolo</th>
+                  <th>Team</th>
+                  <th>Azioni</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (account of filteredAccounts(); track account.idAccount) {
+                  <tr [class.disabled-row]="account.disabled">
+                    
+                    <td>
+                      <div class="user-cell">
+                        <img [src]="'https://api.dicebear.com/7.x/avataaars/svg?seed=' + account.nickname" alt="avatar" class="avatar-img" />
+                        <span class="user-name">{{ account.name }} {{ account.surname }}</span>
+                      </div>
+                    </td>
+                    
+                    <td>
+                      <span class="text-muted">{{ account.email }}</span>
+                    </td>
+                    
+                    <td>
+                      <span class="role-pill role-{{ account.role | lowercase }}">{{ account.role | lowercase }}</span>
+                    </td>
+                    
+                    <td>
+                      <div class="team-cell">
+                        <i class="fa-solid fa-users text-muted me-2"></i>
+                        <span class="text-muted">{{ account.teamName || 'Nessun team' }}</span>
+                      </div>
+                    </td>
+                    
+                    <td>
+                      <div class="action-cell">
+                        <span class="text-muted me-3" [style.font-size]="'0.85rem'">{{ account.disabled ? 'Disabilitato' : 'Attivo' }}</span>
+                        
+                        @if (authService.isAdmin()) {
+                          <button class="icon-action-btn" (click)="askToggleStatus(account)" [title]="account.disabled ? 'Abilita' : 'Disabilita'">
+                            @if (account.disabled) {
+                              <i class="fa-solid fa-lock-open text-success"></i>
+                            } @else {
+                              <i class="fa-solid fa-lock text-danger"></i>
+                            }
+                          </button>
                         }
-                    </button>
-                </div>
-              </div>
-            </div>
-          }
+                      </div>
+                    </td>
+
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
 
         </div>
       </div>
@@ -142,31 +145,52 @@
 </section>
 
 @if (confirmDialog()) {
-  <div class="mt-dialog-overlay" (click)="closeDialog()">
-    <div class="mt-dialog" (click)="$event.stopPropagation()">
-
-      <div class="mt-dialog__icon" [class.mt-dialog__icon--danger]="confirmDialog()!.type === 'danger'">
-        <i [class]="confirmDialog()!.icon"></i>
+  <div class="custom-modal-overlay" (click)="closeDialog()">
+    <div class="custom-modal-content" (click)="$event.stopPropagation()" style="max-width: 450px;">
+      
+      <div class="modal-header" [style.border-bottom]="confirmDialog()!.type === 'danger' ? '1px solid rgba(239, 68, 68, 0.3)' : '1px solid #27272a'">
+        <div style="display: flex; align-items: center; gap: 0.75rem;">
+          <svg *ngIf="confirmDialog()!.type === 'danger'" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" style="width: 1.5rem; height: 1.5rem;">
+            <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+            <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+          </svg>
+          <svg *ngIf="confirmDialog()!.type !== 'danger'" viewBox="0 0 24 24" fill="none" stroke="#a855f7" stroke-width="2" style="width: 1.5rem; height: 1.5rem;">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+          </svg>
+          
+          <h3 class="section-title" [style.color]="confirmDialog()!.type === 'danger' ? '#ef4444' : '#fafafa'" style="margin: 0; font-size: 1.15rem;">
+            {{ confirmDialog()!.title }}
+          </h3>
+        </div>
+        <button class="btn-close" (click)="closeDialog()" style="background: transparent; border: none; cursor: pointer; color: #a1a1aa; padding: 0; display: flex;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 1.25rem; height: 1.25rem;">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
       </div>
 
-      <h4 class="mt-dialog__title">{{ confirmDialog()!.title }}</h4>
-      <p class="mt-dialog__body">{{ confirmDialog()!.message }}</p>
+      <div class="modal-body">
+        <p style="color: #d4d4d8; font-size: 0.95rem; line-height: 1.5; margin: 0;">{{ confirmDialog()!.message }}</p>
+        
+        @if (confirmDialog()!.warning) {
+          <div class="alert-error" style="margin-top: 1rem; margin-bottom: 0;">
+            {{ confirmDialog()!.warning }}
+          </div>
+        }
+      </div>
 
-      @if (confirmDialog()!.warning) {
-        <div class="mt-dialog__warning">
-          <i class="fa-solid fa-triangle-exclamation"></i>
-          <span>{{ confirmDialog()!.warning }}</span>
-        </div>
-      }
-
-      <div class="mt-dialog__actions">
-        <button class="mt-btn-ghost" (click)="closeDialog()">Cancel</button>
-        <button
-          class="mt-dialog__confirm-btn"
-          [class.mt-dialog__confirm-btn--danger]="confirmDialog()!.type === 'danger'"
-          [class.mt-dialog__confirm-btn--success]="confirmDialog()!.type === 'default'"
-          (click)="confirmDialog()!.onConfirm()"
-        >
+      <div class="modal-footer">
+        <button class="btn-ghost" (click)="closeDialog()" style="padding: 0.7rem 1.2rem; border: none; background: transparent; color: #a1a1aa; cursor: pointer; font-weight: 500;">Annulla</button>
+        <button class="btn-primary" 
+                [style.background]="confirmDialog()!.type === 'danger' ? '#ef4444' : '#a855f7'" 
+                [style.width]="'auto'" 
+                [style.padding]="'0.7rem 1.2rem'"
+                [style.border]="'none'"
+                [style.border-radius]="'0.5rem'"
+                [style.color]="'#fff'"
+                [style.font-weight]="'600'"
+                [style.cursor]="'pointer'"
+                (click)="confirmDialog()!.onConfirm()">
           {{ confirmDialog()!.confirmLabel }}
         </button>
       </div>

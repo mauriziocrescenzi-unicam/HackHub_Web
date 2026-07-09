@@ -14,10 +14,10 @@
       </a>
 
       <div class="navbar-links">
-        <a routerLink="/hackathons" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link">Hackathons</a>
+        <a routerLink="/hackathons" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link">Hackathon</a>
         
         @if (isAuthenticated() && userProfile()?.role === 'USER') {
-          <a routerLink="/teams" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link">Teams</a>
+          <a routerLink="/teams" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link">Team</a>
         }
 
         @if (userProfile()?.role === 'STAFF') {
@@ -26,8 +26,8 @@
 
         <div class="auth-buttons">
           @if (!isAuthenticated()) {
-            <a routerLink="/login" class="btn btn-ghost">Login</a>
-            <a routerLink="/register" class="btn btn-gradient">Sign Up</a>
+            <a routerLink="/login" class="btn btn-ghost">Accedi</a>
+            <a routerLink="/register" class="btn btn-gradient">Registrati</a>
           } @else {
             <div class="profile-dropdown" #userDropdown>
               <button class="dropdown-toggle" (click)="toggleProfileDropdown()">
@@ -42,7 +42,7 @@
                   <li><a class="dropdown-item" routerLink="/inviti">I miei inviti</a></li>
                 }
 
-                <li><button class="dropdown-item text-danger" (click)="logout()">Logout</button></li>
+                <li><button class="dropdown-item text-danger" (click)="logout()">Esci</button></li>
               </ul>
             </div>
           }
@@ -59,10 +59,10 @@
     </div>
 
     <div class="mobile-menu" [class.open]="isMobileMenuOpen()">
-      <a routerLink="/hackathons" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link-mobile">Hackathons</a>
+      <a routerLink="/hackathons" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link-mobile">Hackathon</a>
       
       @if (isAuthenticated() && userProfile()?.role === 'USER') {
-        <a routerLink="/teams" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link-mobile">Teams</a>
+        <a routerLink="/teams" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link-mobile">Team</a>
       }
 
       @if (userProfile()?.role === 'STAFF') {
@@ -71,8 +71,8 @@
 
       <div class="mobile-auth">
         @if (!isAuthenticated()) {
-          <a routerLink="/login" class="btn btn-outline w-full">Login</a>
-          <a routerLink="/register" class="btn btn-gradient w-full">Sign Up</a>
+          <a routerLink="/login" class="btn btn-outline w-full">Accedi</a>
+          <a routerLink="/register" class="btn btn-gradient w-full">Registrati</a>
         } @else {
           <a routerLink="/profile" class="btn btn-outline w-full">Il mio profilo</a>
           
@@ -80,7 +80,7 @@
             <a routerLink="/inviti" class="btn btn-outline w-full" style="margin-top: 0.5rem;">I miei inviti</a>
           }
 
-          <button (click)="logout()" class="btn btn-ghost w-full" style="color: #ef4444; margin-top: 0.5rem;">Logout</button>
+          <button (click)="logout()" class="btn btn-ghost w-full" style=" margin-top: 0.5rem;">Esci</button>
         }
       </div>
     </div>

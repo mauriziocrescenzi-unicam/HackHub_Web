@@ -40,7 +40,7 @@ export class TeamComponent {
   maxMembers = 5;
 
   constructor(private teamService: TeamService, private authService: AuthService, private router: Router) {
-    // Gestione reattiva dell'utente: se ha un team lo manda via, altrimenti carica i team
+    // Gestione reattiva dell'utente: se ha già un team viene reindirizzato alla pagina del team, altrimenti carica la lista team
     effect(() => {
       const user = this.authService.user();
       if (user) {
@@ -59,7 +59,7 @@ export class TeamComponent {
     }, { allowSignalWrites: true });
   }
 
-  // --- COMPULSIONE REATTIVA (COMPUTED) ---
+  // Computed properties per filtraggio, paginazione e conteggio totale pagine
 
   // 1. Filtra i team in base alla ricerca testuale
   filteredTeams = computed(() => {
@@ -82,7 +82,7 @@ export class TeamComponent {
     return Math.ceil(this.filteredTeams().length / this.itemsPerPage);
   });
 
-  // --- CARICAMENTO DATI E NAVIGAZIONE ---
+  // --- METODI DI CARICAMENTO DATI ---
 
   loadMyTeam() {
     this.router.navigate(['/teams/my']);
@@ -104,12 +104,12 @@ export class TeamComponent {
     });
   }
 
-  // --- GESTIONE INTERFACCIA E LISTENER ---
+  // --- METODI DI INTERAZIONE UTENTE ---
 
   updateSearch(event: Event) {
     const input = event.target as HTMLInputElement;
     this.searchQuery.set(input.value);
-    this.currentPage.set(1); // Torna alla pagina 1 quando cerchi
+    this.currentPage.set(1); // Resetta la pagina corrente quando cambia la ricerca
   }
 
   changePage(page: number) {
@@ -174,7 +174,7 @@ export class TeamComponent {
         
         setTimeout(() => {
           this.closeCreateForm();
-          // Dopo la creazione, l'utente è leader del team, mandiamolo alla sua pagina!
+          // Dopo la creazione del team, l'utente creatore è il leader, ricarica i dati dell'utente per aggiornare lo stato del team
           this.loadMyTeam(); 
         }, 1500);
       },

@@ -1,4 +1,4 @@
-/* ── NAVBAR BASE (Da Figma) ── */
+/* ── NAVBAR BASE ── */
 .navbar {
   position: sticky;
   top: 0;
@@ -27,7 +27,6 @@
   &.show {
     display: block;
     position: absolute;
-    // aggiungi qui eventuali stili di posizionamento (top, right, ecc.)
   }
 }
 
@@ -132,14 +131,14 @@
       border: none; background: none; width: 100%; text-align: left; cursor: pointer;
       
       &:hover { background-color: #27272a; color: white; }
-      &.text-danger { color: #ef4444; }
+      &.text-danger { color: #db2777; }
     }
   }
 }
 
 /* ── DESKTOP LINKS ── */
 .navbar-links {
-  display: none; /* Nascosto di default per il mobile */
+  display: none; 
   align-items: center;
   gap: 2rem;
 }
@@ -200,7 +199,7 @@
 
 .w-full { width: 100%; }
 
-/* ── RESPONSIVE DESKTOP RULES (Deve stare sempre alla fine) ── */
+/* ── RESPONSIVE DESKTOP RULES ── */
 @media (min-width: 768px) {
   .navbar-links { 
     display: flex; 

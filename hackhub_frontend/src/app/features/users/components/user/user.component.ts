@@ -2,19 +2,10 @@ import { Component, computed, signal } from '@angular/core';
 import { Account } from '../../../account/models/account.model';
 import { AccountService } from '../../../account/service/account.service';
 import { UpperCasePipe, LowerCasePipe } from '@angular/common';
+import { ModaleConferma } from '../../../team/model/modale-conferma.model';
+import { AuthService } from '../../../auth/service/auth.service';
 
 type FilterValue = 'ALL' | 'USER' | 'STAFF' | 'ADMIN' | 'DISABLED';
-
-// Note: Add ConfirmDialogConfig interface if it is not exported elsewhere.
-export interface ConfirmDialogConfig {
-  type: 'default' | 'danger';
-  icon: string;
-  title: string;
-  message: string;
-  warning?: string;
-  confirmLabel: string;
-  onConfirm: () => void;
-}
 
 @Component({
   selector: 'app-user.component',
@@ -29,14 +20,14 @@ export class UserComponent {
   successMessage = signal<string | null>(null);
   searchQuery = signal('');
   activeFilter = signal<FilterValue>('ALL');
-  confirmDialog = signal<ConfirmDialogConfig | null>(null);
+  confirmDialog = signal<ModaleConferma | null>(null);
   private messageTimeout: any;
 
   filters: { label: string; value: FilterValue }[] = [
-    { label: 'All',       value: 'ALL'      },
-    { label: 'User',      value: 'USER'     },
-    { label: 'Staff',     value: 'STAFF'    },
-    { label: 'Disabled',  value: 'DISABLED' },
+    { label: 'Tutti',         value: 'ALL'      },
+    { label: 'Utenti',        value: 'USER'     },
+    { label: 'Staff',         value: 'STAFF'    },
+    { label: 'Disabilitati',  value: 'DISABLED' },
   ];
 
   filteredAccounts = computed(() => {
@@ -61,7 +52,10 @@ export class UserComponent {
     });
   });
 
-  constructor(private accountService: AccountService) {
+  constructor(
+    private accountService: AccountService, 
+    public authService: AuthService) {
+    
     this.loadAccounts();
   }
 
@@ -73,7 +67,7 @@ export class UserComponent {
         this.isLoading.set(false);
       },
       error: () => {
-        this.errorMessage.set('Error loading users.');
+        this.errorMessage.set('Errore durante il caricamento degli utenti.');
         this.clearMessagesAfterDelay();
         this.isLoading.set(false);
       }
@@ -93,11 +87,11 @@ export class UserComponent {
     this.confirmDialog.set({
       type: enabling ? 'default' : 'danger',
       icon: enabling ? 'fa-solid fa-lock-open' : 'fa-solid fa-lock',
-      title: enabling ? "Enable user?" : "Disable user?",
+      title: enabling ? "Abilita utente?" : "Disabilita utente?",
       message: enabling
-        ? `You are about to re-enable the account of ${account.name} ${account.surname} (@${account.nickname}). The user will be able to access the platform again.`
-        : `You are about to disable the account of ${account.name} ${account.surname} (@${account.nickname}). The user will no longer be able to access the platform.`,
-      confirmLabel: enabling ? 'Yes, enable' : 'Yes, disable',
+        ? `Stai per riabilitare l'account di ${account.name} ${account.surname} (@${account.nickname}). L'utente potrà accedere nuovamente alla piattaforma.`
+        : `Stai per disabilitare l'account di ${account.name} ${account.surname} (@${account.nickname}). L'utente non potrà più accedere alla piattaforma.`,
+      confirmLabel: enabling ? 'Sì, abilita' : 'Sì, disabilita',
       onConfirm: () => {
         this.closeDialog();
         this.toggleStatus(account);
@@ -117,8 +111,8 @@ export class UserComponent {
         );
         this.successMessage.set(
           account.disabled
-            ? `${account.nickname}'s account enabled.`
-            : `${account.nickname}'s account disabled.`
+            ? `Account di ${account.nickname} abilitato.`
+            : `Account di ${account.nickname} disabilitato.`
         );
         this.clearMessagesAfterDelay();
       },

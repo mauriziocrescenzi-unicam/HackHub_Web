@@ -27,7 +27,7 @@ export class ProfileComponent {
   errorMessage = signal<string | null>(null);
   successMessage = signal<string | null>(null);
   
-  // Reintrodotta la regex di sicurezza
+  // Regex per la validazione della password: almeno 8 caratteri, una maiuscola, una minuscola e un numero
   private passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
   private messageTimeout: any;
 
@@ -51,7 +51,7 @@ export class ProfileComponent {
     this.errorMessage.set(null);
   }
 
-  // Reintrodotto il metodo per prevenire bug sui messaggi che spariscono troppo in fretta
+  // Funzione per gestire la durata della risposta di un messaggio di successo o errore
   private clearMessagesAfterDelay() {
     if (this.messageTimeout) {
       clearTimeout(this.messageTimeout);

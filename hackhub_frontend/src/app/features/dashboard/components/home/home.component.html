@@ -9,17 +9,17 @@
           <path d="M2 17l10 5 10-5"/>
           <path d="M2 12l10 5 10-5"/>
         </svg>
-        Welcome to HackHub
+        Benvenuto su HackHub
       </div>
 
       <h1 class="hero-title">
-        Organize &amp; Join Amazing
-        <span class="gradient-text">Hackathons</span>
+        Organizza &amp; Partecipa a Straordinari
+        <span class="gradient-text">Hackathon</span>
       </h1>
 
       <p class="hero-subtitle">
-        The ultimate platform to manage hackathons, build teams,
-        and create innovative solutions together.
+        La piattaforma definitiva per gestire hackathon, formare team 
+        e creare insieme soluzioni innovative.
       </p>
 
       <div class="hero-actions">
@@ -28,9 +28,9 @@
             <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
             <circle cx="12" cy="7" r="4"/>
           </svg>
-          Get Started
+          Inizia Ora
         </a>
-        <a routerLink="/hackathons" class="btn-outline btn-lg">Browse Hackathons</a>
+        <a routerLink="/hackathons" class="btn-outline btn-lg">Esplora gli Hackathon</a>
       </div>
 
     </div>
@@ -40,8 +40,8 @@
 <section class="upcoming-events">
   <div class="container">
     <div class="features-header">
-      <h2 class="features-title">Upcoming Hackathons</h2>
-      <p class="features-sub">Don't miss out on these upcoming challenges</p>
+      <h2 class="features-title">Prossimi Hackathon</h2>
+      <p class="features-sub">Non perderti queste prossime sfide</p>
     </div>
 
     @if (errorMessage()) {
@@ -54,7 +54,7 @@
       <input 
         type="text" 
         [(ngModel)]="search" 
-        placeholder="Search upcoming events..." 
+        placeholder="Cerca i prossimi eventi..." 
         class="search-input"
       />
     </div>
@@ -67,12 +67,12 @@
             <strong>Inizio:</strong> {{ formatDate(h.startDate) }}
           </p>
           <a [routerLink]="['/hackathons', h.id]" class="event-link">
-            View Details &rarr;
+            Vedi Dettagli &rarr;
           </a>
         </div>
       } @empty {
         <div class="empty-state">
-          <p>No hackathons match your search.</p>
+          <p>Nessun hackathon corrisponde alla tua ricerca.</p>
         </div>
       }
     </div>
@@ -82,8 +82,8 @@
 <section class="features">
   <div class="container">
     <div class="features-header">
-      <h2 class="features-title">Why Choose HackHub?</h2>
-      <p class="features-sub">Everything you need to run successful hackathons</p>
+      <h2 class="features-title">Perché Scegliere HackHub?</h2>
+      <p class="features-sub">Tutto ciò di cui hai bisogno per gestire hackathon di successo</p>
     </div>
 
     <div class="features-grid">
@@ -95,8 +95,8 @@
             <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0M15 12v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/>
           </svg>
         </div>
-        <h3 class="feature-title">Easy Management</h3>
-        <p class="feature-desc">Create and manage hackathons with an intuitive interface</p>
+        <h3 class="feature-title">Gestione Semplice</h3>
+        <p class="feature-desc">Crea e gestisci hackathon con un'interfaccia intuitiva</p>
       </div>
 
       <div class="feature-card">
@@ -107,8 +107,8 @@
             <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/>
           </svg>
         </div>
-        <h3 class="feature-title">Team Building</h3>
-        <p class="feature-desc">Form teams and collaborate with talented developers</p>
+        <h3 class="feature-title">Creazione Team</h3>
+        <p class="feature-desc">Forma team e collabora con sviluppatori di talento</p>
       </div>
 
       <div class="feature-card">
@@ -118,8 +118,8 @@
             <path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/>
           </svg>
         </div>
-        <h3 class="feature-title">Track Progress</h3>
-        <p class="feature-desc">Monitor submissions and judge projects efficiently</p>
+        <h3 class="feature-title">Traccia i Progressi</h3>
+        <p class="feature-desc">Monitora le sottomissioni e valuta i progetti in modo efficiente</p>
       </div>
 
       <div class="feature-card">
@@ -131,8 +131,8 @@
             <line x1="3" y1="10" x2="21" y2="10"/>
           </svg>
         </div>
-        <h3 class="feature-title">Event Scheduling</h3>
-        <p class="feature-desc">Plan and schedule hackathon events seamlessly</p>
+        <h3 class="feature-title">Pianificazione Eventi</h3>
+        <p class="feature-desc">Pianifica e programma gli eventi hackathon senza problemi</p>
       </div>
     </div>
   </div>
@@ -141,17 +141,17 @@
 <section class="cta" id="ctaSection">
   <div class="container">
     <div class="cta-inner">
-      <h2 class="cta-title">Ready to Get Started?</h2>
+      <h2 class="cta-title">Pronto per Iniziare?</h2>
       <p class="cta-sub">
-        Join thousands of developers and organizers using HackHub
-        to create amazing experiences
+        Unisciti a migliaia di sviluppatori e organizzatori che usano HackHub
+        per creare esperienze straordinarie
       </p>
       <a routerLink="/register" class="btn-primary btn-lg">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
           <circle cx="12" cy="7" r="4"/>
         </svg>
-        Create Your Account
+        Crea il Tuo Account
       </a>
     </div>
   </div>

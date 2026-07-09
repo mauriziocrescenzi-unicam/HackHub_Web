@@ -1,10 +1,10 @@
 :host {
   display: block;
   min-height: 100vh;
-  background-color: #09090b; // Sfondo scuro della pagina
+  background-color: #09090b; 
   color: #fafafa;
 
-  /* ── LAYOUT E SPAZIATURE (Sostituiscono le classi Bootstrap) ── */
+  /* ── LAYOUT E SPAZIATURE ── */
   .container {
     max-width: 900px;
     margin: 0 auto;
@@ -42,7 +42,7 @@
       border-color: #3f3f46;
     }
 
-    /* Riga superiore sfumata (opzionale, stile Figma) */
+    /* Riga superiore sfumata */
     &::before {
       content: '';
       display: block;
@@ -115,6 +115,13 @@
 
     &:hover { background-color: #27272a; }
   }
+
+  .testo-gradiente {
+  background: linear-gradient(to right, rgb(168, 85, 247), rgb(236, 72, 153));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
 
   /* ── RESPONSIVE COMPATIBILITY ── */
   @media (max-width: 768px) {

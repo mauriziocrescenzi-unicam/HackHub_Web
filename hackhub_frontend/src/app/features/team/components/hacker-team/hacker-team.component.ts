@@ -34,7 +34,7 @@ export class HackerTeamComponent implements OnInit {
   constructor(
     private router: Router,
     private teamService: TeamService,
-    private invitiService: InvitiService, // Utilizzo di InvitiService
+    private invitiService: InvitiService, 
     protected authService: AuthService,
     private cdr: ChangeDetectorRef
   ) {}

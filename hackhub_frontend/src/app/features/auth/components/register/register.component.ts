@@ -28,7 +28,8 @@ export class RegisterComponent {
     private router: Router,
     private fb: FormBuilder
   ) {
-    // Creazione del form con tutte le validazioni
+
+    // Creazione del form con validazioni
     this.registerForm = this.fb.group({
       name: ['', Validators.required],
       surname: ['', Validators.required],
@@ -39,13 +40,13 @@ export class RegisterComponent {
         Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/)
       ]],
       confirmPassword: ['', Validators.required],
-      role: ['', Validators.required] // Il valore vuoto iniziale forzerà la scelta
+      role: ['', Validators.required] // Campo ruolo con validazione
     }, { 
       validators: this.passwordMatchValidator // Validatore di gruppo per comparare i due campi
     });
   }
 
-  // Validatore custom per controllare che le password siano identiche
+  // Validatore personalizzato per assicurarsi che password e conferma password coincidano
   passwordMatchValidator(control: AbstractControl): ValidationErrors | null {
     const password = control.get('password')?.value;
     const confirmPassword = control.get('confirmPassword')?.value;
@@ -69,13 +70,13 @@ export class RegisterComponent {
   register() {
     this.errorMessage.set(null);
 
-    // Se il form non è valido, mostriamo tutti gli errori rossi e fermiamo l'invio
+    // Controllo se il form è valido prima di procedere
     if (this.registerForm.invalid) {
       this.registerForm.markAllAsTouched();
       return;
     }
 
-    // Estraiamo i dati dal form escludendo il confirmPassword che non serve al backend
+    // Creazione della richiesta di registrazione basata sui valori del form (escluso confirmPassword)
     const formValue = this.registerForm.value;
     const req: RegisterRequest = {
       name: formValue.name,

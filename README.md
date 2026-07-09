@@ -1,225 +1,181 @@
 # HackHub 🚀
 
-> Piattaforma web full-stack per gestire l'intero ciclo di vita di un hackathon — dall'iscrizione dei team alla proclamazione dei vincitori.
+Una piattaforma web full-stack per la gestione dell'intero ciclo di vita degli hackathon: dalla registrazione dei team fino alla proclamazione dei vincitori.
 
----
+## 📖 Panoramica del Progetto
 
-## 📖 Panoramica del progetto
+HackHub è un'applicazione web progettata per digitalizzare completamente la gestione degli hackathon: competizioni a tempo in cui i team sviluppano e consegnano un progetto per raggiungere un obiettivo comune. La piattaforma centralizza ogni fase dell'evento, dalla registrazione dei partecipanti alla proclamazione dei vincitori.
 
-**HackHub** è un'applicazione web pensata per digitalizzare completamente la gestione degli hackathon — competizioni a tempo in cui i team sviluppano e consegnano un progetto per raggiungere un obiettivo comune. La piattaforma centralizza ogni fase dell'evento, dall'iscrizione dei partecipanti alla proclamazione dei vincitori.
-
-Costruita con un backend in **Java Spring Boot** e un frontend in **Angular 21**, HackHub offre un ambiente basato sui ruoli in cui gli organizzatori creano e gestiscono gli eventi, i team si iscrivono e consegnano i propri progetti, i giudici valutano le consegne e i mentori supportano i partecipanti durante la competizione.
-
----
+Realizzata con un backend in **Java Spring Boot** e un frontend in **Angular 21**, HackHub offre un ambiente basato sui ruoli in cui gli organizzatori possono creare e gestire gli eventi, i team possono registrarsi e inviare i propri progetti, i giudici possono valutare le submission e i mentor possono supportare i partecipanti durante tutta la competizione.
 
 ## ✨ Funzionalità
 
-- 🏆 Creazione e gestione di hackathon con ciclo di vita completo a 4 stati
-- 👥 Creazione dei team, inviti e gestione delle iscrizioni
-- 📁 Consegna del progetto tramite link a repository GitHub, aggiornabile fino alla scadenza
-- ⭐ Sistema di valutazione dei giudici con punteggio numerico (0–10) e feedback scritto
-- 🚩 Segnalazione dei team da parte dei mentori per violazioni del regolamento
-- 🔒 Controllo degli accessi basato sui ruoli (Visitatore, Utente, Staff, Admin)
-- 🔐 Autenticazione tramite JWT con claim di ruolo
-- 🛡️ Route guard Angular per la protezione del frontend
-- 🔍 Filtri, ordinamento e paginazione avanzati per la ricerca di hackathon e team
+- 🏆 Creazione e gestione di hackathon con un ciclo di vita completo a 4 stati.
+- 👥 Creazione di team, gestione degli inviti e dei membri.
+- 📁 Invio dei progetti tramite link a repository GitHub, aggiornabile fino alla scadenza.
+- ⭐ Sistema di valutazione dei giudici con punteggio numerico (0–10) e feedback testuale.
+- 🚩 Segnalazione di team da parte dei mentor per violazioni del regolamento.
+- 🔒 Controllo degli accessi basato sui ruoli (Visitatore, Utente, Staff, Admin).
+- 🔐 Autenticazione basata su JWT con claims per i ruoli.
+- 🛡️ Route guards di Angular per la protezione delle rotte frontend.
+- 🔍 Filtri avanzati, ordinamento e paginazione per la scoperta di hackathon e team.
 
----
-
-## 🛠️ Stack tecnologico
+## 🛠️ Stack Tecnologico
 
 ### Backend
+
 | Tecnologia | Dettagli |
-|---|---|
-| Java | 21 |
-| Spring Boot | 4 |
-| Spring Web | API REST con `@RestController` |
-| Spring Security | Autenticazione JWT + RBAC |
-| Spring Data JPA | Persistenza basata su repository (Hibernate) |
-| H2 Database | Database relazionale su file (`database/hackhubdb.mv.db`) |
-| Apache Maven | Build e gestione delle dipendenze |
+| :--- | :--- |
+| **Java** | 21 |
+| **Spring Boot** | 4 |
+| **Spring Web** | REST API con `@RestController` |
+| **Spring Security** | Autenticazione JWT + RBAC |
+| **Spring Data JPA** | Persistenza basata su repository (Hibernate) |
+| **H2 Database** | Database relazionale in memoria |
+| **Apache Maven** | Strumento di build e gestione delle dipendenze |
 
 ### Frontend
+
 | Tecnologia | Dettagli |
-|---|---|
-| Angular | 21 |
-| TypeScript | JavaScript tipizzato staticamente |
-| SCSS | CSS avanzato con variabili, mixin e nesting |
-| Bootstrap 5 | Layout a griglia responsive e componenti UI |
+| :--- | :--- |
+| **Angular** | 21 |
+| **TypeScript** | ~5.9.2 |
+| **RxJS** | ~7.8.0 (Programmazione reattiva) |
+| **SCSS** | Stili avanzati con variabili, mixin e nesting |
 
----
-
-## 👤 Ruoli e attori
+## 👤 Ruoli e Attori
 
 | Ruolo | Descrizione |
-|---|---|
-| **Visitatore** | Utente non autenticato, può consultare le informazioni pubbliche sugli hackathon |
-| **Utente** | Utente registrato, può creare o unirsi a un team |
-| **Staff** | Personale assegnato a specifici hackathon come Organizzatore, Giudice o Mentore |
-| **Capo team** | Creatore del team, gestisce le iscrizioni, la registrazione all'evento e gli inviti |
-| **Membro del team** | Può iscrivere il proprio team a un hackathon e consegnare un progetto |
-| **Mentore** | Membro dello staff che supporta i team e può segnalare violazioni del regolamento |
-| **Giudice** | Membro dello staff che valuta le consegne con un punteggio (0–10) e un feedback |
-| **Organizzatore** | Membro dello staff che crea gli hackathon e proclama il vincitore |
+| :--- | :--- |
+| **Visitatore** | Utente non autenticato, può navigare le informazioni pubbliche degli hackathon. |
+| **Utente** | Utente registrato, può creare o unirsi a un team. |
+| **Staff** | Personale assegnato a specifici hackathon come Organizzatore, Giudice o Mentor. |
+| **Team Leader** | Creatore del team che gestisce i membri, le iscrizioni agli eventi e gli inviti. |
+| **Membro del Team** | Può registrare il proprio team a un hackathon e inviare un progetto. |
+| **Mentor** | Membro dello staff che supporta i team e può segnalare violazioni del regolamento. |
+| **Giudice** | Membro dello staff che valuta le submission assegnando un punteggio (0–10) e un feedback. |
+| **Organizzatore** | Membro dello staff che crea gli hackathon e proclama il vincitore. |
 
----
+## 📁 Struttura del Progetto
 
-## 📁 Struttura del progetto
-
-```
+```text
 HackHubWeb/
-│
-├── LICENSE
-├── README.md
-├── TODO.txt
-│
-├── database/
-│   └── hackhubdb.mv.db                        # Database H2 (su file)
-│
-├── hackhub_backend/                           # API REST Spring Boot
-│   ├── pom.xml
-│   ├── mvnw / mvnw.cmd                         # Maven Wrapper
-│   └── src/main/
-│       ├── java/it/unicam/cs/hackhub/
-│       │   ├── HackhubApplication.java         # Punto di ingresso
-│       │   ├── client/                         # Integrazione GitHub (parsing dei repository)
-│       │   ├── controller/                     # Endpoint REST
-│       │   ├── DTO/                             # Data Transfer Object
-│       │   ├── exception/                       # Gestione globale delle eccezioni
-│       │   ├── model/                           # Entità JPA (con pattern Builder e Factory)
-│       │   ├── repository/                      # Repository Spring Data
-│       │   ├── security/                        # Configurazione JWT e Spring Security
-│       │   └── service/                         # Logica di business
-│       └── resources/
-│           └── application.properties
-│
-└── hackhub_frontend/                           # Applicazione Angular (SPA)
-    ├── angular.json
-    ├── package.json
-    ├── tsconfig*.json
-    └── src/
-        ├── main.ts
-        ├── index.html
-        ├── styles.scss
-        ├── app/
-        │   ├── app.config.ts                    # Configurazione dell'applicazione
-        │   ├── app.routes.ts                    # Definizione delle rotte
-        │   ├── app.ts                           # Componente radice
-        │   ├── core/
-        │   │   ├── guard/                        # Route guard (auth, role, team)
-        │   │   └── interceptors/                # HTTP interceptor (jwt, error)
-        │   └── features/                         # Moduli funzionali
-        │       ├── account/                      # Profilo utente e inviti
-        │       ├── auth/                          # Login e registrazione
-        │       ├── dashboard/                     # Home / dashboard
-        │       ├── hackathon/                     # Gestione hackathon (creazione, lista, modifica, dettaglio)
-        │       ├── report/                        # Segnalazioni
-        │       ├── submissions/                   # Consegne dei progetti
-        │       ├── team/                          # Gestione dei team
-        │       └── users/                         # Profilo utente
-        └── environments/
-            ├── environment.ts
-            └── environment.prod.ts
+ │
+ ├── hackhub_backend/                          # REST API Spring Boot
+ │   ├── pom.xml
+ │   └── src/main/java/it/unicam/cs/hackhub/
+ │       ├── HackhubApplication.java           # Entry point
+ │       ├── client/                           # Integrazioni esterne (es. GitHub)
+ │       ├── controller/                       # Endpoint REST
+ │       ├── exception/                        # Gestione globale delle eccezioni
+ │       ├── DTO/                              # Data Transfer Objects
+ │       ├── model/                            # Entità JPA
+ │       ├── repository/                       # Repository Spring Data
+ │       ├── service/                          # Logica di business
+ │       └── security/                         # Configurazione JWT e Spring Security
+ │
+ └── hackhub_frontend/                         # Applicazione Angular
+     ├── package.json
+     └── src/
+         ├── app/
+         │   ├── core/                         # Modulo core
+         │   │   ├── guard/                    # Route guards (auth, role, team)
+         │   │   └── interceptors/             # Intercettori HTTP (JWT, Errori)
+         │   │
+         │   └── features/                     # Moduli funzionali (Feature Modules)
+         │      ├── account/                   # Gestione profilo e inviti
+         │      ├── auth/                      # Login e Registrazione
+         │      ├── dashboard/                 # Dashboard e Home
+         │      ├── hackathon/                 # Gestione hackathon (CRUD, lista)
+         │      ├── report/                    # Gestione segnalazioni
+         │      ├── submissions/               # Gestione submission dei team
+         │      ├── team/                      # Gestione team e membri
+         │      └── users/                     # Visualizzazione utenti
+         ├── environments/                     # Configurazioni ambiente (dev/prod)
+         ├── index.html
+         ├── main.ts                           # Bootstrap dell'applicazione
+         └── styles.scss                       # Stili globali
 ```
 
-> Ogni feature segue la stessa convenzione interna: `components/` (i componenti), `model/` (i modelli TypeScript) e `service/` (i servizi verso l'API).
-
----
-
-## 🚀 Come iniziare
+## 🚀 Come Iniziare
 
 ### Prerequisiti
 
-- **Java** 21+
-- **Maven** 3.8+
-- **Node.js** 20+ (richiesto da Angular 21)
-- **npm** 10+
-- **Angular CLI** 21+
+- Java 21+
+- Maven 3.8+
+- Node.js 18+
+- npm 10+
+- Angular CLI 21+
 
----
-
-### Avvio del backend
+### Setup Backend
 
 ```bash
-# Spostarsi nella cartella del backend
+# Naviga nella cartella del backend
 cd hackhub_backend
 
-# Compilare il progetto
-.\mvnw clean install
+# Compila il progetto
+./mvnw clean install   # Su Windows: .\mvnw.cmd clean install
 
-# Avviare l'applicazione
-.\mvnw spring-boot:run
+# Avvia l'applicazione
+./mvnw spring-boot:run # Su Windows: .\mvnw.cmd spring-boot:run
 ```
 
-Il backend si avvia su: `http://localhost:8080`
+Il backend sarà disponibile all'indirizzo: `http://localhost:8080`
 
-> Le credenziali del datasource sono configurate in `src/main/resources/application.properties`.
+Le credenziali predefinite per il datasource sono configurate in `src/main/resources/application.properties`.
 
----
-
-### Avvio del frontend
+### Setup Frontend
 
 ```bash
-# Spostarsi nella cartella del frontend
+# Naviga nella cartella del frontend
 cd hackhub_frontend
 
-# Installare le dipendenze
+# Installa le dipendenze
 npm install
 
-# Avviare il server di sviluppo
+# Avvia il server di sviluppo
 ng serve --open
 ```
 
-L'applicazione sarà disponibile su: `http://localhost:4200`
+L'applicazione sarà disponibile all'indirizzo: `http://localhost:4200`
 
-#### Build di produzione
+### Build di Produzione
 
 ```bash
-# Spostarsi nella cartella del frontend
+# Naviga nella cartella del frontend
 cd hackhub_frontend
 
-# Compilare
+# Genera la build di produzione
 ng build
-
-# Servire la build di produzione
-ng serve --configuration=production
 ```
 
----
+I file compilati e ottimizzati per la produzione verranno generati nella cartella `dist/`.
 
 ## 🔐 Sicurezza
 
 ### Autenticazione JWT
 
-Al login, il backend emette un JWT firmato che contiene l'identità dell'utente e il suo ruolo come claim personalizzato. Il token viene allegato a ogni successiva richiesta HTTP nell'header `Authorization` (`Bearer <token>`), abilitando un'autenticazione stateless senza gestione delle sessioni lato server.
+Al login, il backend genera un JWT firmato contenente l'identità dell'utente e il suo ruolo come *claim* personalizzato. Questo token viene allegato a ogni successiva richiesta HTTP nell'header `Authorization` (`Bearer <token>`), consentendo un'autenticazione *stateless* senza la gestione di sessioni lato server.
 
-### Controllo degli accessi basato sui ruoli (RBAC)
+### Controllo Accessi Basato sui Ruoli (RBAC)
 
 Ogni endpoint REST è protetto da annotazioni di Spring Security che definiscono quali ruoli sono autorizzati ad accedervi:
 
-- `USER` — funzionalità di base per team e partecipazione
-- `STAFF` — gestione degli hackathon per gli eventi assegnati
-- `ADMIN` — accesso completo alla piattaforma
+- `USER` — Funzionalità base per team e partecipazione.
+- `STAFF` — Gestione degli hackathon per gli eventi assegnati.
+- `ADMIN` — Accesso completo alla piattaforma.
 
-### Protezione del frontend
+### Protezione Frontend
 
-Le route guard di Angular impediscono la navigazione verso pagine riservate agli utenti non autenticati o con ruoli insufficienti. L'autorizzazione lato backend resta però il livello di sicurezza autoritativo: l'API respinge ogni richiesta con token non valido o permessi insufficienti con `401 Unauthorized` o `403 Forbidden`.
-
----
+I *Route Guards* di Angular prevengono la navigazione verso pagine riservate per utenti non autenticati o con ruoli insufficienti. L'autorizzazione lato backend rimane il livello di sicurezza autorevole: l'API rifiuta qualsiasi richiesta con un token non valido o permessi insufficienti restituendo `401 Unauthorized` o `403 Forbidden`.
 
 ## 📝 Licenza
 
-Questo progetto è rilasciato sotto [Licenza MIT](LICENSE).
-
----
+Questo progetto è distribuito sotto licenza [MIT License](LICENSE).
 
 ## 👨‍💻 Autori
 
-- **Maurizio Crescenzi**: [@nomeutentegithub](link github)
-- **Luca Gasparretti**: [@nomeutentegithub](link github)
+- **[Maurizio Crescenzi]**: [@mauriziocrescenzi-unicam](https://github.com/mauriziocrescenzi-unicam)
+- **[Luca Gasparretti]**: [@lucagas-lab](https://github.com/lucagas-lab)
 
-Sviluppato come progetto universitario presso l'**Università di Camerino (UNICAM)**.
-
----
-
-> HackHub — Dove le idee competono.
+Progetto sviluppato nell'ambito del corso di studi presso l'**Università di Camerino (UNICAM)**.

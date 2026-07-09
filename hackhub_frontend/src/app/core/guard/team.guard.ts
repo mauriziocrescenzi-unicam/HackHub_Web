@@ -13,17 +13,16 @@ export const teamGuard: CanActivateFn = () => {
 
   const teamId = authService.teamId;
 
-  // Se ha già un team, mandalo alla sua area team privata
+  // L'utente con team viene reindirizzato alla sua area team privata
   if (teamId) {
     router.navigate(['/teams/my']);
     return false;
   } 
-  // Se non è un utente base (es. è STAFF o ADMIN), rimandalo alla home
+  // Se non è un utente base (es. è STAFF o ADMIN), viene reindirizzato alla home
   else if (!authService.isUser()) {
     router.navigate(['/home']);
     return false;
   }
-
-  // Se arriva qui: è autenticato, è un USER normale, e NON ha ancora un team. Può passare!
+  
   return true;
 };

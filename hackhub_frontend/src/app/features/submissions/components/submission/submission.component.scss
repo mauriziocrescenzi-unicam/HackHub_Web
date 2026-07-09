@@ -339,6 +339,23 @@
     .team-name { font-weight: 600; }
     .text-muted { color: #71717a; font-size: 0.8rem; }
 
+    .data-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      color: #c084fc;
+      text-decoration: none;
+      transition: color 0.2s;
+
+      &:hover { color: #d8b4fe; }
+      
+      svg { 
+        width: 1.2rem; 
+        height: 1.2rem; 
+        flex-shrink: 0; 
+      }
+    }
+
     .disabled-badge {
       display: inline-flex;
       align-items: center;

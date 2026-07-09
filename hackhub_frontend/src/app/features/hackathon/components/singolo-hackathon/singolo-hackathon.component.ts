@@ -7,7 +7,6 @@ import { RouterLink } from '@angular/router';
 import { Hackathon } from '../../models/hackathon.model';
 import { Rule } from '../../models/rule.model';
 import { Account } from '../../../account/models/account.model';
-
 import { HackathonService } from '../../service/hackathon.service';
 import { AuthService } from '../../../auth/service/auth.service';
 import { TeamService } from '../../../team/service/team.service';

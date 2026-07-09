@@ -13,13 +13,10 @@ export class App implements OnInit {
   private authService = inject(AuthService);
   private router = inject(Router);
 
-  // Agganciamo il div specifico del menu a tendina tramite il suo ID di template #userDropdown
+  // Gestione dropdown del profilo
   @ViewChild('userDropdown') userDropdown!: ElementRef;
 
-  // Segnale calcolato per autenticazione (true se user è presente)
   isAuthenticated = computed(() => !!this.authService.user());
-  
-  // Riferimento diretto al segnale utente del servizio
   userProfile = this.authService.user; 
 
   // Gestione stato menu
@@ -34,10 +31,10 @@ export class App implements OnInit {
     }
   }
 
-  // Ascoltatore globale che verifica dove avviene il click
+  // Gestione click-outside per chiudere il dropdown del profilo
   @HostListener('document:click', ['$event'])
   clickout(event: Event) {
-    // Se il menu è aperto E il click avviene fuori dal div #userDropdown, lo chiudiamo
+    // chiusura del dropdown del profilo se l'utente clicca fuori da esso
     if (this.isProfileDropdownOpen() && this.userDropdown && !this.userDropdown.nativeElement.contains(event.target)) {
       this.isProfileDropdownOpen.set(false);
     }

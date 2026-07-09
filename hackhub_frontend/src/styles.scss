@@ -1,4 +1,4 @@
-/* ── VARIABILI TEMA (Da Figma) ── */
+/* ── VARIABILI TEMA ── */
 :root {
   --font-size: 16px;
   --background: #ffffff;
@@ -18,7 +18,7 @@
   --font-weight-normal: 400;
   --radius: 0.625rem;
   
-  /* Colori di stato (puoi regolarli su Figma in seguito) */
+  /* Colori di stato */
   --success: oklch(0.6 0.15 150);
   --error: oklch(0.6 0.2 25);
 }
@@ -58,7 +58,7 @@ body {
   color: var(--foreground);
   margin: 0;
   padding: 0;
-  font-family: sans-serif; /* Sostituisci con il tuo font se necessario */
+  font-family: sans-serif;
 }
 
 ::selection {
@@ -162,7 +162,7 @@ body {
   text-align: center;
   border: 1.5px solid transparent;
   padding: 10px 16px;
-  text-decoration: none; /* Rimuove la sottolineatura dai link */
+  text-decoration: none; 
 
   &:disabled {
     opacity: 0.5;

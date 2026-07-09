@@ -13,50 +13,42 @@ export class TeamService {
   private http = inject(HttpClient);
   private apiUrl = environment.apiUrl + '/teams';
 
-  // GET /api/teams
   getAllTeams(): Observable<Team[]> {
     return this.http.get<any[]>(this.apiUrl).pipe(
       map(responses => responses.map(res => this.mapToTeamModel(res)))
     );
   }
 
-  // GET /api/teams/{id}
   getTeamById(id: number): Observable<Team> {
     return this.http.get<any>(`${this.apiUrl}/${id}`).pipe(
       map(res => this.mapToTeamModel(res))
     );
   }
 
-  // POST /api/teams
   createTeam(name: string, description: string): Observable<Team> {
     return this.http.post<any>(this.apiUrl, { name, description }).pipe(
       map(res => this.mapToTeamModel(res))
     );
   }
 
-  // PUT /api/teams
   updateTeam(name: string, description: string): Observable<Team> {
     return this.http.put<any>(this.apiUrl, { name, description }).pipe(
       map(res => this.mapToTeamModel(res))
     );
   }
 
-  // DELETE /api/teams/members (L'utente corrente lascia il team)
   leaveTeamForMember(): Observable<{ message: string }> {
     return this.http.delete<{ message: string }>(`${this.apiUrl}/members`);
   }
 
-  // DELETE /api/teams/leader (Il leader corrente lascia il team)
   leaveTeamForLeader(): Observable<{ message: string }> {
     return this.http.delete<{ message: string }>(`${this.apiUrl}/leader`);
   }
 
-  // DELETE /api/teams/members/id
   removeMember(id: number) {
     return this.http.delete(`${this.apiUrl}/members/${id}`);
   }
 
-  // GET /api/teams/{id}/members
   getTeamMembers(id: number): Observable<MembroTeam[]> {
     return this.http.get<any[]>(`${this.apiUrl}/${id}/members`);
   }
@@ -80,7 +72,7 @@ export class TeamService {
           } as MembroTeam))
         : [],
         
-      // Mappatura sicura delle statistiche verso l'interfaccia SpecificheTeam
+      // Mappatura sicura delle statistiche del team verso l'interfaccia SpecificheTeam
       teamStats: {
         hackathonsPlayed: backendObj.teamStats?.hackathonsPlayed || 0,
         hackathonsWon: backendObj.teamStats?.hackathonsWon || 0, 

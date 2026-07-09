@@ -6,7 +6,7 @@
   @let h = hackathon();
   @if (h) {
     <div class="hero">
-      <img src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=1400&q=80" alt="Hero background" class="hero-img" />
+      <img src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=1400&q=80" alt="Sfondo principale" class="hero-img" />
       <div class="hero-overlay"></div>
 
       <div class="hero-content">
@@ -15,30 +15,30 @@
             <line x1="19" y1="12" x2="5" y2="12"/>
             <polyline points="12 19 5 12 12 5"/>
           </svg>
-          Back to Hackathons
+          Torna agli Hackathon
         </a>
 
         <div style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 1rem;">
           <div>
             <span class="status-badge" [class.badge-ongoing]="$any(h).status === 'ONGOING'" [class.badge-upcoming]="$any(h).status !== 'ONGOING'">
-              {{ $any(h).status || 'UPCOMING' }}
+              {{ $any(h).status || 'IN ARRIVO' }}
             </span>
             <h1 class="hero-title">{{ h.name }}</h1>
             <div class="hero-tags">
               <span class="tag">Hackathon</span>
-              <span class="tag">Event</span>
+              <span class="tag">Evento</span>
             </div>
           </div>
           
           <div class="d-flex" style="gap: 0.5rem; flex-wrap: wrap;">
             @if((teamRegistered() || isStaff()) && $any(h).status !== 'REGISTRATION') {
-              <a [routerLink]="['/hackathons', h.id, 'submissions']" class="btn-outline">
-                {{ teamRegistered() ? 'My Submission' : 'Submissions Hub' }}
+              <a [routerLink]="['/hackathons', h.id, 'submission']" class="btn-outline">
+                {{ teamRegistered() ? 'La Mia Sottomissione' : 'Hub Sottomissioni' }}
               </a>
             }
             @if(isOrganizer) {
               <button class="btn-outline" (click)="showModifyForm = !showModifyForm">
-                {{ showModifyForm ? 'Close Edit' : 'Edit Mode' }}
+                {{ showModifyForm ? 'Chiudi Modifica' : 'Modalità Modifica' }}
               </button>
             }
           </div>
@@ -64,39 +64,39 @@
 
           @if (showModifyForm && isOrganizer) {
             <div class="info-card">
-              <h2 class="section-title">Edit Hackathon</h2>
+              <h2 class="section-title">Modifica Hackathon</h2>
               <form (ngSubmit)="modifyHackathon()" #f="ngForm" ngNativeValidate>
                 <div class="grid-form">
                   <div class="hd-field">
-                    <label class="hd-field__label">Name</label>
+                    <label class="hd-field__label">Nome</label>
                     <input type="text" name="name" class="hd-field__input" [(ngModel)]="modifiedHackathon()!.name" required/>
                   </div>
                   <div class="hd-field">
-                    <label class="hd-field__label">Location</label>
+                    <label class="hd-field__label">Luogo</label>
                     <input type="text" name="location" class="hd-field__input" [(ngModel)]="modifiedHackathon()!.location" required/>
                   </div>
                   <div class="hd-field">
-                    <label class="hd-field__label">Prize (€)</label>
+                    <label class="hd-field__label">Premio (€)</label>
                     <input type="number" name="prize" class="hd-field__input" [(ngModel)]="modifiedHackathon()!.prize" required/>
                   </div>
                   <div class="hd-field">
-                    <label class="hd-field__label">Max Members</label>
+                    <label class="hd-field__label">Membri Max</label>
                     <input type="number" name="maxTeamMembers" class="hd-field__input" [(ngModel)]="modifiedHackathon()!.maxTeamMembers" required/>
                   </div>
                   <div class="hd-field">
-                    <label class="hd-field__label">Max Teams</label>
+                    <label class="hd-field__label">Team Max</label>
                     <input type="number" name="maxNumberTeams" class="hd-field__input" [(ngModel)]="modifiedHackathon()!.maxNumberTeams" required/>
                   </div>
                   <div class="hd-field">
-                    <label class="hd-field__label">Start Date</label>
+                    <label class="hd-field__label">Data di Inizio</label>
                     <input type="datetime-local" name="startDate" class="hd-field__input" [(ngModel)]="modifiedHackathon()!.startDate" required/>
                   </div>
                   <div class="hd-field">
-                    <label class="hd-field__label">End Date</label>
+                    <label class="hd-field__label">Data di Fine</label>
                     <input type="datetime-local" name="endDate" class="hd-field__input" [(ngModel)]="modifiedHackathon()!.endDate" required/>
                   </div>
                   <div class="hd-field">
-                    <label class="hd-field__label">Judge Email</label>
+                    <label class="hd-field__label">Email Giudice</label>
                     <input type="text" name="judgeEmail" class="hd-field__input" [(ngModel)]="modifiedHackathon()!.staff.judgeEmail" (focus)="judgeFocused.set(true)" (input)="filterJudges()" autocomplete="off" required/>
                     @if (judgeFocused() && filteredJudges().length > 0) {
                       <div class="dropdown-list">
@@ -108,29 +108,29 @@
                   </div>
                 </div>
                 <div style="margin-top: 1rem; display: flex; gap: 0.5rem; justify-content: flex-end;">
-                  <button type="button" class="btn-ghost" (click)="showModifyForm=false">Cancel</button>
-                  <button type="submit" class="btn-register" style="width: auto;">Save Changes</button>
+                  <button type="button" class="btn-ghost" (click)="showModifyForm=false">Annulla</button>
+                  <button type="submit" class="btn-register" style="width: auto;">Salva Modifiche</button>
                 </div>
               </form>
             </div>
 
             <div class="info-card">
-              <h2 class="section-title">Manage Mentors</h2>
+              <h2 class="section-title">Gestisci Mentori</h2>
               @if ($any(h).staff?.mentors?.length) {
                 <ul class="expect-list" style="margin-bottom: 1rem;">
                   @for (mentor of $any(h).staff.mentors; track mentor.idAccount) {
                     <li class="flex-between">
                       <div class="d-flex"><span class="bullet"></span> {{ mentor.email }}</div>
-                      <button type="button" class="btn-delete" (click)="removeMentor(mentor.idAccount)">Remove</button>
+                      <button type="button" class="btn-delete" (click)="removeMentor(mentor.idAccount)">Rimuovi</button>
                     </li>
                   }
                 </ul>
               }
               <div class="hd-field">
-                <label class="hd-field__label">Add a new mentor</label>
+                <label class="hd-field__label">Aggiungi un nuovo mentore</label>
                 <div class="d-flex">
                   <input type="text" class="hd-field__input" [(ngModel)]="mentorSearch" name="mentorSearch" (focus)="mentorFocused.set(true)" (input)="filterMentors()" autocomplete="off" />
-                  <button type="button" class="btn-ghost" (click)="addMentor()">Add</button>
+                  <button type="button" class="btn-ghost" (click)="addMentor()">Aggiungi</button>
                 </div>
                 @if (mentorFocused() && filteredMentors().length > 0) {
                   <div class="dropdown-list">
@@ -144,14 +144,14 @@
           }
 
           <div class="section">
-            <h2 class="section-title">About This Hackathon</h2>
+            <h2 class="section-title">Informazioni su questo Hackathon</h2>
             <p class="section-text">
-              Build the next generation of applications. Focus on practical solutions that can make a real impact in everyday life. Whether you're a seasoned developer or just starting out, this event is for innovators.
+              Sviluppa la prossima generazione di applicazioni. Concentrati su soluzioni pratiche che possono avere un impatto reale nella vita di tutti i giorni. Che tu sia uno sviluppatore esperto o alle prime armi, questo evento è per gli innovatori.
             </p>
           </div>
 
           <div class="section">
-            <h2 class="section-title">Hackathon Rules</h2>
+            <h2 class="section-title">Regole dell'Hackathon</h2>
             @if ($any(h).rules && $any(h).rules.length > 0) {
               <ul class="expect-list">
                 @for (rule of $any(h).rules; track rule.id) {
@@ -162,7 +162,7 @@
                       <span class="section-text">{{ rule.description }}</span>
                     </div>
                     @if (isOrganizer && showModifyForm) {
-                      <button type="button" class="btn-delete" (click)="removeRule(rule.id)">Remove</button>
+                      <button type="button" class="btn-delete" (click)="removeRule(rule.id)">Rimuovi</button>
                     }
                   </li>
                 }
@@ -173,10 +173,10 @@
 
             @if (isOrganizer && showModifyForm) {
               <form (ngSubmit)="addRule()" class="hd-field" style="margin-top: 1.5rem;">
-                <label class="hd-field__label">Link an existing Rule</label>
+                <label class="hd-field__label">Collega una Regola esistente</label>
                 <div class="d-flex">
                   <input type="text" class="hd-field__input" [(ngModel)]="ruleSearch" name="ruleSearch" (focus)="ruleFocused.set(true)" (input)="filterRules()" autocomplete="off" />
-                  <button type="submit" class="btn-ghost">Link Rule</button>
+                  <button type="submit" class="btn-ghost">Collega Regola</button>
                 </div>
                 @if (ruleFocused() && filteredRules().length > 0) {
                   <div class="dropdown-list">
@@ -192,20 +192,20 @@
           </div>
 
           <div class="section">
-            <h2 class="section-title">Registered Teams</h2>
+            <h2 class="section-title">Team Registrati</h2>
             @if($any(h).teams && $any(h).teams.length > 0) {
               <div class="grid-form">
                 @for(team of $any(h).teams; track team.id) {
                   <div class="info-card" style="padding: 1rem;">
                     <h3 class="info-value" style="margin-bottom: 0.5rem; color: #a855f7;">
                       {{ team.name }}
-                      @if ($any(h).winningTeam?.id === team.id) { <span class="tag" style="background: rgba(234,179,8,0.2); color: #eab308; border: none;">Winner</span> }
+                      @if ($any(h).winningTeam?.id === team.id) { <span class="tag" style="background: rgba(234,179,8,0.2); color: #eab308; border: none;">Vincitore</span> }
                     </h3>
                     @if(team.leader) {
                       <div class="section-text" style="font-size: 0.85rem;"><strong>Leader:</strong> {{ team.leader.email }}</div>
                     }
                     @for(member of team.members; track $index) {
-                      <div class="section-text" style="font-size: 0.85rem;">User: {{ member.email }}</div>
+                      <div class="section-text" style="font-size: 0.85rem;">Utente: {{ member.email }}</div>
                     }
                   </div>
                 }
@@ -230,7 +230,7 @@
                 </svg>
               </div>
               <div>
-                <p class="info-label">Start Date</p>
+                <p class="info-label">Data di Inizio</p>
                 <p class="info-value">{{ h.startDate | date:'longDate' }}</p>
               </div>
             </div>
@@ -243,7 +243,7 @@
                 </svg>
               </div>
               <div>
-                <p class="info-label">Duration</p>
+                <p class="info-label">Durata</p>
                 <p class="info-value">{{ getDuration() }}</p>
               </div>
             </div>
@@ -256,7 +256,7 @@
                 </svg>
               </div>
               <div>
-                <p class="info-label">Location</p>
+                <p class="info-label">Luogo</p>
                 <p class="info-value">{{ h.location }}</p>
               </div>
             </div>
@@ -270,7 +270,7 @@
                 </svg>
               </div>
               <div>
-                <p class="info-label">Participants</p>
+                <p class="info-label">Partecipanti</p>
                 <p class="info-value">{{ $any(h).teams?.length || 0 }} / {{ h.maxNumberTeams }}</p>
               </div>
             </div>
@@ -283,7 +283,7 @@
                 </svg>
               </div>
               <div>
-                <p class="info-label">Prize Pool</p>
+                <p class="info-label">Montepremi</p>
                 <p class="info-value info-value--prize">€{{ h.prize }}</p>
               </div>
             </div>
@@ -292,32 +292,32 @@
               <div class="progress-bar">
                 <div class="progress-fill" [style.width.%]="(($any(h).teams?.length || 0) / (h.maxNumberTeams || 1)) * 100"></div>
               </div>
-              <p class="progress-label">{{ $any(h).teams?.length || 0 }} of {{ h.maxNumberTeams }} spots filled</p>
+              <p class="progress-label">{{ $any(h).teams?.length || 0 }} su {{ h.maxNumberTeams }} posti occupati</p>
             </div>
 
             @if(leader() && $any(h).status === 'REGISTRATION') { 
               @if(teamRegistered()) {
-                <button class="btn-register" style="background: #3f3f46;" (click)="unsubscribeTeam()">Leave Hackathon</button>
+                <button class="btn-register" style="background: #3f3f46;" (click)="unsubscribeTeam()">Abbandona Hackathon</button>
               } 
-              @else if ((h.maxNumberTeams ?? 0) - ($any(h).teams?.length ?? 0) > 0) {
-                <button class="btn-register" (click)="registerTeam()">Register Now</button>
+              @else if ((h.maxNumberTeams || 0) - ($any(h).teams?.length || 0) > 0) {
+                <button class="btn-register" (click)="registerTeam()">Registrati Ora</button>
               }
             }
           </div>
 
           <div class="team-card">
-            <h3 class="team-card-title">Need a Team?</h3>
-            <p class="team-card-sub">Browse available teams or create your own</p>
-            <a routerLink="/teams" class="btn-outline">View Teams</a>
+            <h3 class="team-card-title">Hai bisogno di un Team?</h3>
+            <p class="team-card-sub">Sfoglia i team disponibili o crea il tuo</p>
+            <a routerLink="/teams" class="btn-outline">Vedi Team</a>
           </div>
 
           <div class="team-card" style="background: #09090b;">
-            <h3 class="team-card-title">Staff & Judge</h3>
-            <p class="team-card-sub" style="margin-bottom: 0.5rem;"><strong>Organizer:</strong> {{ $any(h).staff?.organizerEmail || 'N/A' }}</p>
-            <p class="team-card-sub" style="margin-bottom: 1rem;"><strong>Judge:</strong> {{ $any(h).staff?.judgeEmail || 'N/A' }}</p>
+            <h3 class="team-card-title">Staff & Giudice</h3>
+            <p class="team-card-sub" style="margin-bottom: 0.5rem;"><strong>Organizzatore:</strong> {{ $any(h).staff?.organizerEmail || 'N/A' }}</p>
+            <p class="team-card-sub" style="margin-bottom: 1rem;"><strong>Giudice:</strong> {{ $any(h).staff?.judgeEmail || 'N/A' }}</p>
             
             @if($any(h).staff?.mentors?.length > 0) {
-              <p class="info-label">Mentors</p>
+              <p class="info-label">Mentori</p>
               <ul class="expect-list" style="margin-top: 0.5rem;">
                 @for (mentor of $any(h).staff.mentors; track mentor.idAccount) {
                   <li><span class="bullet" style="background: #22c55e;"></span> <span class="section-text" style="font-size: 0.85rem;">{{ mentor.email }}</span></li>

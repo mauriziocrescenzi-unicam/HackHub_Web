@@ -6,8 +6,8 @@ export interface SubmissionResponse {
   submittedAt: string;
   repositoryUrl: string;
   immutableReference: string;
-  writtenJudgment?: string; // Opzionale perché potrebbe non essere ancora valutato
-  score?: number; // Opzionale
+  writtenJudgment?: string; 
+  score?: number; 
   teamDisabled: boolean;
 }
 

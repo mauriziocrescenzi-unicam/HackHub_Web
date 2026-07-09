@@ -32,7 +32,7 @@ export class SubmissionComponent implements OnInit {
   submissions = signal<SubmissionResponse[]>([]);
   winner = signal<Team | null>(null);             
 
-  // --- FORM & UI STATES ---
+  // -- TEAM STATES ---
   githubUrl = signal<string>('');
   submittedAt = signal<string>('');
   mySubmissionId = signal<number | null>(null);
@@ -41,25 +41,24 @@ export class SubmissionComponent implements OnInit {
   editMode = signal<boolean>(false);
   editUrlTemp = signal<string>('');
 
-  // --- MESSAGE HANDLING ---
+  // --- MESSAGE STATES ---
   successMessage = signal<string | null>(null);
   errorMessage = signal<string | null>(null);
   private successTimeoutId: any;
   private errorTimeoutId: any;
 
-  // --- REACTIVE ROLES ---
+  // -- COMPUTED STATES ---
   isTeamMember = computed(() => !!this.authService.user()?.idTeam);
   isStaff = computed(() => this.authService.user()?.role === 'STAFF');
 
-  // --- EVALUATION & REPORT ---
-  // Popup state
+  // --- MODAL STATES ---
   showReportModal = signal(false);
   showEvaluateModal = signal(false);
   showReportListModal = signal(false);
   showWinnerModal = signal(false);
   activeSubmission = signal<any>(null);
 
-  // Report form
+  // --- REPORT STATES ---
   reportReason = signal('');
   reportDescription = signal('');
   isReporting = signal(false);
@@ -67,7 +66,7 @@ export class SubmissionComponent implements OnInit {
   isLoadingReports = signal(false);
   myTeamDisabled = signal<boolean>(false);
 
-  // Evaluate form
+  // --- EVALUATION STATES ---
   evalScore = signal(7.5);
   evalJudgment = signal('');
   isEvaluating = signal(false);
@@ -107,7 +106,7 @@ export class SubmissionComponent implements OnInit {
     });
   }
 
-  // --- GENERAL METHODS ---
+  // --- WINNER METHODS ---
   checkWinner(idHackathon: number) {
     this.hackathonService.getWinner(idHackathon).subscribe({
       next: (winnerTeam) => {
@@ -130,16 +129,14 @@ export class SubmissionComponent implements OnInit {
 
     this.submissionService.proclaimWinner(id).subscribe({
       next: (message) => {
-        // Show success message from backend
         this.showSuccess(message || 'Winner proclaimed successfully!');
-        
         this.checkWinner(id);
       },
       error: (err: any) => this.showError(err)
     });
   }
 
-  // --- HELPER METHODS FOR MESSAGES (5 seconds) ---
+  // -- MESSAGE HANDLING METHODS ---
   private showSuccess(message: string) {
     this.successMessage.set(message);
     if (this.successTimeoutId) clearTimeout(this.successTimeoutId);
@@ -154,7 +151,7 @@ export class SubmissionComponent implements OnInit {
     this.errorTimeoutId = setTimeout(() => this.errorMessage.set(null), 5000);
   }
 
-  // --- STAFF METHODS ---
+  // -- STAFF METHODS ---
   loadStaffDashboard(idHackathon: number) {
     this.submissionService.getSubmissionsByHackathon(idHackathon).subscribe({
       next: (data) => {
@@ -164,7 +161,7 @@ export class SubmissionComponent implements OnInit {
     });
   }
 
-  // --- TEAM METHODS ---
+  // -- TEAM METHODS ---
   checkMySubmission() {
     this.submissionService.getSubmissionForTeam(this.hackathonId()!).subscribe({
       next: (submission) => {

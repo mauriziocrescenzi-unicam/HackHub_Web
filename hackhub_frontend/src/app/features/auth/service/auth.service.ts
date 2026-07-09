@@ -22,7 +22,7 @@ export class AuthService {
 
     if (token) {
       this.loadUser$().subscribe({
-        next: (user) => console.log('✅ Sessione ripristinata con successo!'),
+        next: (user) => console.log('Sessione ripristinata con successo!'),
         error: (err) => {
           if (err.status === 401 || err.status === 403) {
             this.logout();
@@ -104,7 +104,6 @@ export class AuthService {
     }
   }
 
-  // NUOVO: Aggiunto per gestire il nome del team
   updateTeamName(teamName: string | null) {
     const current = this.currentUser;
     if (current) {
@@ -125,7 +124,6 @@ export class AuthService {
     return this.currentUser?.idTeam ?? null;
   }
 
-  // CORRETTO: In precedenza ritornava idTeam, ora ritorna il nome
   get teamName(): string | null {
     return this.currentUser?.teamName ?? null;
   }

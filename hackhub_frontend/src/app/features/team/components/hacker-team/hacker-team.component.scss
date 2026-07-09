@@ -556,31 +556,31 @@
 
 /* ── Modal Overlay ── */
 .custom-modal-overlay {
-  position: fixed; /* Si fissa allo schermo, indipendentemente dallo scroll */
+  position: fixed; 
   top: 0;
   left: 0;
-  width: 100vw; /* Occupa tutta la larghezza dello schermo */
-  height: 100vh; /* Occupa tutta l'altezza dello schermo */
-  background-color: rgba(0, 0, 0, 0.7); /* Sfondo scuro semi-trasparente */
-  backdrop-filter: blur(4px); /* Effetto sfocatura moderno sullo sfondo (opzionale) */
-  display: flex; /* Permette di centrare il contenuto interno */
-  align-items: center; /* Centra verticalmente */
-  justify-content: center; /* Centra orizzontalmente */
-  z-index: 9999; /* Assicura che la modale sia sempre sopra a tutto il resto */
-  padding: 1rem; /* Margine di sicurezza sui dispositivi piccoli */
+  width: 100vw; 
+  height: 100vh; 
+  background-color: rgba(0, 0, 0, 0.7); 
+  backdrop-filter: blur(4px); 
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  z-index: 9999; 
+  padding: 1rem; 
 }
 
 /* ── Modal Content ── */
 .custom-modal-content {
-  background-color: #09090b; /* Stesso sfondo scuro delle card */
+  background-color: #09090b; 
   border: 1px solid #27272a;
   border-radius: 0.75rem;
   width: 100%;
-  max-width: 450px; /* Larghezza massima come definito nel tuo HTML inline */
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.3); /* Ombra profonda */
+  max-width: 450px; 
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.3); 
   display: flex;
   flex-direction: column;
-  overflow: hidden; /* Evita sbavature dei bordi */
+  overflow: hidden; 
 }
 
 .modal-header {

@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-
 import { Observable } from 'rxjs';
-
 import { Hackathon } from '../models/hackathon.model';
 import { environment } from '../../../../environments/environment';
 import { Rule } from '../models/rule.model';
@@ -14,6 +12,7 @@ import { Team } from '../../team/model/team.model';
 })
 
 export class HackathonService {
+  
   private readonly BASE_URL = environment.apiUrl + '/hackathons';
 
   constructor(private http: HttpClient) {}

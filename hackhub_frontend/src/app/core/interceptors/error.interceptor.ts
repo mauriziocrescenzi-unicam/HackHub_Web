@@ -6,7 +6,7 @@ import { catchError } from 'rxjs/operators';
 import { AuthService } from '../../features/auth/service/auth.service';
 
 export const errorInterceptor: HttpInterceptorFn = (req, next) => {
-  // Iniettiamo l'Injector invece di Router e AuthService direttamente
+  // Iniezione dei servizi tramite Injector per evitare problemi di dipendenze circolari
   const injector = inject(Injector);
 
   return next(req).pipe(
@@ -28,7 +28,7 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
         if (error.status === 401) {
           console.warn('Token scaduto o non valido. Disconnessione in corso...');
           
-          // Recuperiamo i servizi dall'injector SOLO al momento del bisogno
+          // recupero dei servizi dall'injector SOLO al momento del bisogno
           const authService = injector.get(AuthService);
           const router = injector.get(Router);
           
