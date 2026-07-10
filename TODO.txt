@@ -1,7 +1,0 @@
-* Vedere XSS per attacchi sugli interceptor
-- controllare environment (da sistemare) sia file che import sui service
-- eseguire ng build --configuration production per vedere se è tutto ok o lancia degli errori --> vedere screenshot su WhatsApp
-- rivedere nel backend le impostazioni del db e i file modificati all'inizio: pom, security config, application properties
-- gestione del CORS
-
-
