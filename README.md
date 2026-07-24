@@ -107,6 +107,18 @@ HackHubWeb/
 - npm 10+
 - Angular CLI 21+
 
+### Sviluppo locale
+
+### Clonare il repository
+
+```bash
+# Clonare il repository
+git clone https://github.com/mauriziocrescenzi-unicam/HackHub_Web
+
+# Navigare nella cartella del progetto
+cd HackHub_Web
+```
+
 ### Setup Backend
 
 ```bash
