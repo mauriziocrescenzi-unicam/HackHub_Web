@@ -91,7 +91,7 @@ HackHubWeb/
          │      ├── submissions/               # Gestione submission dei team
          │      ├── team/                      # Gestione team e membri
          │      └── users/                     # Visualizzazione utenti
-         ├── environments/                     # Configurazioni ambiente (dev/prod)
+         ├── environments/                     # Configurazione ambiente (dev)
          ├── index.html
          ├── main.ts                           # Bootstrap dell'applicazione
          └── styles.scss                       # Stili globali

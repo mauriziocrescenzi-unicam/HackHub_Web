@@ -1,5 +1,5 @@
 import { HttpInterceptorFn, HttpErrorResponse } from '@angular/common/http';
-import { inject, Injector } from '@angular/core'; // <--- Aggiunto Injector
+import { inject, Injector } from '@angular/core'; 
 import { Router } from '@angular/router';
 import { throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
